@@ -93,6 +93,16 @@ To set up the token you will have to make use of the [`.env.example`](.env.examp
 
 Alternatively you can simply create an environment variable named `TOKEN`.
 
+## CanuckBot specific 
+
+# you will need to create a dedicated test discord server
+# invite the bot
+# create the database (see the setup folder, import the dump file into a new database)
+# run the bot
+# use config commands to set channel_logs, channel_cmds, default_category, mngr_roleid
+# in the cogs/ folder, create a new file and add your set of commands
+# in the CanuckBot/ folder, add your classes
+
 ## How to start
 
 To start the bot you simply need to launch, either your terminal (Linux, Mac & Windows), or your Command Prompt (
