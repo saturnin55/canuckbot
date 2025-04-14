@@ -1,0 +1,2636 @@
+{
+    "Atlético Ottawa": {
+       "tz": "America/Toronto",
+       "location": "Ottawa, ON",
+       "abbrev": null,
+       "discord_name": "atletico",
+       "emote": ":AtleticoOttawa:"
+    },
+    "HFX Wanderers FC": {
+       "tz": "America/Halifax",
+       "location": "Halifax, NS",
+       "abbrev": null,
+       "discord_name": "wanderers",
+       "emote": ":HFXWanderers:",
+		"aliases": ["HFX Wanderers"]
+    },
+    "York United": {
+       "tz": "America/Toronto",
+       "location": "York Region, ON",
+       "abbrev": null,
+       "discord_name": "york",
+       "emote": ":York9FC:",
+		"aliases": ["York United FC","York9 FC"]
+    },
+    "Forge FC": {
+       "tz": "America/Toronto",
+       "location": "Hamilton, ON",
+       "abbrev": null,
+       "discord_name": "forge",
+       "emote": ":ForgeFC:"
+    },
+    "Valour FC": {
+       "tz": "America/Winnipeg",
+       "location": "Winnipeg, MB",
+       "abbrev": null,
+       "discord_name": "valour",
+       "emote": ":ValourFC:"
+    },
+    "Vancouver FC": {
+       "tz": "America/Vancouver",
+       "location": "Langley, BC",
+       "abbrev": null,
+       "discord_name": "vanfc",
+       "emote": ""
+    },
+    "FC Edmonton": {
+       "tz": "America/Edmonton",
+       "location": "Edmonton, AB",
+       "abbrev": null,
+       "discord_name": "eddies",
+       "emote": ":FCEdmonton:"
+    },
+    "Cavalry FC": {
+       "tz": "America/Edmonton",
+       "location": "Calgary, AB",
+       "abbrev": null,
+       "discord_name": "cavalry",
+       "emote": ":CavalryFC:"
+    },
+    "Pacific FC": {
+       "tz": "America/Vancouver",
+       "location": "Langford, BC",
+       "abbrev": null,
+       "discord_name": "pacific",
+       "emote": ":PacificFC:"
+    },
+    "Ottawa Fury": {
+       "tz": "America/Toronto",
+       "location": "Ottawa, ON",
+       "abbrev": null,
+       "discord_name": "fury",
+       "emote": ":OttawaFury:"
+    },
+    "CF Montréal": {
+       "tz": "America/Toronto",
+       "location": "Montréal, QC",
+       "abbrev": null,
+       "discord_name": "cfmtl",
+       "emote": ":MontrealImpact:",
+		"aliases": ["CF Montreal","Montreal Impact"]
+    },
+    "Toronto FC": {
+       "tz": "America/Toronto",
+       "location": "Toronto, ON",
+       "abbrev": null,
+       "discord_name": "tfc",
+       "emote": ":TorontoFC:",
+		"aliases": ["TFC"]
+    },
+    "Vancouver Whitecaps": {
+       "tz": "America/Vancouver",
+       "location": "Vancouver, BC",
+       "abbrev": null,
+       "discord_name": "whitecaps",
+       "emote": ":TorontoFC:",
+		"aliases": ["Whitecaps FC", "Vancouver Whitecaps FC"]
+    },
+    "Whitecaps FC Girls Elite": {
+       "tz": "America/Vancouver",
+       "location": "Vancouver, BC",
+       "abbrev": null,
+       "discord_name": "whitecaps",
+       "emote": ":TorontoFC:"
+    },
+    "Vaughan Azzurri SC": {
+       "tz": "America/Toronto",
+       "location": "Vaughn, ON",
+       "abbrev": null,
+       "discord_name": "azzurri",
+       "emote": null,
+		"aliases": ["Vaughan Azzurri"]
+    },
+    "AS Blainville": {
+       "tz": "America/Toronto",
+       "location": "Blainville, QC",
+       "abbrev": null,
+       "discord_name": "asblainville",
+       "emote": null
+    },
+    "CS Herediano": {
+       "tz": "America/Costa_Rica",
+       "location": "Heredia, Costa Rica",
+       "abbrev": null,
+       "discord_name": "herediano",
+       "emote": ""
+    },
+    "Deportivo Saprissa": {
+       "tz": "America/Costa_Rica",
+       "location": "San Jose, Costa Rica",
+       "abbrev": null,
+       "discord_name": "saprissa",
+       "emote": ""
+    },
+    "FC Motagua": {
+       "tz": "America/Tegucigalpa",
+       "location": "Tegucigalpa, Honduras",
+       "abbrev": null,
+       "discord_name": "motagua",
+       "emote": ""
+    },
+    "CD Olimpia": {
+       "tz": "America/Tegucigalpa",
+       "location": "Tegucigalpa, Honduras",
+       "abbrev": null,
+       "discord_name": "olimpia",
+       "emote": ""
+    },
+    "Tauro FC": {
+       "tz": "America/Panama",
+       "location": "Panama City, Panama",
+       "abbrev": null,
+       "discord_name": "tauro",
+       "emote": ""
+    },
+    "Santa Tecla FC": {
+       "tz": "America/El_Salvador",
+       "location": "Santa Tecla, El Salvador",
+       "abbrev": null,
+       "discord_name": "santatecla",
+       "emote": ""
+    },
+    "Alianza FC": {
+       "tz": "America/El_Salvador",
+       "location": "San Salvador, El Salvador",
+       "abbrev": null,
+       "discord_name": "alianza",
+       "emote": ""
+    },
+    "Alianza Women FC": {
+       "tz": "America/El_Salvador",
+       "location": "San Salvador, El Salvador",
+       "abbrev": null,
+       "discord_name": "alianza",
+       "emote": ""
+    },
+    "Comunicaciones FC": {
+       "tz": "America/Guatemala",
+       "location": "Guatemala City, Guatemala",
+       "abbrev": null,
+       "discord_name": "comunicaciones",
+       "emote": ""
+    },
+    "CD Guastatoya": {
+       "tz": "America/Guatemala",
+       "location": "Guastatoya, Guatemala",
+       "abbrev": null,
+       "discord_name": "guastatoya",
+       "emote": ""
+    },
+    "Antigua GFC": {
+       "tz": "America/Guatemala",
+       "location": "Estadio Pensativo, Guatemala",
+       "abbrev": null,
+       "discord_name": "antigua",
+       "emote": ""
+    },
+    "Managua FC": {
+       "tz": "America/Managua",
+       "location": "Managua, Nicaragua",
+       "abbrev": null,
+       "discord_name": "managua",
+       "emote": ""
+    },
+    "Belmopan Bandits": {
+       "tz": "America/Belize",
+       "location": "Belmopan, Belize",
+       "abbrev": null,
+       "discord_name": "bandits",
+       "emote": ""
+    },
+    "Atlanta United": {
+       "tz": "America/New_York",
+       "location": "Atlanta, GA",
+       "abbrev": null,
+       "discord_name": "atlanta",
+       "emote": "",
+		"aliases": ["Atlanta United FC"]
+    },
+     "Chicago Fire FC": {
+       "tz": "America/Chicago",
+       "location": "Chicago, IL",
+       "abbrev": null,
+       "discord_name": "fire",
+       "emote": "",
+		"aliases": ["Chicago Fire"]
+    },
+     "FC Cincinnati": {
+       "tz": "America/New_York",
+       "location": "Cincinnati, OH",
+       "abbrev": null,
+       "discord_name": "cincy",
+       "emote": ""
+    },
+	     "Charlotte FC": {
+	       "tz": "America/New_York",
+	       "location": "Charlotte, SC",
+	       "abbrev": null,
+	       "discord_name": "charlotte",
+	       "emote": ""
+	    },
+	     "Columbus Crew": {
+	       "tz": "America/New_York",
+	       "location": "Columbus, OH",
+	       "abbrev": null,
+	       "discord_name": "crew",
+	       "emote": "",
+			"aliases": ["Columbus Crew SC"]
+	    },
+	     "DC United": {
+	       "tz": "America/New_York",
+	       "location": "Washington, D.C.",
+	       "abbrev": null,
+	       "discord_name": "dcunited",
+	       "emote": "",
+			"aliases": ["D.C. United"]
+	    },
+	     "New England Revolution": {
+	       "tz": "America/New_York",
+	       "location": "Foxborough, MA",
+	       "abbrev": null,
+	       "discord_name": "revolution",
+	       "emote": ""
+	    },
+	     "New York City FC": {
+	       "tz": "America/New_York",
+	       "location": "New York City, NY",
+	       "abbrev": null,
+	       "discord_name": "nycfc",
+	       "emote": ""
+	    },
+	     "New York Red Bulls": {
+	       "tz": "America/New_York",
+	       "location": "Harrison, NJ",
+	       "abbrev": null,
+	       "discord_name": "nyrb",
+	       "emote": "",
+			"aliases": ["NY Red Bulls"]
+	    },
+	     "Orlando City SC": {
+	       "tz": "America/New_York",
+	       "location": "Orlando, FL",
+	       "abbrev": null,
+	       "discord_name": "orlando",
+	       "emote": "",
+			"aliases": ["Orlando City"]
+	    },
+	     "Philadelphia Union": {
+	       "tz": "America/New_York",
+	       "location": "Philadelphia, PA",
+	       "abbrev": null,
+	       "discord_name": "union",
+	       "emote": ""
+	    },
+	     "Colorado Rapids": {
+	       "tz": "America/Denver",
+	       "location": "Denver, CO",
+	       "abbrev": null,
+	       "discord_name": "rapids",
+	       "emote": ""
+	    },
+	     "FC Dallas": {
+	       "tz": "America/Chicago",
+	       "location": "Dallas, TX",
+	       "abbrev": null,
+	       "discord_name": "dallas",
+	       "emote": ""
+	    },
+	     "Houston Dynamo": {
+	       "tz": "America/Chicago",
+	       "location": "Houston, TX",
+	       "abbrev": null,
+	       "discord_name": "dynamo",
+	       "emote": "",
+			"aliases": ["Houston Dynamo FC"]
+	    },
+	     "LA Galaxy": {
+	       "tz": "America/Los_Angeles",
+	       "location": "Los Angeles, CA",
+	       "abbrev": null,
+	       "discord_name": "galaxy",
+	       "emote": ""
+	    },
+	     "San Diego FC": {
+	       "tz": "America/Los_Angeles",
+	       "location": "San Diego , CA",
+	       "abbrev": null,
+	       "discord_name": "sdfc",
+	       "emote": ""
+	    },
+	     "LAFC": {
+	       "tz": "America/Los_Angeles",
+	       "location": "Los Angeles, CA",
+	       "abbrev": null,
+	       "discord_name": "lafc",
+	       "emote": "",
+			"aliases": ["Los Angeles Football Club"]
+	    },
+	     "Minnesota United": {
+	       "tz": "America/Chicago",
+	       "location": "Minneapolis-Saint Paul, MN",
+	       "abbrev": null,
+	       "discord_name": "minnesota",
+	       "emote": "",
+			"aliases": ["Minnesota United FC"]
+	    },
+	     "Portland Timbers": {
+	       "tz": "America/Los_Angeles",
+	       "location": "Portland, OR",
+	       "abbrev": null,
+	       "discord_name": "timbers",
+	       "emote": ""
+	    },
+	     "Real Salt Lake": {
+	       "tz": "America/Denver",
+	       "location": "Salt Lake City, UT",
+	       "abbrev": null,
+	       "discord_name": "rsl",
+	       "emote": ""
+	    },
+	     "San Jose Earthquakes": {
+       "tz": "America/Los_Angeles",
+       "location": "San Jose, CA",
+       "abbrev": null,
+       "discord_name": "quakes",
+       "emote": ""
+    },
+     "Seattle Sounders FC": {
+       "tz": "America/Los_Angeles",
+       "location": "Seattle, WA",
+       "abbrev": null,
+       "discord_name": "sounders",
+       "emote": "",
+		"aliases": ["Seattle Sounders"]
+    },
+     "Sporting Kansas City": {
+       "tz": "America/Chicago",
+       "location": "Kansas City, KA",
+       "abbrev": null,
+       "discord_name": "skc",
+       "emote": ""
+    },
+     "Atlético de San Luis": {
+       "tz": "America/Monterrey",
+       "location": "San Luis Potosi, Mexico",
+       "abbrev": null,
+       "discord_name": "sanluis",
+       "emote": ""
+    },
+     "Tigres UANL": {
+       "tz": "America/Monterrey",
+       "location": "Monterrey, Mexico",
+       "abbrev": null,
+       "discord_name": "tigres",
+       "emote": ""
+    },
+     "Santos Laguna": {
+       "tz": "America/Mexico_City",
+       "location": "Torreon, Mexico",
+       "abbrev": null,
+       "discord_name": "santoslaguna",
+       "emote": ""
+    },
+     "CF Monterrey": {
+       "tz": "America/Monterrey",
+       "location": "Monterrey, Mexico",
+       "abbrev": null,
+       "discord_name": "cfmonterrey",
+       "emote": ""
+    },
+     "Deportivo Toluca FC": {
+       "tz": "America/Mexico_City",
+       "location": "Toluca, Mexico",
+       "abbrev": null,
+       "discord_name": "toluca",
+       "emote": ""
+    },
+     "CD Marathon": {
+       "tz": "America/Tegucigalpa",
+       "location": "San Pedro Sula, Nicaragua",
+       "abbrev": null,
+       "discord_name": "marathon",
+       "emote": ""
+    },
+     "Independiente": {
+       "tz": "America/Panama",
+       "location": "La Chorrera, Panama",
+       "abbrev": null,
+       "discord_name": "independiente",
+       "emote": ""
+    },
+     "Club America": {
+       "tz": "America/Mexico_City",
+       "location": "Mexico City, Mexico",
+       "abbrev": null,
+       "discord_name": "america",
+       "emote": ""
+    },
+     "CD Guadalajara": {
+       "tz": "America/Mexico_City",
+       "location": "Guadalajara, Mexico",
+       "abbrev": null,
+       "discord_name": "guadalajara",
+       "emote": ""
+    },
+     "Cruz Azul": {
+       "tz": "America/Mexico_City",
+       "location": "Mexico City, Mexico",
+       "abbrev": null,
+       "discord_name": "cruzazul",
+       "emote": ""
+    },
+     "Pumas UNAM": {
+       "tz": "America/Mexico_City",
+       "location": "Mexico City, Mexico",
+       "abbrev": null,
+       "discord_name": "pumas",
+       "emote": ""
+    },
+     "Club Leon": {
+       "tz": "America/Mexico_City",
+       "location": "Leon, Mexico",
+       "abbrev": null,
+       "discord_name": "leon",
+       "emote": ""
+    },
+     "CF Pachuca": {
+       "tz": "America/Mexico_City",
+       "location": "Pachuca, Mexico",
+       "abbrev": null,
+       "discord_name": "pachuca",
+       "emote": ""
+    },
+     "Club Necaxa": {
+       "tz": "America/Mexico_City",
+       "location": "Aguascalientes, Mexico",
+       "abbrev": null,
+       "discord_name": "necaxa",
+       "emote": ""
+    },
+     "Club Puebla": {
+       "tz": "America/Mexico_City",
+       "location": "Puebla, Mexico",
+       "abbrev": null,
+       "discord_name": "puebla",
+       "emote": ""
+    },
+     "Club Atlas": {
+       "tz": "America/Mexico_City",
+       "location": "Guadalajara, Mexico",
+       "abbrev": null,
+       "discord_name": "atlas",
+       "emote": ""
+    },
+     "Lobos BUAP": {
+       "tz": "America/Mexico_City",
+       "location": "Puebla, Mexico",
+       "abbrev": null,
+       "discord_name": "lobos",
+       "emote": ""
+    },
+     "Club Atletico Monarcas": {
+       "tz": "America/Mexico_City",
+       "location": "Morelia, Mexico",
+       "abbrev": null,
+       "discord_name": "monarcas",
+       "emote": ""
+    },
+     "Queretaro FC": {
+       "tz": "America/Mexico_City",
+       "location": "Queretaro City, Mexico",
+       "abbrev": null,
+       "discord_name": "queretaro",
+       "emote": ""
+    },
+    "Club Tijuana": {
+       "tz": "America/Tijuana",
+       "location": "Tijuana, Mexico",
+       "abbrev": null,
+       "discord_name": "xolos",
+       "emote": ""
+    },
+    "Club Deportivo Tiburones Rojos de Veracruz": {
+       "tz": "America/Mexico_City",
+       "location": "Veracruz, Mexico",
+       "abbrev": null,
+       "discord_name": "veracruz",
+       "emote": ""
+    },
+    "Canada": {
+       "tz": "America/Toronto",
+       "location": "",
+       "abbrev": "CAN MNT",
+       "discord_name": "canada",
+       "emote": ":csa:"
+    },
+    "Afghanistan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "AFG",
+       "discord_name": "afghanistan",
+       "emote": null
+    },
+    "Albania": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ALB",
+       "discord_name": "albania",
+       "emote": null
+    },
+    "Algeria": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ALG",
+       "discord_name": "algeria",
+       "emote": null
+    },
+    "American Samoa": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ASA",
+       "discord_name": "americansamoa",
+       "emote": null
+    },
+    "Andorra": {
+       "tz": null,
+       "location": null,
+       "abbrev": "AND",
+       "discord_name": "andorra",
+       "emote": null
+    },
+    "Angola": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ANG",
+       "discord_name": "angola",
+       "emote": null
+    },
+    "Anguilla": {
+       "tz": null,
+       "location": null,
+       "abbrev": "AIA",
+       "discord_name": "anguilla",
+       "emote": null
+    },
+    "Antigua and Barbuda": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ATG",
+       "discord_name": "antiguabarbuda",
+       "emote": null
+    },
+    "Argentina": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ARG",
+       "discord_name": "argentina",
+       "emote": null
+    },
+    "Armenia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ARM",
+       "discord_name": "armenia",
+       "emote": null
+    },
+    "Suriname": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SUR",
+       "discord_name": "suriname",
+       "emote": null
+    },
+    "Aruba": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ARU",
+       "discord_name": "aruba",
+       "emote": null
+    },
+    "Australia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "AUS",
+       "discord_name": "australia",
+       "emote": null
+    },
+    "Austria": {
+       "tz": null,
+       "location": null,
+       "abbrev": "AUT",
+       "discord_name": "austria",
+       "emote": null
+    },
+    "Azerbaijan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "AZE",
+       "discord_name": "azerbaijan",
+       "emote": null
+    },
+    "Bahamas": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BAH",
+       "discord_name": "bahamas",
+       "emote": null
+    },
+    "Bahrain": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BHR",
+       "discord_name": "bahrain",
+       "emote": null
+    },
+    "Bangladesh": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BAN",
+       "discord_name": "bangladesh",
+       "emote": null
+    },
+    "Barbados": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BRB",
+       "discord_name": "barbados",
+       "emote": null
+    },
+    "Belarus": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BLR",
+       "discord_name": "belarus",
+       "emote": null
+    },
+    "Belgium": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BEL",
+       "discord_name": "belgium",
+       "emote": null
+    },
+    "Belize": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BLZ",
+       "discord_name": "belize",
+       "emote": null
+    },
+    "Benin": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BEN",
+       "discord_name": "benin",
+       "emote": null
+    },
+    "Bermuda": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BER",
+       "discord_name": "bermuda",
+       "emote": null
+    },
+    "Bhutan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BHU",
+       "discord_name": "bhutan",
+       "emote": null
+    },
+    "Bolivia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BOL",
+       "discord_name": "bolivia",
+       "emote": null
+    },
+    "Bosnia and Herzegovina": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BIH",
+       "discord_name": "bosniaherzegovina",
+       "emote": null
+    },
+    "Botswana": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BOT",
+       "discord_name": "botswana",
+       "emote": null
+    },
+    "Brazil": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BRA",
+       "discord_name": "brazil",
+       "emote": null
+    },
+    "British Virgin Islands": {
+       "tz": null,
+       "location": null,
+       "abbrev": "VGB",
+       "discord_name": "bvi",
+       "emote": null
+    },
+    "Brunei": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BRU",
+       "discord_name": "brunei",
+       "emote": null
+    },
+    "Bulgaria": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BUL",
+       "discord_name": "bulgaria",
+       "emote": null
+    },
+    "Burkina Faso": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BFA",
+       "discord_name": "burkinafaso",
+       "emote": null
+    },
+    "Burundi": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BDI",
+       "discord_name": "burundi",
+       "emote": null
+    },
+    "Cambodia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CAM",
+       "discord_name": "cambodia",
+       "emote": null
+    },
+    "Cameroon": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CMR",
+       "discord_name": "cameroon",
+       "emote": null
+    },
+    "Cape Verde": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CPV",
+       "discord_name": "capeverde",
+       "emote": null
+    },
+    "Cayman Islands": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CAY",
+       "discord_name": "caymanislands",
+       "emote": null
+    },
+    "Central African Republic": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CTA",
+       "discord_name": "ca-republic",
+       "emote": null
+    },
+    "Chad": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CHA",
+       "discord_name": "chad",
+       "emote": null
+    },
+    "Chile": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CHI",
+       "discord_name": "chile",
+       "emote": null
+    },
+    "China": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CHN",
+       "discord_name": "china",
+       "emote": null
+    },
+    "Chinese Taipei": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TPE",
+       "discord_name": "taipei",
+       "emote": null
+    },
+    "Colombia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "COL",
+       "discord_name": "colombia",
+       "emote": null
+    },
+    "Comoros": {
+       "tz": null,
+       "location": null,
+       "abbrev": "COM",
+       "discord_name": "comoros",
+       "emote": null
+    },
+    "Congo": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CGO",
+       "discord_name": "congo",
+       "emote": null
+    },
+    "Cook Islands": {
+       "tz": null,
+       "location": null,
+       "abbrev": "COK",
+       "discord_name": "cookislands",
+       "emote": null
+    },
+    "Costa Rica": {
+       "tz": "America/Costa_Rica",
+       "location": null,
+       "abbrev": "CRC",
+       "discord_name": "costarica",
+       "emote": null
+    },
+    "Scotland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SCO",
+       "discord_name": "scotland",
+       "emote": null
+    },
+    "Croatia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CRO",
+       "discord_name": "croatia",
+       "emote": null
+    },
+    "Cuba": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CUB",
+       "discord_name": "cuba",
+       "emote": null
+    },
+    "Curacao": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CUW",
+       "discord_name": "curacao",
+       "emote": null
+    },
+    "Cyprus": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CYP",
+       "discord_name": "cyprus",
+       "emote": null
+    },
+    "Czechia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CZE",
+       "discord_name": "czechia",
+       "emote": null
+    },
+    "Czech Republic": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CZE",
+       "discord_name": "czechia",
+       "emote": null
+    },
+    "Denmark": {
+       "tz": null,
+       "location": null,
+       "abbrev": "DEN",
+       "discord_name": "denmark",
+       "emote": null
+    },
+    "Djibouti": {
+       "tz": null,
+       "location": null,
+       "abbrev": "DJI",
+       "discord_name": "djibouti",
+       "emote": null
+    },
+    "Dominica": {
+       "tz": null,
+       "location": null,
+       "abbrev": "DMA",
+       "discord_name": "dominica",
+       "emote": null
+    },
+    "Dominican Republic": {
+       "tz": null,
+       "location": null,
+       "abbrev": "DOM",
+       "discord_name": "domrepublic",
+       "emote": null
+    },
+    "DR Congo": {
+       "tz": null,
+       "location": null,
+       "abbrev": "COD",
+       "discord_name": "drcongo",
+       "emote": null
+    },
+    "Ecuador": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ECU",
+       "discord_name": "ecuador",
+       "emote": null
+    },
+    "Egypt": {
+       "tz": null,
+       "location": null,
+       "abbrev": "EGY",
+       "discord_name": "egypt",
+       "emote": null
+    },
+    "El Salvador": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SLV",
+       "discord_name": "elsalvador",
+       "emote": null
+    },
+    "England": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ENG",
+       "discord_name": "england",
+       "emote": null
+    },
+    "Equatorial Guinea": {
+       "tz": null,
+       "location": null,
+       "abbrev": "EQG",
+       "discord_name": "eqguinea",
+       "emote": null
+    },
+    "Eritrea": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ERI",
+       "discord_name": "eritrea",
+       "emote": null
+    },
+    "Estonia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "EST",
+       "discord_name": "estonia",
+       "emote": null
+    },
+    "Eswatini": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SWZ",
+       "discord_name": "eswatini",
+       "emote": null
+    },
+    "Ethiopia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ETH",
+       "discord_name": "ethiopia",
+       "emote": null
+    },
+    "Faroe Islands": {
+       "tz": null,
+       "location": null,
+       "abbrev": "FRO",
+       "discord_name": "faroeislands",
+       "emote": null
+    },
+    "Fiji": {
+       "tz": null,
+       "location": null,
+       "abbrev": "FIJ",
+       "discord_name": "fiji",
+       "emote": null
+    },
+    "Finland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "FIN",
+       "discord_name": "finland",
+       "emote": null
+    },
+    "France": {
+       "tz": null,
+       "location": null,
+       "abbrev": "FRA",
+       "discord_name": "france",
+       "emote": null
+    },
+    "Gabon": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GAB",
+       "discord_name": "gabon",
+       "emote": null
+    },
+    "Gambia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GAM",
+       "discord_name": "gambia",
+       "emote": null
+    },
+    "Georgia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GEO",
+       "discord_name": "georgia",
+       "emote": null
+    },
+    "Germany": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GER",
+       "discord_name": "germany",
+       "emote": null
+    },
+    "Ghana": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GHA",
+       "discord_name": "ghana",
+       "emote": null
+    },
+    "Gibraltar": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GIB",
+       "discord_name": "gibraltar",
+       "emote": null
+    },
+    "Greece": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GRE",
+       "discord_name": "greece",
+       "emote": null
+    },
+    "Grenada": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GRN",
+       "discord_name": "grenada",
+       "emote": null
+    },
+    "Guam": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GUM",
+       "discord_name": "guam",
+       "emote": null
+    },
+    "Guatemala": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GUA",
+       "discord_name": "guatemala",
+       "emote": null
+    },
+    "Guinea": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GUI",
+       "discord_name": "guinea",
+       "emote": null
+    },
+    "Guinea-Bissau": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GNB",
+       "discord_name": "guineabissau",
+       "emote": null
+    },
+    "Guyana": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GUY",
+       "discord_name": "guyana",
+       "emote": null
+    },
+    "Haiti": {
+       "tz": null,
+       "location": null,
+       "abbrev": "HAI",
+       "discord_name": "haiti",
+       "emote": null
+    },
+    "Honduras": {
+       "tz": null,
+       "location": null,
+       "abbrev": "HON",
+       "discord_name": "honduras",
+       "emote": null
+    },
+    "Hong Kong": {
+       "tz": null,
+       "location": null,
+       "abbrev": "HKG",
+       "discord_name": "hongkong",
+       "emote": null
+    },
+    "Hungary": {
+       "tz": null,
+       "location": null,
+       "abbrev": "HUN",
+       "discord_name": "hungary",
+       "emote": null
+    },
+    "Iceland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ISL",
+       "discord_name": "iceland",
+       "emote": null
+    },
+    "India": {
+       "tz": null,
+       "location": null,
+       "abbrev": "IND",
+       "discord_name": "india",
+       "emote": null
+    },
+    "Indonesia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "IDN",
+       "discord_name": "indonesia",
+       "emote": null
+    },
+    "Iran": {
+       "tz": null,
+       "location": null,
+       "abbrev": "IRN",
+       "discord_name": "iran",
+       "emote": null
+    },
+    "Iraq": {
+       "tz": null,
+       "location": null,
+       "abbrev": "IRQ",
+       "discord_name": "iraq",
+       "emote": null
+    },
+    "Israel": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ISR",
+       "discord_name": "israel",
+       "emote": null
+    },
+    "Italy": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ITA",
+       "discord_name": "italy",
+       "emote": null
+    },
+    "Cote d'Ivoire": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CIV",
+       "discord_name": "cotedivoire",
+       "emote": null
+    },
+    "Saudi Arabia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SAU",
+       "discord_name": "saudiarabia",
+       "emote": null
+    },
+    "Côte d'Ivoire": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CIV",
+       "discord_name": "cotedivoire",
+       "emote": null
+    },
+    "Ivory Coast": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CIV",
+       "discord_name": "cotedivoire",
+       "emote": null
+    },
+    "Jamaica": {
+       "tz": null,
+       "location": null,
+       "abbrev": "JAM",
+       "discord_name": "jamaica",
+       "emote": null
+    },
+    "Japan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "JPN",
+       "discord_name": "japan",
+       "emote": null
+    },
+    "Jordan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "JOR",
+       "discord_name": "jordan",
+       "emote": null
+    },
+    "Kazakhstan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "KAZ",
+       "discord_name": "kazakhstan",
+       "emote": null
+    },
+    "Kenya": {
+       "tz": null,
+       "location": null,
+       "abbrev": "KEN",
+       "discord_name": "kenya",
+       "emote": null
+    },
+    "Kosovo": {
+       "tz": null,
+       "location": null,
+       "abbrev": "KVX",
+       "discord_name": "kosovo",
+       "emote": null
+    },
+    "Kuwait": {
+       "tz": null,
+       "location": null,
+       "abbrev": "KUW",
+       "discord_name": "kuwait",
+       "emote": null
+    },
+    "Kyrgyzstan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "KGZ",
+       "discord_name": "kyrgyzstan",
+       "emote": null
+    },
+    "Laos": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LAO",
+       "discord_name": "laos",
+       "emote": null
+    },
+    "Latvia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LVA",
+       "discord_name": "latvia",
+       "emote": null
+    },
+    "Lebanon": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LIB",
+       "discord_name": "lebanon",
+       "emote": null
+    },
+    "Lesotho": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LES",
+       "discord_name": "lesotho",
+       "emote": null
+    },
+    "Liberia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LBR",
+       "discord_name": "liberia",
+       "emote": null
+    },
+    "Libya": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LBY",
+       "discord_name": "libya",
+       "emote": null
+    },
+    "Liechtenstein": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LIE",
+       "discord_name": "liechtenstein",
+       "emote": null
+    },
+    "Lithuania": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LTU",
+       "discord_name": "lithuania",
+       "emote": null
+    },
+    "Luxembourg": {
+       "tz": null,
+       "location": null,
+       "abbrev": "LUX",
+       "discord_name": "luxembourg",
+       "emote": null
+    },
+    "Macau": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MAC",
+       "discord_name": "macau",
+       "emote": null
+    },
+    "Ukraine": {
+       "tz": null,
+       "location": null,
+       "abbrev": "UKR",
+       "discord_name": "ukraine",
+       "emote": null
+    },
+    "North Macedonia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MKD",
+       "discord_name": "northmacedonia",
+       "emote": null
+    },
+    "Madagascar": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MAD",
+       "discord_name": "madagascar",
+       "emote": null
+    },
+    "Malawi": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MWI",
+       "discord_name": "malawi",
+       "emote": null
+    },
+    "Malaysia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MAS",
+       "discord_name": "malaysia",
+       "emote": null
+    },
+    "Maldives": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MDV",
+       "discord_name": "maldives",
+       "emote": null
+    },
+    "Mali": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MLI",
+       "discord_name": "mali",
+       "emote": null
+    },
+    "Malta": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MLT",
+       "discord_name": "malta",
+       "emote": null
+    },
+    "Mauritania": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MTN",
+       "discord_name": "mauritania",
+       "emote": null
+    },
+    "Mauritius": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MRI",
+       "discord_name": "mauritius",
+       "emote": null
+    },
+    "Mexico": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MEX",
+       "discord_name": "mexico",
+       "emote": null
+    },
+    "Moldova": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MDA",
+       "discord_name": "moldova",
+       "emote": null
+    },
+    "Mongolia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MNG",
+       "discord_name": "mongolia",
+       "emote": null
+    },
+    "Montenegro": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MNE",
+       "discord_name": "montenegro",
+       "emote": null
+    },
+    "Montserrat": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MSR",
+       "discord_name": "montserrat",
+       "emote": null
+    },
+    "Morocco": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MAR",
+       "discord_name": "morocco",
+       "emote": null
+    },
+    "Mozambique": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MOZ",
+       "discord_name": "mozambique",
+       "emote": null
+    },
+    "Myanmar": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MYA",
+       "discord_name": "myanmar",
+       "emote": null
+    },
+    "Namibia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NAM",
+       "discord_name": "namibia",
+       "emote": null
+    },
+    "Nepal": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NEP",
+       "discord_name": "nepal",
+       "emote": null
+    },
+    "Senegal": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SEG",
+       "discord_name": "senegal",
+       "emote": null
+    },
+    "Netherlands": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NED",
+       "discord_name": "netherlands",
+       "emote": null
+    },
+    "New Caledonia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NCL",
+       "discord_name": "newcaledonia",
+       "emote": null
+    },
+    "New Zealand": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NZL",
+       "discord_name": "newzealand",
+       "emote": null
+    },
+    "Nicaragua": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NCA",
+       "discord_name": "nicaragua",
+       "emote": null
+    },
+    "Niger": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NIG",
+       "discord_name": "niger",
+       "emote": null
+    },
+    "Nigeria": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NGA",
+       "discord_name": "nigeria",
+       "emote": null
+    },
+    "South Africa": {
+       "tz": null,
+       "location": null,
+       "abbrev": "RSA",
+       "discord_name": "southafrica",
+       "emote": null
+    },
+    "South Korea": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SKR",
+       "discord_name": "korea",
+       "emote": null
+    },
+    "North Korea": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PRK",
+       "discord_name": "northkorea",
+       "emote": null
+    },
+    "Northern Ireland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NIR",
+       "discord_name": "northern-ireland",
+       "emote": null
+    },
+    "Norway": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NOR",
+       "discord_name": "norway",
+       "emote": null
+    },
+    "Oman": {
+       "tz": null,
+       "location": null,
+       "abbrev": "OMA",
+       "discord_name": "oman",
+       "emote": null
+    },
+    "Pakistan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PAK",
+       "discord_name": "pakistan",
+       "emote": null
+    },
+    "Palestine": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PLE",
+       "discord_name": "palestine",
+       "emote": null
+    },
+    "Panama": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PAN",
+       "discord_name": "panama",
+       "emote": null
+    },
+    "Papua New Guinea": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PNG",
+       "discord_name": "papua-newguinea",
+       "emote": null
+    },
+    "Paraguay": {
+       "tz": "America/Asuncion",
+       "location": null,
+       "abbrev": "PAR",
+       "discord_name": "paraguay",
+       "emote": null
+    },
+    "Peru": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PER",
+       "discord_name": "peru",
+       "emote": null
+    },
+    "Philippines": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PHI",
+       "discord_name": "philippines",
+       "emote": null
+    },
+    "Slovenia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SLO",
+       "discord_name": "slovenia",
+       "emote": null
+    },
+    "Slovakia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SVK",
+       "discord_name": "slovakia",
+       "emote": null
+    },
+    "Poland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "POL",
+       "discord_name": "poland",
+       "emote": null
+    },
+    "Portugal": {
+       "tz": null,
+       "location": null,
+       "abbrev": "POR",
+       "discord_name": "portugal",
+       "emote": null
+    },
+    "Puerto Rico": {
+       "tz": null,
+       "location": null,
+       "abbrev": "PUR",
+       "discord_name": "puertorico",
+       "emote": null
+    },
+    "Qatar": {
+       "tz": null,
+       "location": null,
+       "abbrev": "QAT",
+       "discord_name": "qatar",
+       "emote": null
+    },
+    "Republic of Ireland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "IRL",
+       "discord_name": "ireland",
+       "emote": null
+    },
+    "Romania": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ROU",
+       "discord_name": "romania",
+       "emote": null
+    },
+    "Russia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "RUS",
+       "discord_name": "russia",
+       "emote": null
+    },
+    "Rwanda": {
+       "tz": null,
+       "location": null,
+       "abbrev": "RWA",
+       "discord_name": "rwanda",
+       "emote": null
+    },
+    "St. Kitts and Nevis": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SKN",
+       "discord_name": "stkitts",
+       "emote": null
+    },
+    "Venezuela": {
+       "tz": null,
+       "location": null,
+       "abbrev": "VEN",
+       "discord_name": "venezuela",
+       "emote": null
+    },
+    "Trinidad and Tobago": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TNT",
+       "discord_name": "tnt",
+       "emote": null
+    },
+    "Artsakh": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NKR",
+       "discord_name": "artsakh",
+       "emote": null
+    },
+    "Basque Country": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BSQ",
+       "discord_name": "basquecountry",
+       "emote": null
+    },
+    "Bonaire": {
+       "tz": null,
+       "location": null,
+       "abbrev": "BOE",
+       "discord_name": "bonaire",
+       "emote": null
+    },
+    "Catalonia": {
+       "tz": null,
+       "location": null,
+       "abbrev": "CAT",
+       "discord_name": "catalonia",
+       "emote": null
+    },
+    "French Guiana": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GUF",
+       "discord_name": "french-guiana",
+       "emote": null
+    },
+    "Great Britain": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GBR",
+       "discord_name": "greatbritain",
+       "emote": null
+    },
+    "Greenland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GRL",
+       "discord_name": "greenland",
+       "emote": null
+    },
+    "Guadeloupe": {
+       "tz": null,
+       "location": null,
+       "abbrev": "GLP",
+       "discord_name": "guadeloupe",
+       "emote": null
+    },
+    "Kiribati": {
+       "tz": null,
+       "location": null,
+       "abbrev": "KIR",
+       "discord_name": "kiribati",
+       "emote": null
+    },
+    "Martinique": {
+       "tz": null,
+       "location": null,
+       "abbrev": "MTQ",
+       "discord_name": "martinique",
+       "emote": null
+    },
+    "Northern Cyprus": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TRNC",
+       "discord_name": "northern-cyprus",
+       "emote": null
+    },
+    "Northern Mariana Islands": {
+       "tz": null,
+       "location": null,
+       "abbrev": "NMI",
+       "discord_name": "northern-mariana",
+       "emote": null
+    },
+    "Reunion": {
+       "tz": null,
+       "location": null,
+       "abbrev": "REU",
+       "discord_name": "reunion",
+       "emote": null
+    },
+    "Saint Martin": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SMN",
+       "discord_name": "saint-martin",
+       "emote": null
+    },
+    "Sint Maarten": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SMA",
+       "discord_name": "sint-maarten",
+       "emote": null
+    },
+    "Turkey": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TUR",
+       "discord_name": "turkiye",
+       "emote": null
+    },
+    "Turkiye": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TUR",
+       "discord_name": "turkiye",
+       "emote": null
+    },
+    "Türkiye": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TUR",
+       "discord_name": "turkiye",
+       "emote": null
+    },
+    "Tuvalu": {
+       "tz": null,
+       "location": null,
+       "abbrev": "TUV",
+       "discord_name": "tuvalu",
+       "emote": null
+    },
+    "Vatican City": {
+       "tz": null,
+       "location": null,
+       "abbrev": "VAT",
+       "discord_name": "vatican",
+       "emote": null
+    },
+    "Zanzibar": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ZAN",
+       "discord_name": "zanzibar",
+       "emote": null
+    },
+    "Spain": {
+       "tz": null,
+       "location": null,
+       "abbrev": "ESP",
+       "discord_name": "spain",
+       "emote": null
+    },
+    "Sweden": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SWE",
+       "discord_name": "sweden",
+       "emote": null
+    },
+    "USA": {
+       "tz": null,
+       "location": null,
+       "abbrev": "USA",
+       "discord_name": "usa",
+       "emote": null,
+		"aliases": ["United States of America"]
+    },
+    "Uzbekistan": {
+       "tz": null,
+       "location": null,
+       "abbrev": "UZB",
+       "discord_name": "uzbekistan",
+       "emote": null
+    },
+    "Wales": {
+       "tz": null,
+       "location": null,
+       "abbrev": "WAL",
+       "discord_name": "wales",
+       "emote": null
+    },
+    "Switzerland": {
+       "tz": null,
+       "location": null,
+       "abbrev": "SUI",
+       "discord_name": "switzerland",
+       "emote": null
+    },
+    "Uruguay": {
+       "tz": null,
+       "location": null,
+       "abbrev": "URU",
+       "discord_name": "uruguay",
+       "emote": null
+    },
+    "Austin FC": {
+       "tz": "America/Chicago",
+       "location": "Austin, TX",
+       "abbrev": null,
+       "discord_name": "austin",
+       "emote": null
+    },
+    "Inter Miami CF": {
+       "tz": "America/New_York",
+       "location": "Miami, FL",
+       "abbrev": null,
+       "discord_name": "miami",
+       "emote": null
+    },
+    "Nashville SC": {
+       "tz": "America/Chicago",
+       "location": "Nashville, TN",
+       "abbrev": null,
+       "discord_name": "nashville",
+       "emote": null
+    },
+    "Charleston Battery": {
+       "tz": "America/New_York",
+       "location": "Charleston, SC",
+       "abbrev": null,
+       "discord_name": "battery",
+       "emote": null
+    },
+    "Atlanta United 2": {
+       "tz": "America/New_York",
+       "location": "Atlanta, GA",
+       "abbrev": null,
+       "discord_name": "atlanta2",
+       "emote": null
+    },
+"Bethlehem Steel FC": {
+       "tz": "America/New_York",
+       "location": "Chester, PA",
+       "abbrev": null,
+       "discord_name": "bethlehem-steel",
+       "emote": null
+    },
+"Birmingham Legion FC": {
+       "tz": "America/Chicago",
+       "location": "Birmingham, AL",
+       "abbrev": null,
+       "discord_name": "legion-fc",
+       "emote": null
+    },
+"Charlotte Independence": {
+       "tz": "America/New_York",
+       "location": "Charlotte, NC",
+       "abbrev": null,
+       "discord_name": "charlotte-independence",
+       "emote": null
+    },
+"Hartford Athletic": {
+       "tz": "America/New_York",
+       "location": "Hartford, CT",
+       "abbrev": null,
+       "discord_name": "hartford-athletic",
+       "emote": null
+    },
+"Indy Eleven": {
+       "tz": "America/Chicago",
+       "location": "Indianapolis, Indiana",
+       "abbrev": null,
+       "discord_name": "indy-eleven",
+       "emote": null
+    },
+"Loudoun United FC": {
+       "tz": "America/New_York",
+       "location": "Leesburg, VA",
+       "abbrev": null,
+       "discord_name": "loudoun",
+       "emote": null
+    },
+"Louisville City FC": {
+       "tz": "America/New_York",
+       "location": "Louisville, KY",
+       "abbrev": null,
+       "discord_name": "louisville",
+       "emote": null
+    },
+"Memphis 901 FC": {
+       "tz": "America/Chicago",
+       "location": "Memphis, TN",
+       "abbrev": null,
+       "discord_name": "memphis-901",
+       "emote": null
+    },
+"New York Red Bull II": {
+       "tz": "America/New_York",
+       "location": "Montclair, NJ",
+       "abbrev": null,
+       "discord_name": "nyrb2",
+       "emote": null
+    },
+"North Carolina FC": {
+       "tz": "America/New_York",
+       "location": "Cary, NC",
+       "abbrev": null,
+       "discord_name": "ncfc",
+       "emote": null
+    },
+"Pittsburgh Riverhounds SC": {
+       "tz": "America/New_York",
+       "location": "Pittsburgh, PA",
+       "abbrev": null,
+       "discord_name": "riverhounds",
+       "emote": null
+    },
+"Saint Louis FC": {
+       "tz": "America/Chicago",
+       "location": "Fenton, MO",
+       "abbrev": null,
+       "discord_name": "stlouis",
+       "emote": null
+    },
+"Swope Park Rangers": {
+       "tz": "America/Chicago",
+       "location": "Kansas City, KS",
+       "abbrev": null,
+       "discord_name": "swope-park",
+       "emote": null
+    },
+"Tampa Bay Rowdies": {
+       "tz": "America/New_York",
+       "location": "St. Petersburg, FL",
+       "abbrev": null,
+       "discord_name": "rowdies",
+       "emote": null
+    },
+"St. Louis City SC": {
+       "tz": "America/Chicago",
+       "location": "St. Louis, MO",
+       "abbrev": null,
+       "discord_name": "stlouis",
+       "emote": null
+    },
+"Austin Bold FC": {
+       "tz": "America/Chicago",
+       "location": "Austin, TX",
+       "abbrev": null,
+       "discord_name": "austin-bold",
+       "emote": null
+    },
+"Colorado Springs Switchbacks FC": {
+       "tz": "America/Denver",
+       "location": "Denver, CO",
+       "abbrev": null,
+       "discord_name": "switchbacks",
+       "emote": null
+    },
+"Fresno FC": {
+       "tz": "America/Los_Angeles",
+       "location": "Fresno, CA",
+       "abbrev": null,
+       "discord_name": "fresno",
+       "emote": null
+    },
+"El Paso Locomotive FC": {
+       "tz": "America/Denver",
+       "location": "El Paso, CA",
+       "abbrev": null,
+       "discord_name": "elpaso",
+       "emote": null
+    },
+"LA Galaxy II": {
+       "tz": "America/Los_Angeles",
+       "location": "Carson, CA",
+       "abbrev": null,
+       "discord_name": "lagalaxy2",
+       "emote": null
+    },
+"Las Vegas Lights FC": {
+       "tz": "America/Los_Angeles",
+       "location": "Las Vegas, NV",
+       "abbrev": null,
+       "discord_name": "lasvegas-lights",
+       "emote": null
+    },
+"New Mexico United": {
+       "tz": "America/Denver",
+       "location": "Albuquerque, NM",
+       "abbrev": null,
+       "discord_name": "newmexico-united",
+       "emote": null
+    },
+"Oklahoma City Energy FC": {
+       "tz": "America/Chicago",
+       "location": "Oklahoma City, OK",
+       "abbrev": null,
+       "discord_name": "okc-energy",
+       "emote": null
+    },
+"Orange County SC": {
+       "tz": "America/Los_Angeles",
+       "location": "Irvine, CA",
+       "abbrev": null,
+       "discord_name": "orange-county",
+       "emote": null
+    },
+"Phoenix Rising FC": {
+       "tz": "America/Denver",
+       "location": "Tempe, AZ",
+       "abbrev": null,
+       "discord_name": "phoenix-rising",
+       "emote": null
+    },
+"Portland Timbers 2": {
+       "tz": "America/Los_Angeles",
+       "location": "Portland, OR",
+       "abbrev": null,
+       "discord_name": "timbers2",
+       "emote": null
+    },
+"Real Monarchs": {
+       "tz": "America/Denver",
+       "location": "Herriman, UT",
+       "abbrev": null,
+       "discord_name": "real-monarchs",
+       "emote": null
+    },
+"Reno 1868 FC": {
+       "tz": "America/Los_Angeles",
+       "location": "Reno, NV",
+       "abbrev": null,
+       "discord_name": "reno1868",
+       "emote": null
+    },
+"Rio Grande Valley FC": {
+       "tz": "America/Chicago",
+       "location": "Edinburg, TX",
+       "abbrev": null,
+       "discord_name": "riogrande-valley",
+       "emote": null
+    },
+"Sacramento Republic FC": {
+       "tz": "America/Los_Angeles",
+       "location": "Sacramento, CA",
+       "abbrev": null,
+       "discord_name": "sac-republic",
+       "emote": null
+    },
+"San Antonio FC": {
+       "tz": "America/Chicago",
+       "location": "San Antonio, TX",
+       "abbrev": null,
+       "discord_name": "sanantonio",
+       "emote": null
+    },
+"Tacoma Defiance": {
+       "tz": "America/Los_Angeles",
+       "location": "Tacoma, WA",
+       "abbrev": null,
+       "discord_name": "tacoma-defiance",
+       "emote": null
+    },
+"Tulsa Roughnecks FC": {
+       "tz": "America/Chicago",
+       "location": "Tulsa, Oklahoma",
+       "abbrev": null,
+       "discord_name": "tulsa-roughnecks",
+       "emote": null
+    },
+"Master's Futbol Academy": {
+       "tz": "America/Toronto",
+       "location": "Scarborough, ON",
+       "abbrev": null,
+       "discord_name": "masters-fa",
+       "emote": null
+    },
+"Portmore United": {
+       "tz": "America/Jamaica",
+       "location": "Portmore, Jamaica",
+       "abbrev": null,
+       "discord_name": "portmore-united",
+       "emote": null
+    },
+	"Waterhouse FC": {
+        "tz": "America/Jamaica",
+        "location": null,
+        "abbrev": null,
+        "discord_name": "waterhouse",
+       "emote": null
+    },
+"Municipal Limeno": {
+       "tz": "America/El_Salvador",
+       "location": "Santa Rose de Lima, El Salvador",
+       "abbrev": null,
+       "discord_name": "municipal-limeno",
+       "emote": null
+    },
+"AD San Carlos": {
+       "tz": "America/Costa_Rica",
+       "location": "Ciudad Quesada, Costa Rica",
+       "abbrev": null,
+       "discord_name": "san-carlos",
+       "emote": null
+    },
+"Arcahaie FC": {
+       "tz": "America/Port-au-Prince",
+       "location": "Parc Saint-Yves, Haiti",
+       "abbrev": null,
+       "discord_name": "arcahaie",
+       "emote": null
+    },
+"CD FAS": {
+       "tz": "America/El_Salvador",
+       "location": "Parc Saint-Yves, Haiti",
+       "abbrev": null,
+       "discord_name": "cdfas",
+       "emote": null
+    },
+"Santos de Guápiles FC": {
+       "tz": "America/Costa_Rica",
+       "location": "Guápiles, Costa Rica",
+       "abbrev": null,
+       "discord_name": "santosguapiles",
+       "emote": null
+    },
+    "Guelph Union": {
+	"tz": "America/Toronto",
+	"location": "Guelph, ON",
+	"abbrev": null,
+	"discord_name": "guelph-union",
+       "emote": null
+    },
+    "Guelph United FC": {
+	"tz": "America/Toronto",
+	"location": "Guelph, ON",
+	"abbrev": null,
+	"discord_name": "guelph",
+       "emote": null
+    },
+    "CS Mont-Royal Outremont": {
+	"tz": "America/Toronto",
+	"location": "Mont-Royal/Outremont, QC",
+	"abbrev": null,
+	"discord_name": "csmro",
+       "emote": null
+    },
+    "Alliance United": {
+        "tz": "America/Toronto",
+        "location": "Scarborough, ON",
+        "abbrev": null,
+        "discord_name": "alliance",
+       "emote": null,
+		"aliases": ["Alliance United FC"]
+    },
+    "Blue Devils FC": {
+        "tz": "America/Toronto",
+        "location": "Oakville, ON",
+        "abbrev": null,
+        "discord_name": "blue-devils",
+       "emote": null
+    },
+    "Burlington SC": {
+        "tz": "America/Toronto",
+        "location": "Burlington, ON",
+        "abbrev": null,
+        "discord_name": "burlington",
+       "emote": null
+    },
+    "BVB IA Waterloo": {
+        "tz": "America/Toronto",
+        "location": "Waterloo, ON",
+        "abbrev": null,
+        "discord_name": "bvb-waterloo",
+       "emote": null
+    },
+    "Darby FC": {
+        "tz": "America/Toronto",
+        "location": "Whitby, ON",
+        "abbrev": null,
+        "discord_name": "darby",
+       "emote": null
+    },
+    "Electric City FC": {
+        "tz": "America/Toronto",
+        "location": "Peterborough, ON",
+        "abbrev": null,
+        "discord_name": "electric-city",
+       "emote": null
+    },
+    "Hamilton United": {
+        "tz": "America/Toronto",
+        "location": "Hamilton, ON",
+        "abbrev": null,
+        "discord_name": "hamilton-united",
+       "emote": null
+    },
+    "FC London": {
+        "tz": "America/Toronto",
+        "location": "London, ON",
+        "abbrev": null,
+        "discord_name": "london",
+       "emote": null
+    },
+    "North Mississauga SC": {
+        "tz": "America/Toronto",
+        "location": "Mississauga, ON",
+        "abbrev": null,
+        "discord_name": "north-mississauga",
+       "emote": null
+    },
+    "North Toronto Nitros": {
+        "tz": "America/Toronto",
+        "location": "Toronto, ON",
+        "abbrev": null,
+        "discord_name": "nitros",
+       "emote": null
+    },
+    "Pickering FC": {
+        "tz": "America/Toronto",
+        "location": "Pickering, ON",
+        "abbrev": null,
+        "discord_name": "pickering",
+       "emote": null
+    },
+    "ProStars FC": {
+        "tz": "America/Toronto",
+        "location": "Brampton, ON",
+        "abbrev": null,
+        "discord_name": "prostars",
+       "emote": null
+    },
+    "Scrosoppi FC": {
+        "tz": "America/Toronto",
+        "location": "Milton, ON",
+        "abbrev": null,
+        "discord_name": "scrosoppi",
+       "emote": null
+    },
+    "Sigma FC": {
+        "tz": "America/Toronto",
+        "location": "Mississauga, ON",
+        "abbrev": null,
+        "discord_name": "sigma",
+       "emote": null
+    },
+    "Simcoe County Rovers FC": {
+        "tz": "America/Toronto",
+        "location": "Barrie, ON",
+        "abbrev": null,
+        "discord_name": "simcoe",
+       "emote": null
+    },
+    "St. Catharines Roma Wolves": {
+        "tz": "America/Toronto",
+        "location": "St. Catharines, ON",
+        "abbrev": null,
+        "discord_name": "wolves",
+       "emote": null
+    },
+    "Unionville Milliken SC": {
+        "tz": "America/Toronto",
+        "location": "Markham, ON",
+        "abbrev": null,
+        "discord_name": "unionville",
+       "emote": null
+    },
+    "Windsor TFC": {
+        "tz": "America/Toronto",
+        "location": "Amherstburg, ON",
+        "abbrev": null,
+        "discord_name": "windsor-tfc",
+       "emote": null
+    },
+	"Woodbridge Strikers": {
+        "tz": "America/Toronto",
+        "location": "Woodbridge, ON",
+        "abbrev": null,
+        "discord_name": "woodbridge",
+       "emote": null
+    },
+	"Celtix du Haut-Richelieu": {
+        "tz": "America/Toronto",
+        "location": "Saint-Jean-sur-Richelieu, QC",
+        "abbrev": null,
+        "discord_name": "celtix",
+       "emote": null
+    },
+	"CS Lanaudière-Nord": {
+        "tz": "America/Toronto",
+        "location": "Joliette, QC",
+        "abbrev": null,
+        "discord_name": "lanaudiere",
+       "emote": null
+    },
+	"AS Laval": {
+        "tz": "America/Toronto",
+        "location": "Laval, QC",
+        "abbrev": null,
+        "discord_name": "aslaval",
+       "emote": null
+    },
+	"FC Laval": {
+        "tz": "America/Toronto",
+        "location": "FC Laval, QC",
+        "abbrev": null,
+        "discord_name": "fclaval",
+       "emote": null
+    },
+	"CS Longueuil": {
+        "tz": "America/Toronto",
+        "location": "Longueuil, QC",
+        "abbrev": null,
+        "discord_name": "longueuil",
+       "emote": null
+    },
+	"CF Montréal U23": {
+        "tz": "America/Toronto",
+        "location": "Montréal, QC",
+        "abbrev": null,
+        "discord_name": "cfmtl-u23",
+       "emote": null
+    },
+	"CS Saint-Laurent": {
+        "tz": "America/Toronto",
+        "location": "Saint-Laurent, QC",
+        "abbrev": null,
+        "discord_name": "stlaurent",
+       "emote": null
+    },
+	"CS St-Hubert": {
+        "tz": "America/Toronto",
+        "location": "Saint-Hubert, QC",
+        "abbrev": null,
+        "discord_name": "sthubert",
+       "emote": null
+    },
+	"Ottawa South United": {
+        "tz": "America/Toronto",
+        "location": "Ottawa, ON",
+        "abbrev": null,
+        "discord_name": "osu",
+       "emote": null
+    },
+	"Royal-Sélect de Beauport": {
+        "tz": "America/Toronto",
+        "location": "Québec, QC",
+        "abbrev": null,
+        "discord_name": "royalselect",
+       "emote": null
+    },
+	"Tecumseh SC": {
+        "tz": "America/Toronto",
+        "location": "Windsor, ON",
+        "abbrev": null,
+        "discord_name": "tecumseh",
+       "emote": null
+    },
+	"AS Chaudière-Ouest": {
+        "tz": "America/Toronto",
+        "location": "Lévis, QC",
+        "abbrev": null,
+        "discord_name": "chaudiere",
+       "emote": null
+    },
+	"Pierrefonds FC": {
+        "tz": "America/Toronto",
+        "location": "Lac St-Louis, QC",
+        "abbrev": null,
+        "discord_name": "pierrefonds",
+       "emote": null
+    },
+	"csapef-qc": {
+        "tz": "America/Toronto",
+        "location": "QC",
+        "abbrev": null,
+        "discord_name": "csapef-qc",
+       "emote": null
+    },
+	"Varsity FC": {
+        "tz": "America/Toronto",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "varsity",
+       "emote": null
+    },
+	"Altitude FC": {
+        "tz": "America/Vancouver",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "altitude",
+       "emote": null
+    },
+	"Rivers FC": {
+        "tz": "America/Vancouver",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "rivers",
+       "emote": null
+    },
+	"TSS Rovers": {
+        "tz": "America/Vancouver",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "rovers",
+       "emote": null,
+		"aliases": ["TSS FC Rovers"]
+    },
+	"Unity FC": {
+        "tz": "America/Vancouver",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "unity",
+       "emote": null
+    },
+	"Victoria Highlanders FC": {
+        "tz": "America/Vancouver",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "highlanders",
+       "emote": null
+    },
+	"NDC Ontario": {
+        "tz": "America/Toronto",
+        "location": "ON",
+        "abbrev": null,
+        "discord_name": "ndc-on",
+       "emote": null
+    },
+	"Calgary Blizzard": {
+        "tz": "America/Edmonton",
+        "location": "AB",
+        "abbrev": null,
+        "discord_name": "blizzard",
+       "emote": null
+    },
+	"Real Espana": {
+        "tz": "America/Tegucigalpa",
+        "location": "ON",
+        "abbrev": null,
+        "discord_name": "realespana",
+       "emote": null
+    },
+	"PEF Quebec": {
+        "tz": "America/Toronto",
+        "location": "ON",
+        "abbrev": null,
+        "discord_name": "pef-qc",
+       "emote": null
+    },
+	"Calgary Wild FC": {
+        "tz": "America/Edmonton",
+        "location": "AB",
+        "abbrev": null,
+        "discord_name": "wild",
+       "emote": null
+    },
+	"Halifax Tides FC": {
+        "tz": "America/Halifax",
+        "location": "NS",
+        "abbrev": null,
+        "discord_name": "tides",
+       "emote": null
+    },
+	"Montréal Roses FC": {
+        "tz": "America/Toronto",
+        "location": "QC",
+        "abbrev": null,
+        "discord_name": "roses",
+       "emote": null
+    },
+	"Ottawa Rapid FC": {
+        "tz": "America/Toronto",
+        "location": "ON",
+        "abbrev": null,
+        "discord_name": "rapid",
+       "emote": null
+    },
+	"AFC Toronto": {
+        "tz": "America/Toronto",
+        "location": "ON",
+        "abbrev": null,
+        "discord_name": "afctoronto",
+       "emote": null
+    },
+	"Vancouver Rise FC": {
+        "tz": "America/Vancouver",
+        "location": "BC",
+        "abbrev": null,
+        "discord_name": "rise",
+       "emote": null
+    },
+
+
+
+
+	"Santa Fe FC": {
+        "tz": "America/Panama",
+        "location": "Santa Fe, Panama",
+        "abbrev": null,
+        "discord_name": "santafe",
+       "emote": null
+    }
+}
