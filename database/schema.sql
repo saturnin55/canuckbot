@@ -1,15 +1,14 @@
-CREATE TABLE team_aliases (
+CREATE TABLE IF NOT EXISTS team_aliases (
 id_team INTEGER,
 alias TEXT
 );
-CREATE TABLE teams (
+CREATE TABLE IF NOT EXISTS teams (
 id_team INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
    tz TEXT default "American/Toronto",
 handle TEXT DEFAULT NULL
 );
-CREATE TABLE sqlite_sequence(name,seq);
-CREATE TABLE competitions (
+CREATE TABLE IF NOT EXISTS competitions (
 id_competition INTEGER PRIMARY KEY AUTOINCREMENT,
 handle TEXT NOT NULL,
 flag_active BOOLEAN default TRUE,
@@ -21,7 +20,7 @@ color TEXT default NULL,
 roleid_optout TEXT default NULL,
 category TEXT default NULL,
 flag_intl BOOLEAN default 0);
-CREATE TABLE matches (
+CREATE TABLE IF NOT EXISTS matches (
 id_match INTEGER PRIMARY KEY AUTOINCREMENT,
 home INTEGER NOT NULL,
 away INTEGER NOT NULL,
@@ -40,15 +39,15 @@ msgid_welcome TEXT default NULL,
 hours_before INTEGER default NULL,
 hours_after INTEGER default NULL,
 _key TEXT default NULL);
-CREATE TABLE info (
+CREATE TABLE IF NOT EXISTS info (
  id_info INTEGER PRIMARY KEY AUTOINCREMENT,
  obj TEXT NOT NULL,
  field TEXT NOT NULL,
  info TEXT DEFAULT NULL
  );
-CREATE TABLE managers (
+CREATE TABLE IF NOT EXISTS managers (
 userid INTEGER NOT NULL PRIMARY KEY,
 dt_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 added_by INTEGER DEFAULT NULL
 );
-CREATE TABLE config (field TEXT PRIMARY KEY NOT NULL, value TEXT);
+CREATE TABLE IF NOT EXISTS config (field TEXT PRIMARY KEY NOT NULL, value TEXT);
