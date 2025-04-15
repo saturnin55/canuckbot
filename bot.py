@@ -173,7 +173,7 @@ class DiscordBot(commands.Bot):
                         f"Failed to load extension {extension}\n{exception}"
                     )
 
-    @tasks.loop(minutes=2.0)
+    @tasks.loop(minutes=5.0)
     async def status_task(self) -> None:
         """
         Setup the game status task of the bot.
@@ -241,13 +241,11 @@ class DiscordBot(commands.Bot):
             "Eustáquio be the midfield general we needed!",
             "Larin ghost into the box (again)!",
             "Johnston leave wingers in his back pocket!",
-            "Jesse Marsch turn Canada into Red Bull FC!",
             "Eustáquio run the midfield like a CEO!",
             "Larin score while looking half-asleep!",
             "Johnston prove fullbacks can be cool!"
         ]
 
-        #await self.change_presence(activity=discord.Game(random.choice(statuses)))
         await self.change_presence(activity=discord.Activity( name=random.choice(statuses), 
                                     type=discord.ActivityType.watching))
 
