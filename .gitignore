@@ -176,3 +176,4 @@ cython_debug/
 # CanuckBot stuff
 setup/
 database/database.db
+discord.log
