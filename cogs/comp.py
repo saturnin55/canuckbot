@@ -51,13 +51,14 @@ class CompCog(commands.Cog, name="comp"):
         print("a2")
         if not comp.get('id_competition'):
             await context.send(f"ERR: couldn't find a matching competition.")
+            return
 
         print("a3")
-        #print(comp.data)
+        # print(comp.data)
         embed = discord.Embed(title="Competition", color=discord.Color.blue())
         buffer = ""
         for f in comp.FIELDS:
-            t = comp.FIELDS[f]['type'] 
+            t = comp.FIELDS[f]['type']
             _type = comp.get_field_type(key)
             value = comp.get(f)
 
@@ -90,7 +91,7 @@ class CompCog(commands.Cog, name="comp"):
 
             buffer += f"```{f:<15} : {v}```"
 
-        #await context.send(embed=embed)
+        # await context.send(embed=embed)
         await context.send(f"{buffer}")
 
     @comp.command(
@@ -102,6 +103,7 @@ class CompCog(commands.Cog, name="comp"):
     # )
     async def comp_edit(self, context: Context, key: str = None, field: str = None, value: str = None):
         pass
+
 
 async def setup(bot) -> None:
     await bot.add_cog(CompCog(bot))
