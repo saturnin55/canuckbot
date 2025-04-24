@@ -23,11 +23,14 @@ from database import DatabaseManager
 from CanuckBot.Manager import Manager
 import CanuckBot
 
+load_dotenv()
+
 if not os.path.isfile(f"{os.path.realpath(os.path.dirname(__file__))}/config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
 else:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
         config = json.load(file)
+        config['invite_link'] = os.getenv("INVITE_LINK")
 
 """	
 Setup bot intents (events restrictions)
@@ -117,7 +120,8 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(LoggingFormatter())
 # File handler
-file_handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
+file_handler = logging.FileHandler(
+    filename="discord.log", encoding="utf-8", mode="w")
 file_handler_formatter = logging.Formatter(
     "[{asctime}] [{levelname:<8}] {name}: {message}", "%Y-%m-%d %H:%M:%S", style="{"
 )
@@ -246,8 +250,8 @@ class DiscordBot(commands.Bot):
             "Johnston prove fullbacks can be cool!"
         ]
 
-        await self.change_presence(activity=discord.Activity( name=random.choice(statuses), 
-                                    type=discord.ActivityType.watching))
+        await self.change_presence(activity=discord.Activity(name=random.choice(statuses),
+                                                             type=discord.ActivityType.watching))
 
     @status_task.before_loop
     async def before_status_task(self) -> None:
@@ -316,7 +320,8 @@ class DiscordBot(commands.Bot):
             hours, minutes = divmod(minutes, 60)
             hours = hours % 24
             embed = discord.Embed(
-                description=f"**Please slow down** - You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.",
+                description=f"**Please slow down** - You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {
+                    f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.",
                 color=0xE02B2B,
             )
             await context.send(embed=embed)
@@ -361,8 +366,6 @@ class DiscordBot(commands.Bot):
             raise error
 
 
-load_dotenv()
-
 bot = DiscordBot()
-#bot = DiscordBot(owner_id = os.getenv("OWNER"))
+# bot = DiscordBot(owner_id = os.getenv("OWNER"))
 bot.run(os.getenv("TOKEN"))
