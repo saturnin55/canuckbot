@@ -1,3 +1,5 @@
+import sqlite3
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -17,6 +19,7 @@ from CanuckBot.constants import (
     TYPE_TIMESTAMP,
     TYPE_URL,
 )
+from database.db_utils import connect_db
 from decorators.checks import is_manager
 
 
@@ -44,13 +47,22 @@ class CompCog(commands.Cog, name="comp"):
     @is_manager()
     @app_commands.describe()
     async def comp_list(self, context: Context) -> None:
-        await context.send("comp list")
-        c = Competition(self.bot)
-        await c.list()
+        try:
+            conn = connect_db()
+        except sqlite3.Error as e:
+            print(f"{e}")
 
-        # for item in competitions:
+        cursor = conn.cursor()
+        cursor.execute("SELECT name, handle FROM competitions WHERE flag_active = TRUE")
+        results = cursor.fetchall()
+        print(results)
+        conn.close()
 
-        pass
+        buffer = ""
+        for name, handle in results:
+            buffer += f"```{handle:<5} : {name}```"
+
+        await context.send(f"{buffer}")
 
     @comp.command(
         name="show",
