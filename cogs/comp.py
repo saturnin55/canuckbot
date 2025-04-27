@@ -35,6 +35,12 @@ class CompCog(commands.Cog, name="comp"):
     @app_commands.describe(
     )
     async def comp_list(self, context: Context) -> None:
+        await context.send(f"comp list")
+        c = Competition(self.bot)
+        competitions = await c.list()
+
+        #for item in competitions:
+            
         pass
 
     @comp.command(

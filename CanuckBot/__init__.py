@@ -1,6 +1,5 @@
 from typing import Any
 from .constants import *
-#from CanuckBot import Info
 from .utils import timestamp2str, get_discord_user, key_value_exists, get_discord_channel, get_discord_category, is_valid_type, get_field_value, regex_is_integer, pp_discord_channel, pp_discord_category, pp_hex_color, pp_discord_role, get_discord_role, pp_discord_user, pp_timestamp, pp_url, pp_bool, pp_string, pp_int, get_type_name, is_snowflakeid
 
 __all__ = ["timestamp2str", "get_discord_user", "get_discord_channel", "key_value_exists", "get_discord_category", "is_valid_type", "CanuckBotBase","get_field_value","regex_is_integer", "pp_discord_channel", "pp_discord_category", "pp_hex_color", "pp_discord_role", "get_discord_role", "pp_discord_user", "pp_timestamp", "pp_url", "pp_bool", "pp_string", "pp_int", "get_type_name", "is_snowflakeid" ]
