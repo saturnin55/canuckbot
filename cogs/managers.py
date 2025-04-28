@@ -1,11 +1,11 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 from discord.ext.commands import Context
+
 import CanuckBot
 from CanuckBot.Info import Info
 from CanuckBot.Manager import Manager
-from CanuckBot.constants import *
 from decorators.checks import is_manager
 
 
@@ -21,7 +21,8 @@ class ManagerCog(commands.Cog, name="managers"):
     async def mngr(self, context: Context) -> None:
         if context.invoked_subcommand is None:
             embed = discord.Embed(
-                description="Please specify a subcommand.\n\n**Subcommands:**\n`add` - Add a new CanuckBot manager.\n`del` - Remove a CanuckBot manager.\n`list` - List all CanuckBot managers.", color=0xE02B2B,
+                description="Please specify a subcommand.\n\n**Subcommands:**\n`add` - Add a new CanuckBot manager.\n`del` - Remove a CanuckBot manager.\n`list` - List all CanuckBot managers.",
+                color=0xE02B2B,
             )
         await context.send(embed=embed)
 
@@ -38,9 +39,11 @@ class ManagerCog(commands.Cog, name="managers"):
         manager = Manager(self.bot)
         ret = await manager.add(user.id, invoking_user.id)
         if ret:
-            await context.send(f'{user.name} added as a new CanuckBot manager.')
+            await context.send(f"{user.name} added as a new CanuckBot manager.")
         else:
-            await context.send(f'ERR: There was an error trying to add {user.name} as a new CanuckBot manager.')
+            await context.send(
+                f"ERR: There was an error trying to add {user.name} as a new CanuckBot manager."
+            )
 
     @mngr.command(
         name="del",
@@ -51,14 +54,18 @@ class ManagerCog(commands.Cog, name="managers"):
         user="The user to remove as a CanuckBot manager.",
     )
     async def mngr_del(self, context: Context, user: discord.User) -> None:
-        m = Manager(self.bot) 
+        m = Manager(self.bot)
         managers = await m.list()
 
-        if(CanuckBot.key_value_exists(managers, 'userid', user.id)):
-            ret = await m.remove(user.id)
-            await context.send(f'{user.name} removed as a CanuckBot manager.', ephemeral=True)
+        if CanuckBot.key_value_exists(managers, "userid", user.id):
+            await m.remove(user.id)
+            await context.send(
+                f"{user.name} removed as a CanuckBot manager.", ephemeral=True
+            )
         else:
-            await context.send(f'{user.name} is currently not a CanuckBot manager.', ephemeral=True)
+            await context.send(
+                f"{user.name} is currently not a CanuckBot manager.", ephemeral=True
+            )
 
     @mngr.command(
         name="list",
@@ -68,20 +75,24 @@ class ManagerCog(commands.Cog, name="managers"):
     # @app_commands.describe(
     # )
     async def mngr_list(self, context: Context):
-        m = Manager(self.bot) 
+        m = Manager(self.bot)
         managers = await m.list()
 
         embed = discord.Embed(title="CanuckBot Managers", color=discord.Color.blue())
         for item in managers:
             dt_added = CanuckBot.timestamp2str(item["dt_added"])
 
-            manager = await CanuckBot.get_discord_user(context, self.bot, item["userid"])
+            manager = await CanuckBot.get_discord_user(
+                context, self.bot, item["userid"]
+            )
             if manager:
                 _manager = f"{manager.display_name} [{manager.id}]"
             else:
                 _manager = f"Error ({manager.id}"
 
-            added_by = await CanuckBot.get_discord_user(context, self.bot, item["added_by"])
+            added_by = await CanuckBot.get_discord_user(
+                context, self.bot, item["added_by"]
+            )
             if added_by:
                 _added_by = f"{added_by.display_name}"
             else:
@@ -91,13 +102,13 @@ class ManagerCog(commands.Cog, name="managers"):
                 embed.add_field(
                     name=f"{_manager}",
                     value=f"Added: {dt_added}\nSuper Manager",
-                    inline=False  # Set to True to make columns
+                    inline=False,  # Set to True to make columns
                 )
             else:
                 embed.add_field(
                     name=f"{_manager}",
                     value=f"Added: {dt_added}\nby: {_added_by}",
-                    inline=False  # Set to True to make columns
+                    inline=False,  # Set to True to make columns
                 )
 
         await context.send(embed=embed)
@@ -111,23 +122,24 @@ class ManagerCog(commands.Cog, name="managers"):
         field="The field to get info on.",
     )
     async def mngr_info(self, context: Context, field: str = None) -> None:
-
         manager = await Manager.create(self.bot)
 
         if not manager.field_exists(field):
-            await context.send(f'ERR: manager.{field} is not defined.')
+            await context.send(f"ERR: manager.{field} is not defined.")
             return
 
-        objinfo = await Info.create(self.bot, 'manager', field)
+        objinfo = await Info.create(self.bot, "manager", field)
         if objinfo.info == "":
             info = "n/a"
         else:
             info = objinfo.info
 
         if info:
-            await context.send(f'manager.{field} : `{info}`')
+            await context.send(f"manager.{field} : `{info}`")
         else:
-            await context.send('ERR: There was an error trying to get info from the database.')
+            await context.send(
+                "ERR: There was an error trying to get info from the database."
+            )
 
     @mngr.command(
         name="setinfo",
@@ -137,10 +149,12 @@ class ManagerCog(commands.Cog, name="managers"):
     @app_commands.describe(
         field="The field to set info on.",
     )
-    async def mngr_setinfo(self, context: Context, field: str = None, info_text: str = None) -> bool:
-        objinfo = await Info.create(self.bot, 'manager', field)
+    async def mngr_setinfo(
+        self, context: Context, field: str = None, info_text: str = None
+    ) -> bool:
+        objinfo = await Info.create(self.bot, "manager", field)
         if await objinfo.set(info_text):
-            await context.send(f'manager.{field} updated : `{info_text}`')
+            await context.send(f"manager.{field} updated : `{info_text}`")
         else:
             await context.send(f"ERR: couldn't update manager.{field}")
 

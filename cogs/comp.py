@@ -1,10 +1,22 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 from discord.ext.commands import Context
+
 import CanuckBot
 from CanuckBot.Competition import Competition
-from CanuckBot.constants import *
+from CanuckBot.constants import (
+    TYPE_BOOL,
+    TYPE_COLOR,
+    TYPE_DISCORD_CATEGORYID,
+    TYPE_DISCORD_CHANNELID,
+    TYPE_DISCORD_ROLEID,
+    TYPE_DISCORD_USERID,
+    TYPE_INT,
+    TYPE_STRING,
+    TYPE_TIMESTAMP,
+    TYPE_URL,
+)
 from decorators.checks import is_manager
 
 
@@ -20,7 +32,8 @@ class CompCog(commands.Cog, name="comp"):
     async def comp(self, context: Context) -> None:
         if context.invoked_subcommand is None:
             embed = discord.Embed(
-                description="Please specify a subcommand.\n\n**Subcommands:**\n`list` - List all competitions.\n`show` - Show the details of a competition.\nedit - Edit a competition\ndel - Remove a competition\nadd - Add a competition\nupcoming - Show upcoming matches of a competition", color=0xE02B2B,
+                description="Please specify a subcommand.\n\n**Subcommands:**\n`list` - List all competitions.\n`show` - Show the details of a competition.\nedit - Edit a competition\ndel - Remove a competition\nadd - Add a competition\nupcoming - Show upcoming matches of a competition",
+                color=0xE02B2B,
             )
         await context.send(embed=embed)
 
@@ -29,15 +42,14 @@ class CompCog(commands.Cog, name="comp"):
         description="List all competitions.",
     )
     @is_manager()
-    @app_commands.describe(
-    )
+    @app_commands.describe()
     async def comp_list(self, context: Context) -> None:
         await context.send("comp list")
         c = Competition(self.bot)
-        competitions = await c.list()
+        await c.list()
 
-        #for item in competitions:
-            
+        # for item in competitions:
+
         pass
 
     @comp.command(
@@ -52,16 +64,14 @@ class CompCog(commands.Cog, name="comp"):
         print("a1")
         comp = await Competition.create(self.bot, key)
         print("a2")
-        if not comp.get('id_competition'):
+        if not comp.get("id_competition"):
             await context.send("ERR: couldn't find a matching competition.")
             return
 
         print("a3")
-        # print(comp.data)
-        embed = discord.Embed(title="Competition", color=discord.Color.blue())
         buffer = ""
         for f in comp.FIELDS:
-            t = comp.FIELDS[f]['type']
+            # t = comp.FIELDS[f]['type']
             _type = comp.get_field_type(key)
             value = comp.get(f)
 
@@ -72,7 +82,9 @@ class CompCog(commands.Cog, name="comp"):
                 category = await CanuckBot.get_discord_user(context, self.bot, value)
                 v = CanuckBot.pp_discord_user(category)
             elif _type == TYPE_DISCORD_CATEGORYID:
-                category = await CanuckBot.get_discord_category(context, self.bot, value)
+                category = await CanuckBot.get_discord_category(
+                    context, self.bot, value
+                )
                 v = CanuckBot.pp_discord_category(category)
             elif _type == TYPE_DISCORD_ROLEID:
                 role = await CanuckBot.get_discord_role(context, self.bot, value)
@@ -104,7 +116,9 @@ class CompCog(commands.Cog, name="comp"):
     @is_manager()
     # @app_commands.describe(
     # )
-    async def comp_edit(self, context: Context, key: str = None, field: str = None, value: str = None):
+    async def comp_edit(
+        self, context: Context, key: str = None, field: str = None, value: str = None
+    ):
         pass
 
 

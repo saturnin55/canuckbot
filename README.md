@@ -123,6 +123,12 @@ python bot.py
 
 > **Note** You may need to replace `python` with `py`, `python3`, `python3.11`, etc. depending on what Python versions you have installed on the machine.
 
+## Linting and Formatting
+
+Ruff is used as the linter and formatter. It is installed as part of the requirements, and is run using a pre-commit hook defined in the .githooks folder. Ruff can also be installed as an extension for your code editor for inline hints.
+
+Use `git config core.hooksPath .githooks` to set the hooks directory for this repository.
+
 ## Issues or Questions
 
 If you have any issues or questions of how to code a specific command, you can:

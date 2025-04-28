@@ -60,10 +60,11 @@ class DatabaseManager:
                 else:
                     return False
         except aiosqlite.Error as e:
-            formatted_sql = sql.replace("?", "{}").format(*[repr(p) for p in [sql, values]])
+            formatted_sql = sql.replace("?", "{}").format(
+                *[repr(p) for p in [sql, values]]
+            )
             print(f"ERR Database.update(): {e}, query : |{formatted_sql}|")
             return False
-    
 
     async def insert(self, sql: str, values: list) -> bool:
         try:
@@ -81,9 +82,7 @@ class DatabaseManager:
         print(userid)
         rows = await self.connection.execute(
             "SELECT userid FROM managers WHERE userid=? ORDER BY userid DESC LIMIT 1",
-            (
-                userid,
-            ),
+            (userid,),
         )
         async with rows as cursor:
             result = await cursor.fetchone()
@@ -97,4 +96,3 @@ class DatabaseManager:
                 ),
             )
             await self.connection.commit()
-

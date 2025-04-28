@@ -1,5 +1,6 @@
 import pytz
 
+
 class TimeZone:
     def __init__(self, tz: str):
         if not self.validate_timezone(tz):

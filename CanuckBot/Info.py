@@ -1,5 +1,4 @@
-
-class Info():
+class Info:
     bot = None
     id_info = None
     obj = None
@@ -27,11 +26,13 @@ class Info():
 
         return instance
 
-    async def get(self) -> [str, bool]:
+    async def get(self) -> str | bool:
         if self.field is None:
             return False
 
-        row = await self.bot.database.get_one("SELECT * FROM info WHERE obj = ? AND field = ?", [self.obj, self.field])
+        row = await self.bot.database.get_one(
+            "SELECT * FROM info WHERE obj = ? AND field = ?", [self.obj, self.field]
+        )
         if not row:
             return False
         else:
@@ -42,9 +43,14 @@ class Info():
             info = ""
 
         if self.id_info is None:
-            ret = await self.bot.database.insert("INSERT INTO info (info, obj, field) VALUES (?, ?, ?)", [info, self.obj, self.field])
+            ret = await self.bot.database.insert(
+                "INSERT INTO info (info, obj, field) VALUES (?, ?, ?)",
+                [info, self.obj, self.field],
+            )
         else:
-            ret =  await self.bot.database.update("UPDATE info SET info = ? WHERE id_info = ?", [info, self.id_info])
+            ret = await self.bot.database.update(
+                "UPDATE info SET info = ? WHERE id_info = ?", [info, self.id_info]
+            )
 
         if ret:
             self.info = info
