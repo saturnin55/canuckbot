@@ -1,6 +1,4 @@
-import time
 import aiosqlite
-import CanuckBot
 from . import CanuckBotBase
 from CanuckBot.constants import *
 

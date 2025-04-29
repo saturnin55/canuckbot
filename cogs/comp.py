@@ -1,11 +1,8 @@
-import typing
 import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import Context
-from datetime import datetime
 import CanuckBot
-from CanuckBot.Info import Info
 from CanuckBot.Competition import Competition
 from CanuckBot.constants import *
 from decorators.checks import is_manager
@@ -35,7 +32,7 @@ class CompCog(commands.Cog, name="comp"):
     @app_commands.describe(
     )
     async def comp_list(self, context: Context) -> None:
-        await context.send(f"comp list")
+        await context.send("comp list")
         c = Competition(self.bot)
         competitions = await c.list()
 
@@ -56,7 +53,7 @@ class CompCog(commands.Cog, name="comp"):
         comp = await Competition.create(self.bot, key)
         print("a2")
         if not comp.get('id_competition'):
-            await context.send(f"ERR: couldn't find a matching competition.")
+            await context.send("ERR: couldn't find a matching competition.")
             return
 
         print("a3")

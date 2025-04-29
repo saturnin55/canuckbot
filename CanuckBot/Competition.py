@@ -1,5 +1,3 @@
-import time
-import aiosqlite
 import CanuckBot
 from . import CanuckBotBase
 from CanuckBot.constants import *
@@ -41,12 +39,12 @@ class Competition(CanuckBotBase):
         return instance
 
     async def load_by_id(self, id_competition):
-        row = await self.database.get_one(f"SELECT * FROM competitions WHERE id_competition = ?", [ id_competition ])
+        row = await self.database.get_one("SELECT * FROM competitions WHERE id_competition = ?", [ id_competition ])
         self.load_data(row)
 
     async def load_by_handle(self, handle):
         print("x1")
-        row = await self.database.get_one(f"SELECT * FROM competitions WHERE handle = ?", [ handle ])
+        row = await self.database.get_one("SELECT * FROM competitions WHERE handle = ?", [ handle ])
         print("x2")
         self.load_data(row)
         print("x3")
@@ -55,7 +53,7 @@ class Competition(CanuckBotBase):
         value = CanuckBot.get_field_value(self.FIELDS[field]['type'], value)
         if not CanuckBot.is_valid_type(self.FIELDS[field]['type'], value):
             return False
-        return await self.bot.database.update(f"UPDATE config SET value = ? WHERE field = ?", [value, field])
+        return await self.bot.database.update("UPDATE config SET value = ? WHERE field = ?", [value, field])
 
     def get(self, field=None) -> [str, bool]:
         if self.data.get(field) is None:

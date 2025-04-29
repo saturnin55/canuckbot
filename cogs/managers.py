@@ -1,9 +1,7 @@
-import typing
 import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import Context
-from datetime import datetime
 import CanuckBot
 from CanuckBot.Info import Info
 from CanuckBot.Manager import Manager
@@ -129,7 +127,7 @@ class ManagerCog(commands.Cog, name="managers"):
         if info:
             await context.send(f'manager.{field} : `{info}`')
         else:
-            await context.send(f'ERR: There was an error trying to get info from the database.')
+            await context.send('ERR: There was an error trying to get info from the database.')
 
     @mngr.command(
         name="setinfo",

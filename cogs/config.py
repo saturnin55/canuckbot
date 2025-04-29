@@ -1,9 +1,7 @@
-import typing
 import discord
 from discord.ext import commands
 from discord import app_commands
 from discord.ext.commands import Context
-from datetime import datetime
 import CanuckBot
 from CanuckBot.Config import Config
 from CanuckBot.Info import Info
@@ -39,9 +37,9 @@ class ConfigCog(commands.Cog, name="config"):
     async def config_set(self, context: Context, field: str = None, value: str = None) -> None:
         config = await Config.create(self.bot)
         if await config.update(field, value):
-            await context.send(f'Configuration updated.')
+            await context.send('Configuration updated.')
         else:
-            await context.send(f'ERR: There was an error trying to update the config.')
+            await context.send('ERR: There was an error trying to update the config.')
 
     @config.command(
         name="info",
@@ -68,7 +66,7 @@ class ConfigCog(commands.Cog, name="config"):
         if info:
             await context.send(f'config.{field} : `{info}`')
         else:
-            await context.send(f'ERR: There was an error trying to get info from the database.')
+            await context.send('ERR: There was an error trying to get info from the database.')
 
     @config.command(
         name="setinfo",

@@ -1,6 +1,5 @@
 # db_utils.py
 import sqlite3
-from discord.ext import commands
 
 DB_PATH = 'database/database.db'  # Path to your SQLite database
 

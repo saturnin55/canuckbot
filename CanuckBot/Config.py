@@ -1,5 +1,3 @@
-import time
-import aiosqlite
 import CanuckBot
 from . import CanuckBotBase
 #from . import Info
@@ -34,7 +32,7 @@ class Config(CanuckBotBase):
         value = CanuckBot.get_field_value(self.get_field_type(field), value)
         if not CanuckBot.is_valid_type(self.get_field_type(field), value):
             return False
-        return await self.bot.database.update(f"UPDATE config SET value = ? WHERE field = ?", [value, field])
+        return await self.bot.database.update("UPDATE config SET value = ? WHERE field = ?", [value, field])
 
     async def get(self, field=None) -> [str, bool]:
         if self.data.get(field) is None:

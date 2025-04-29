@@ -20,8 +20,6 @@ from discord.ext.commands import Context
 from dotenv import load_dotenv
 
 from database import DatabaseManager
-from CanuckBot.Manager import Manager
-import CanuckBot
 
 load_dotenv()
 
