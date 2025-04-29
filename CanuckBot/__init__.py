@@ -1,8 +1,67 @@
 from typing import Any
-from .constants import *
-from .utils import timestamp2str, get_discord_user, key_value_exists, get_discord_channel, get_discord_category, is_valid_type, get_field_value, regex_is_integer, pp_discord_channel, pp_discord_category, pp_hex_color, pp_discord_role, get_discord_role, pp_discord_user, pp_timestamp, pp_url, pp_bool, pp_string, pp_int, get_type_name, is_snowflakeid
 
-__all__ = ["timestamp2str", "get_discord_user", "get_discord_channel", "key_value_exists", "get_discord_category", "is_valid_type", "CanuckBotBase","get_field_value","regex_is_integer", "pp_discord_channel", "pp_discord_category", "pp_hex_color", "pp_discord_role", "get_discord_role", "pp_discord_user", "pp_timestamp", "pp_url", "pp_bool", "pp_string", "pp_int", "get_type_name", "is_snowflakeid" ]
+from .constants import (
+    TYPE_BOOL,
+    TYPE_COLOR,
+    TYPE_DISCORD_CATEGORYID,
+    TYPE_DISCORD_CHANNELID,
+    TYPE_DISCORD_MESSAGEID,
+    TYPE_DISCORD_ROLEID,
+    TYPE_DISCORD_USERID,
+    TYPE_INT,
+    TYPE_STRING,
+    TYPE_TIMESTAMP,
+    TYPE_URL,
+)
+from .utils import (
+    get_discord_category,
+    get_discord_channel,
+    get_discord_role,
+    get_discord_user,
+    get_field_value,
+    get_type_name,
+    is_snowflakeid,
+    is_valid_type,
+    key_value_exists,
+    pp_bool,
+    pp_discord_category,
+    pp_discord_channel,
+    pp_discord_role,
+    pp_discord_user,
+    pp_hex_color,
+    pp_int,
+    pp_string,
+    pp_timestamp,
+    pp_url,
+    regex_is_integer,
+    timestamp2str,
+)
+
+__all__ = [
+    "timestamp2str",
+    "get_discord_user",
+    "get_discord_channel",
+    "key_value_exists",
+    "get_discord_category",
+    "is_valid_type",
+    "CanuckBotBase",
+    "get_field_value",
+    "regex_is_integer",
+    "pp_discord_channel",
+    "pp_discord_category",
+    "pp_hex_color",
+    "pp_discord_role",
+    "get_discord_role",
+    "pp_discord_user",
+    "pp_timestamp",
+    "pp_url",
+    "pp_bool",
+    "pp_string",
+    "pp_int",
+    "get_type_name",
+    "is_snowflakeid",
+]
+
 
 class CanuckBotBase:
     obj = None
@@ -13,7 +72,7 @@ class CanuckBotBase:
         self.database = bot.database
 
     def val(field: str, flag_raw: bool = True) -> Any:
-        pass 
+        pass
 
     def get_field_type(self, field: str) -> Any:
         if self.field_exists(field):
@@ -43,11 +102,18 @@ class CanuckBotBase:
                 self.data[key] = None
                 return True
 
-            if _type in [ TYPE_INT, TYPE_DISCORD_USERID, TYPE_DISCORD_CHANNELID, TYPE_DISCORD_CATEGORYID, TYPE_DISCORD_ROLEID, TYPE_DISCORD_MESSAGEID]:
+            if _type in [
+                TYPE_INT,
+                TYPE_DISCORD_USERID,
+                TYPE_DISCORD_CHANNELID,
+                TYPE_DISCORD_CATEGORYID,
+                TYPE_DISCORD_ROLEID,
+                TYPE_DISCORD_MESSAGEID,
+            ]:
                 self.data[key] = int(value)
             elif _type == TYPE_BOOL:
                 self.data[key] = bool(value)
-            elif _type in [ TYPE_STRING, TYPE_URL, TYPE_COLOR]:
+            elif _type in [TYPE_STRING, TYPE_URL, TYPE_COLOR]:
                 self.data[key] = str(value)
             elif _type == TYPE_TIMESTAMP:
                 self.data[key] = int(value)
@@ -56,19 +122,19 @@ class CanuckBotBase:
 
         return True
 
-    #async def get_field_info(self, field=None) -> str:
-         
-        #else:
-        #    return "—"
+    # async def get_field_info(self, field=None) -> str:
 
-    #async def set_field_info(self, obj: str = None, field=None, value:str = None) -> bool:
+    # else:
+    #    return "—"
+
+    # async def set_field_info(self, obj: str = None, field=None, value:str = None) -> bool:
     #    pass
     def print(self):
         print(f"{self.obj:<12}:")
         print("=============")
         for f in self.FIELDS:
-            t = self.FIELDS[f]['type']
-            _type = get_type_name(self.FIELDS[f]['type'])
+            # t = self.FIELDS[f]['type']
+            _type = get_type_name(self.FIELDS[f]["type"])
             v = self.get(f)
             if not v:
                 print(f"   {f:<15} {_type:<15} : |—|")

@@ -28,7 +28,7 @@ if not os.path.isfile(f"{os.path.realpath(os.path.dirname(__file__))}/config.jso
 else:
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
         config = json.load(file)
-        config['invite_link'] = os.getenv("INVITE_LINK")
+        config["invite_link"] = os.getenv("INVITE_LINK")
 
 """	
 Setup bot intents (events restrictions)
@@ -118,8 +118,7 @@ logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(LoggingFormatter())
 # File handler
-file_handler = logging.FileHandler(
-    filename="discord.log", encoding="utf-8", mode="w")
+file_handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 file_handler_formatter = logging.Formatter(
     "[{asctime}] [{levelname:<8}] {name}: {message}", "%Y-%m-%d %H:%M:%S", style="{"
 )
@@ -245,11 +244,14 @@ class DiscordBot(commands.Bot):
             "Johnston leave wingers in his back pocket!",
             "Eustáquio run the midfield like a CEO!",
             "Larin score while looking half-asleep!",
-            "Johnston prove fullbacks can be cool!"
+            "Johnston prove fullbacks can be cool!",
         ]
 
-        await self.change_presence(activity=discord.Activity(name=random.choice(statuses),
-                                                             type=discord.ActivityType.watching))
+        await self.change_presence(
+            activity=discord.Activity(
+                name=random.choice(statuses), type=discord.ActivityType.watching
+            )
+        )
 
     @status_task.before_loop
     async def before_status_task(self) -> None:
@@ -327,7 +329,7 @@ class DiscordBot(commands.Bot):
                 parts.append(f"{round(seconds)} seconds")
 
             embed = discord.Embed(
-                description = f"**Please slow down** - You can use this command again in {' '.join(parts)}.",
+                description=f"**Please slow down** - You can use this command again in {' '.join(parts)}.",
                 color=0xE02B2B,
             )
             await context.send(embed=embed)

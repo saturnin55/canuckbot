@@ -1,11 +1,23 @@
 import discord
-from discord.ext import commands
 from discord import app_commands
+from discord.ext import commands
 from discord.ext.commands import Context
+
 import CanuckBot
 from CanuckBot.Config import Config
+from CanuckBot.constants import (
+    TYPE_BOOL,
+    TYPE_COLOR,
+    TYPE_DISCORD_CATEGORYID,
+    TYPE_DISCORD_CHANNELID,
+    TYPE_DISCORD_ROLEID,
+    TYPE_DISCORD_USERID,
+    TYPE_INT,
+    TYPE_STRING,
+    TYPE_TIMESTAMP,
+    TYPE_URL,
+)
 from CanuckBot.Info import Info
-from CanuckBot.constants import *
 from decorators.checks import is_manager
 
 
@@ -21,7 +33,8 @@ class ConfigCog(commands.Cog, name="config"):
     async def config(self, context: Context) -> None:
         if context.invoked_subcommand is None:
             embed = discord.Embed(
-                description="Please specify a subcommand.\n\n**Subcommands:**\n`set` - Set CanuckBot's configuration.\n`list` - List CanuckBot's configuration.", color=0xE02B2B,
+                description="Please specify a subcommand.\n\n**Subcommands:**\n`set` - Set CanuckBot's configuration.\n`list` - List CanuckBot's configuration.",
+                color=0xE02B2B,
             )
         await context.send(embed=embed)
 
@@ -34,12 +47,14 @@ class ConfigCog(commands.Cog, name="config"):
         field="The field to set.",
         value="The value to set for the selected field.",
     )
-    async def config_set(self, context: Context, field: str = None, value: str = None) -> None:
+    async def config_set(
+        self, context: Context, field: str = None, value: str = None
+    ) -> None:
         config = await Config.create(self.bot)
         if await config.update(field, value):
-            await context.send('Configuration updated.')
+            await context.send("Configuration updated.")
         else:
-            await context.send('ERR: There was an error trying to update the config.')
+            await context.send("ERR: There was an error trying to update the config.")
 
     @config.command(
         name="info",
@@ -50,23 +65,24 @@ class ConfigCog(commands.Cog, name="config"):
         field="The field to get info on.",
     )
     async def config_info(self, context: Context, field: str = None) -> None:
-
         config = await Config.create(self.bot)
 
         if not config.field_exists(field):
-            await context.send(f'ERR: config.{field} is not defined.')
+            await context.send(f"ERR: config.{field} is not defined.")
             return
 
-        objinfo = await Info.create(self.bot, 'config', field)
+        objinfo = await Info.create(self.bot, "config", field)
         if objinfo.info == "":
             info = "n/a"
         else:
             info = objinfo.info
 
         if info:
-            await context.send(f'config.{field} : `{info}`')
+            await context.send(f"config.{field} : `{info}`")
         else:
-            await context.send('ERR: There was an error trying to get info from the database.')
+            await context.send(
+                "ERR: There was an error trying to get info from the database."
+            )
 
     @config.command(
         name="setinfo",
@@ -76,10 +92,12 @@ class ConfigCog(commands.Cog, name="config"):
     @app_commands.describe(
         field="The field to set info on.",
     )
-    async def config_setinfo(self, context: Context, field: str = None, info_text: str = None) -> bool:
-        objinfo = await Info.create(self.bot, 'config', field)
+    async def config_setinfo(
+        self, context: Context, field: str = None, info_text: str = None
+    ) -> bool:
+        objinfo = await Info.create(self.bot, "config", field)
         if await objinfo.set(info_text):
-            await context.send(f'config.{field} updated : `{info_text}`')
+            await context.send(f"config.{field} updated : `{info_text}`")
         else:
             await context.send(f"ERR: couldn't update config.{field}")
 
@@ -93,7 +111,9 @@ class ConfigCog(commands.Cog, name="config"):
     async def config_list(self, context: Context):
         config = await Config.create(self.bot)
 
-        embed = discord.Embed(title="CanuckBot Configuration", color=discord.Color.blue())
+        embed = discord.Embed(
+            title="CanuckBot Configuration", color=discord.Color.blue()
+        )
         for key, value in config.data.items():
             _type = config.get_field_type(key)
             if _type == TYPE_DISCORD_CHANNELID:
@@ -103,7 +123,9 @@ class ConfigCog(commands.Cog, name="config"):
                 category = await CanuckBot.get_discord_user(context, self.bot, value)
                 v = CanuckBot.pp_discord_user(category)
             elif _type == TYPE_DISCORD_CATEGORYID:
-                category = await CanuckBot.get_discord_category(context, self.bot, value)
+                category = await CanuckBot.get_discord_category(
+                    context, self.bot, value
+                )
                 v = CanuckBot.pp_discord_category(category)
             elif _type == TYPE_DISCORD_ROLEID:
                 role = await CanuckBot.get_discord_role(context, self.bot, value)
@@ -127,9 +149,10 @@ class ConfigCog(commands.Cog, name="config"):
             embed.add_field(
                 name=f"{key}",
                 value=f"{v}",
-                inline=True  # Set to True to make columns
+                inline=True,  # Set to True to make columns
             )
         await context.send(embed=embed)
+
 
 async def setup(bot) -> None:
     await bot.add_cog(ConfigCog(bot))

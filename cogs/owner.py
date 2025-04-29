@@ -215,5 +215,6 @@ class Owner(commands.Cog, name="owner"):
         embed = discord.Embed(description=message, color=0xBEBEFE)
         await context.send(embed=embed)
 
+
 async def setup(bot) -> None:
     await bot.add_cog(Owner(bot))
