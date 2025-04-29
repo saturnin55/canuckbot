@@ -317,9 +317,17 @@ class DiscordBot(commands.Bot):
             minutes, seconds = divmod(error.retry_after, 60)
             hours, minutes = divmod(minutes, 60)
             hours = hours % 24
+
+            parts = []
+            if round(hours) > 0:
+                parts.append(f"{round(hours)} hours")
+            if round(minutes) > 0:
+                parts.append(f"{round(minutes)} minutes")
+            if round(seconds) > 0:
+                parts.append(f"{round(seconds)} seconds")
+
             embed = discord.Embed(
-                description=f"**Please slow down** - You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {
-                    f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.",
+                description = f"**Please slow down** - You can use this command again in {' '.join(parts)}.",
                 color=0xE02B2B,
             )
             await context.send(embed=embed)
