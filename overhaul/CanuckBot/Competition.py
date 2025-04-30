@@ -1,8 +1,10 @@
-from pydantic import HttpUrl
 from datetime import date
+
+from pydantic import HttpUrl
+
 from . import CanuckBotBase
-from .types import Handle, HexColor, SnowflakeId
 from .Competition_Type import Competition_Type
+from .types import Handle, HexColor, SnowflakeId
 
 
 class Competition(CanuckBotBase):

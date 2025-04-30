@@ -1,5 +1,6 @@
-from typing import List
 from datetime import date
+from typing import List
+
 from . import CanuckBotBase
 from .types import SnowflakeId
 from .User_Level import User_Level
