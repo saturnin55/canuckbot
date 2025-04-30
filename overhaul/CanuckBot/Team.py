@@ -4,10 +4,11 @@ from . import CanuckBotBase
 from .types import Handle
 from .TimeZone import TimeZone
 
+
 class Team(CanuckBotBase):
     team_id: int
     name: str
-    shortname: Handle
+    shortname = Handle
     tz: TimeZone
     created_at: date
     aliases: List[str]
