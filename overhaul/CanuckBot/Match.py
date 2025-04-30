@@ -1,8 +1,10 @@
 from datetime import date
+
 from . import CanuckBotBase
-from .types import DiscordChannelName, SnowflakeId
 from .Match_Status import Match_Status
 from .TimeZone import TimeZone
+from .types import DiscordChannelName, SnowflakeId
+
 
 class Match(CanuckBotBase):
     match_id: int
@@ -15,10 +17,10 @@ class Match(CanuckBotBase):
     tz: TimeZone
     venue: str
     description: str
-    channel_name: DiscordChannelName
-    channel_id: SnowflakeId
+    channel_name = DiscordChannelName
+    channel_id = SnowflakeId
     channel_topic: str
     is_warned: bool
-    welcome_message_id: SnowflakeId
+    welcome_message_id = SnowflakeId
     hours_before_kickoff: int
     hours_after_kickoff: int
