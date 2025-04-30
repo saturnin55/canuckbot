@@ -1,2 +1,7 @@
-ruff check --select I --fix
-ruff format
+#!/bin/bash
+
+# for staged files, lint, lint imports, and format.
+git diff -u --staged --name-only | tee \
+>(ruff check --fix) \
+>(ruff check --select I --fix) \
+>(ruff format)
