@@ -17,7 +17,7 @@ def is_user_manager(user_id):
         print(f"{e}")
 
     cursor = conn.cursor()
-    cursor.execute("SELECT userid FROM managers WHERE userid = ?", (user_id,))
+    cursor.execute("SELECT user_id FROM managers WHERE user_id = ?", (user_id,))
     result = cursor.fetchone()
     conn.close()
 
