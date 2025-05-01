@@ -1,9 +1,11 @@
+import time
 from datetime import date
-from typing import List
+from typing import List, Optional
 
 from . import CanuckBotBase
 from .types import SnowflakeId
 from .User_Level import User_Level
+
 
 
 class Manager(CanuckBotBase):
@@ -26,25 +28,25 @@ class Manager(CanuckBotBase):
         instance = Manager(bot)
         return instance
 
-    async def get(self, user_id=None) -> bool:
+    async def get(self, user_id: Optional[int] = None) -> bool:
         if user_id is None:
             return False
         else:
             row = await self.database.get_one(
-                "SELECT * FROM managers WHERE user_id = ?", [user_id]
+                "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
             )
             if not row:
                 return False
             else:
-                self.data["userid"] = int(row["user_id"])
+                self.data["user_id"] = int(row["user_id"])
                 self.data["created_at"] = int(row["created_at"])
                 self.data["created_by"] = int(row["created_by"])
 
                 return True
 
-    async def add(self, user_id, invoking_id) -> bool:
+    async def add(self, user_id: int, invoking_id: int) -> bool:
         user = await self.database.get_one(
-            "SELECT * FROM managers WHERE user_id = ?", [user_id]
+            "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
 
         if user:
@@ -52,14 +54,15 @@ class Manager(CanuckBotBase):
             return False
         else:
             try:
+                now = int(time.time())
                 await self.database.insert(
-                    "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, CURRENT_TIMESTAMP, ?)",
-                    (user_id, invoking_id),
+                    "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, ?, ?)",
+                    (str(user_id), now, str(invoking_id)),
                 )
                 await self.database.connection.commit()
 
                 self.data["user_id"] = int(user_id)
-                self.data["created_at"] = ""
+                self.data["created_at"] = int(now)
                 self.data["created_by"] = int(invoking_id)
 
                 return True
@@ -69,9 +72,9 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def remove(self, user_id) -> bool:
+    async def remove(self, user_id: int) -> bool:
         user = await self.database.get_one(
-            "SELECT * FROM managers WHERE user_id = ?", [user_id]
+            "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
 
         if not user:
@@ -80,7 +83,7 @@ class Manager(CanuckBotBase):
         else:
             try:
                 await self.database.delete(
-                    "DELETE FROM managers WHERE user_id = ?", [int(user_id)]
+                    "DELETE FROM managers WHERE user_id = ?", [str(user_id)]
                 )
                 await self.database.connection.commit()
 
