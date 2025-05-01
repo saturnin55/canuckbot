@@ -1,7 +1,7 @@
-aiohttp
-aiosqlite
-discord.py
-python-dotenv
-validators
-pytz
-ruff
+aiohttp == 3.11.*
+aiosqlite == 0.21.*
+discord.py == 2.5.*
+python-dotenv == 1.1.*
+validators == 0.34.*
+pytz == 2025.2
+ruff == 0.11.*
