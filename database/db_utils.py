@@ -1,13 +1,18 @@
 # db_utils.py
 import sqlite3
-
-# from discord.ext import commands
-
-DB_PATH = "database/database.db"  # Path to your SQLite database
-
+import os
+from pathlib import Path
 
 def connect_db():
-    return sqlite3.connect(DB_PATH)
+    db_path = os.getenv("DB_PATH")
+    if not db_path:
+        raise EnvironmentError("DB_PATH environment variable is not set. Check your .env file.")
+
+    path = Path(db_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Database file not found at: {db_path}")
+
+    return sqlite3.connect(db_path)
 
 
 def is_user_manager(user_id):
