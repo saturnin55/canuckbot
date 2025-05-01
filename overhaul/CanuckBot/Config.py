@@ -1,11 +1,11 @@
 import CanuckBot
+from typing import get_type_hints, Any
 from . import CanuckBotBase
 from .types import SnowflakeId
 from .TimeZone import TimeZone
 
 
 class Config(CanuckBotBase):
-    obj = "config"
 
     channel_logs = SnowflakeId
     channel_cmd = SnowflakeId
@@ -28,23 +28,38 @@ class Config(CanuckBotBase):
         instance.data = await instance.list()
         return instance
 
-    async def update(self, field, value) -> bool:
-        return await self.bot.database.update(
-            "UPDATE config SET value = ? WHERE field = ?", [str(value), str(field)]
-        )
+    async def update(self, field) -> bool:
+        ret: bool
 
-    async def get(self, field=None) -> str | bool:
-        if self.data.get(field) is None:
+        ret = await self.bot.database.update(
+            "UPDATE config SET value = ? WHERE field = ?", [str(getattr(self, field, None)), str(field)]
+        )
+        return ret
+
+    async def get(self, field: str = None) -> str | bool:
+        value = getattr(self, field, None)
+
+        if value is None:
             return False
         else:
-            return self.data.get(field)
+            return  value
 
     async def list(self) -> list | bool:
+        data: dict[str, Any] = {}
+
         rows = await self.bot.database.select("SELECT * FROM config ORDER BY field ASC")
 
         if not rows:
             return False
         else:
+            hints = get_type_hints(Config)
             for item in rows:
-                self.data[item["field"]] = item["value"]
-            return self.data
+                expected_type = hints.get(item["field"])
+                if expected_type:
+                    cast_value = expected_type(item["value"])
+                    setattr(self, item["field"], cast_value)
+                    data[item["field"]] = cast_value
+                else:
+                    # fixme: oops
+                    pass
+            return data
