@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# for staged files, lint, lint imports, and format.
-git diff -u --staged --name-only | tee \
->(ruff check --fix) \
->(ruff check --select I --fix) \
->(ruff format)
+stagedfiles=$(git diff -u --staged --name-only | grep ".py$") # get names of staged python files
+if [ -n "$stagedfiles" ]; then
+  # if variable is not empty, run lint and fomatting commands
+  # note: empty variable will cause commands to run on all files
+  ruff check --fix $stagedfiles             # lint
+  ruff check --select I --fix $stagedfiles  # lint imports (not included by default)
+  ruff format $stagedfiles                  # format
+fi
