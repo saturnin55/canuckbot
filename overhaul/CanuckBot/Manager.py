@@ -42,7 +42,20 @@ class Manager(CanuckBotBase):
                 self.data["created_at"] = int(row["created_at"])
                 self.data["created_by"] = int(row["created_by"])
 
-                return True
+            try:
+                rows = await self.bot.database.select(
+                    "SELECT competition_id FROM manager_competitions WHERE user_id = ? ORDER BY competition_id ASC", [str(user_id)]
+                )
+                if not rows:
+                    self.competitions = []
+                else:
+                    for row in rows:
+                        c.append(int(row["competition_id"]))
+            except aiosqlite.Error as e:
+                print(f"ERR Manager.get(): {e}")
+                return False
+
+        return True
 
     async def add(self, user_id: int, invoking_id: int) -> bool:
         user = await self.database.get_one(
@@ -57,13 +70,17 @@ class Manager(CanuckBotBase):
                 now = int(time.time())
                 await self.database.insert(
                     "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, ?, ?)",
-                    (str(user_id), now, str(invoking_id)),
+                    [str(user_id), now, str(invoking_id)],
                 )
                 await self.database.connection.commit()
 
                 self.data["user_id"] = int(user_id)
                 self.data["created_at"] = int(now)
                 self.data["created_by"] = int(invoking_id)
+
+                # make sure there are no prior entries in manager_competitions
+                await self.database.delete("DELETE FROM manager_competitions WHERE user_id = ?", [str(user_id)])
+                await self.database.connection.commit()
 
                 return True
             except aiosqlite.Error as e:
