@@ -3,6 +3,6 @@ from enum import IntEnum
 
 class User_Level(IntEnum):
     Superadmin = 0
-    Full = 1
-    Trusted = 2
+    Full = 10
+    Trusted = 20
     Public = 99
