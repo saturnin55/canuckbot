@@ -85,13 +85,12 @@ Here is an explanation of what everything is:
 | Variable                  | What it is                                     |
 | ------------------------- | ---------------------------------------------- |
 | YOUR_BOT_PREFIX_HERE      | The prefix you want to use for normal commands |
-| YOUR_BOT_INVITE_LINK_HERE | The link to invite the bot                     |
 
 ### `.env` file
 
-To set up the token you will have to make use of the [`.env.example`](.env.example) file, you should rename it to `.env` and replace `YOUR_BOT_TOKEN_HERE` with your actual bot's token.
+To set up the bot you will have to make use of the [`.env.example`](.env.example) file, you should rename it to `.env` and provide your bot's `TOKEN`, `INVITE_LINK`, and the location of your database in `DB_PATH`.
 
-Alternatively you can simply create an environment variable named `TOKEN`.
+Alternatively, simply create the appropriate environmental variables in your operating system.
 
 ## CanuckBot specific 
 
