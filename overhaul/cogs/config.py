@@ -38,8 +38,11 @@ class ConfigCog(commands.Cog, name="config"):
     async def config_set(
         self, context: Context, field: str = None, value: str = None
     ) -> None:
+
         config = await Config.create(self.bot)
-        if await config.update(field, value):
+        setattr(config, field, value)
+
+        if await config.update(field):
             await context.send("Configuration updated.")
         else:
             await context.send("ERR: There was an error trying to update the config.")
@@ -100,37 +103,9 @@ class ConfigCog(commands.Cog, name="config"):
         embed = discord.Embed(
             title="CanuckBot Configuration", color=discord.Color.blue()
         )
-        for key, value in config.data.items():
-            _type = config.get_field_type(key)
-            if _type == TYPE_DISCORD_CHANNELID:
-                channel = await CanuckBot.get_discord_channel(self.bot, value)
-                v = CanuckBot.pp_discord_channel(channel)
-            elif _type == TYPE_DISCORD_USERID:
-                category = await CanuckBot.get_discord_user(context, self.bot, value)
-                v = CanuckBot.pp_discord_user(category)
-            elif _type == TYPE_DISCORD_CATEGORYID:
-                category = await CanuckBot.get_discord_category(
-                    context, self.bot, value
-                )
-                v = CanuckBot.pp_discord_category(category)
-            elif _type == TYPE_DISCORD_ROLEID:
-                role = await CanuckBot.get_discord_role(context, self.bot, value)
-                v = CanuckBot.pp_discord_role(role)
-            elif _type == TYPE_COLOR:
-                v = CanuckBot.pp_hex_color(value)
-            elif _type == TYPE_URL:
-                v = CanuckBot.pp_url(value)
-            elif _type == TYPE_TIMESTAMP:
-                print(f"timestamp : {key} |{value}|")
-                v = CanuckBot.pp_timestamp(value)
-            elif _type == TYPE_BOOL:
-                v = CanuckBot.pp_bool(value)
-            elif _type == TYPE_INT:
-                v = CanuckBot.pp_int(value)
-            elif _type == TYPE_STRING:
-                v = CanuckBot.pp_string(value)
-            else:
-                v = value
+
+        for key, v in config.model_dump().items():
+            #print(f"{key}: {v}")
 
             embed.add_field(
                 name=f"{key}",

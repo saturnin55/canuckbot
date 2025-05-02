@@ -8,7 +8,7 @@ HANDLE_PATTERN = r"^[a-zA-Z0-9\-]+$"
 Handle: str = Field(
     ..., pattern=r"^[a-zA-Z0-9\-]+$", max_length=24
 )  # max_length=23 ensures under 24 characters
-HexColor = str
+HexColor = Annotated[str, Field(pattern=HEX_COLOR_PATTERN)]
 # we'll need to store snowflakeid as TEXT into sqlite
 UnixTimestamp: int = Annotated[int, Field(strict=True, gt=0)]
 SnowflakeId: int = Annotated[int, Field(strict=True, gt=0, lt=2**64 - 1)]

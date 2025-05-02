@@ -1,6 +1,6 @@
 class Info:
     bot = None
-    id_info = None
+    info_id = None
     obj = None
     field = None
     value = None
@@ -19,7 +19,7 @@ class Info:
         if not row:
             return instance
 
-        instance.id_info = row["id_info"]
+        instance.info_id = row["info_id"]
         instance.obj = row["obj"]
         instance.field = row["field"]
         instance.info = row["info"]
@@ -42,14 +42,14 @@ class Info:
         if info is None:
             info = ""
 
-        if self.id_info is None:
+        if self.info_id is None:
             ret = await self.bot.database.insert(
                 "INSERT INTO info (info, obj, field) VALUES (?, ?, ?)",
                 [info, self.obj, self.field],
             )
         else:
             ret = await self.bot.database.update(
-                "UPDATE info SET info = ? WHERE id_info = ?", [info, self.id_info]
+                "UPDATE info SET info = ? WHERE info_id = ?", [info, self.info_id]
             )
 
         if ret:

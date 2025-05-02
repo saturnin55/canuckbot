@@ -1,40 +1,41 @@
 from . import CanuckBotBase
-from pydantic import HttpUrl, BaseModel, Field
+from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
 from typing import get_type_hints, Any
 from .types import *
 from .TimeZone import TimeZone
+from discord.ext.commands import Bot
 
 
 class Config(CanuckBotBase):
 
-    channel_logs: SnowflakeId
-    channel_cmd: SnowflakeId
-    default_add_hours_before: int
-    default_del_hours_after: int
-    default_category_id: SnowflakeId
-    default_logo_url: HttpUrl
-    default_tz: TimeZone
-    mngr_role_id: SnowflakeId
-    default_comp_color: HexColor = Field(..., pattern=HEX_COLOR_PATTERN)
-    optout_all_role_id: SnowflakeId
+    channel_logs: SnowflakeId = 0
+    channel_cmds: SnowflakeId = 0
+    default_add_hours_before: int = 0
+    default_del_hours_after: int = 0
+    default_category_id: SnowflakeId = 0
+    default_logo_url: HttpUrl = "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
+    default_tz: TimeZone = "America/Toronto"
+    mngr_role_id: SnowflakeId = 0
+    default_comp_color: HexColor = "#ffffff"
+    optout_all_role_id: SnowflakeId = 0
 
     class Config:
         arbitrary_types_allowed = True
 
     def __init__(self, bot):
         super().__init__(bot)
-        self.data = {}
 
     @classmethod
     async def create(cls, bot):
-        instance = Config(bot)
-        instance.data = await instance.list()
+        instance = cls(bot)
+        await instance.list()
+
         return instance
 
     async def update(self, field) -> bool:
         ret: bool
 
-        ret = await self.bot.database.update(
+        ret = await self._bot.database.update(
             "UPDATE config SET value = ? WHERE field = ?", [str(getattr(self, field, None)), str(field)]
         )
         return ret
@@ -50,19 +51,17 @@ class Config(CanuckBotBase):
     async def list(self) -> list | bool:
         data: dict[str, Any] = {}
 
-        rows = await self.bot.database.select("SELECT * FROM config ORDER BY field ASC")
+        rows = await self._bot.database.select("SELECT * FROM config ORDER BY field ASC")
 
         if not rows:
             return False
         else:
-            hints = get_type_hints(Config)
             for item in rows:
-                expected_type = hints.get(item["field"])
-                if expected_type:
-                    cast_value = expected_type(item["value"])
-                    setattr(self, item["field"], cast_value)
-                    data[item["field"]] = cast_value
-                else:
-                    # fixme: oops
-                    pass
-            return data
+                field = item["field"]
+                value = item["value"]
+
+                cast_value = self.cast_value(field, value)
+                setattr(self, item["field"], cast_value)
+                data[item["field"]] = cast_value
+
+        return data
