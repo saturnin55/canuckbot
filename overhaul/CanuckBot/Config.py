@@ -1,23 +1,26 @@
-import CanuckBot
-from typing import get_type_hints, Any
 from . import CanuckBotBase
-from .types import SnowflakeId
+from pydantic import HttpUrl, BaseModel, Field
+from typing import get_type_hints, Any
+from .types import *
 from .TimeZone import TimeZone
 
 
 class Config(CanuckBotBase):
 
-    channel_logs = SnowflakeId
-    channel_cmd = SnowflakeId
+    channel_logs: SnowflakeId
+    channel_cmd: SnowflakeId
     default_add_hours_before: int
     default_del_hours_after: int
-    default_category_id = SnowflakeId
-    default_logo_url = HttpUrl
-    default_tz = TimeZone
-    mngr_role_id = SnowflakeId
-    default_comp_color = HexColor
-    optout_all_role_id = SnowflakeId
-    
+    default_category_id: SnowflakeId
+    default_logo_url: HttpUrl
+    default_tz: TimeZone
+    mngr_role_id: SnowflakeId
+    default_comp_color: HexColor = Field(..., pattern=HEX_COLOR_PATTERN)
+    optout_all_role_id: SnowflakeId
+
+    class Config:
+        arbitrary_types_allowed = True
+
     def __init__(self, bot):
         super().__init__(bot)
         self.data = {}
