@@ -14,7 +14,7 @@ class DatabaseManager:
         self.connection = connection
         self.connection.row_factory = aiosqlite.Row
 
-    async def get_one(self, sql: str, values: list) -> [dict, bool]:
+    async def get_one(self, sql: str, values: list) -> dict | bool:
         try:
             rows = await self.select(sql, values)
             if not rows or len(rows) < 1:
@@ -37,7 +37,7 @@ class DatabaseManager:
             print(f"ERR Database.delete(): {e}")
             return False
 
-    async def select(self, sql: str, values: list = None) -> [list[dict], bool]:
+    async def select(self, sql: str, values: list = None) -> list[dict] | bool:
         try:
             async with self.connection.execute(sql, values) as cursor:
                 rows = await cursor.fetchall()
