@@ -1,12 +1,16 @@
-class Info:
-    bot = None
-    info_id = None
-    obj = None
-    field = None
-    value = None
+from . import CanuckBotBase
+from pydantic import BaseModel, Field, TypeAdapter, PrivateAttr
+from typing import get_type_hints, Any
+from discord.ext.commands import Bot
+
+class Info(CanuckBotBase):
+    info_id: int = None
+    obj: str = None
+    field: str = None
+    info: str = None
 
     def __init__(self, bot):
-        self.bot = bot
+        super().__init__(bot)
 
     @classmethod
     async def create(cls, bot, obj, field):
@@ -30,8 +34,8 @@ class Info:
         if self.field is None:
             return False
 
-        row = await self.bot.database.get_one(
-            "SELECT * FROM info WHERE obj = ? AND field = ?", [self.obj, self.field]
+        row = await self._bot.database.get_one(
+            "SELECT * FROM info WHERE obj = ? AND field = ?", [str(self.obj), str(self.field)]
         )
         if not row:
             return False
@@ -43,13 +47,13 @@ class Info:
             info = ""
 
         if self.info_id is None:
-            ret = await self.bot.database.insert(
+            ret = await self._bot.database.insert(
                 "INSERT INTO info (info, obj, field) VALUES (?, ?, ?)",
-                [info, self.obj, self.field],
+                [str(info), str(self.obj), str(self.field)],
             )
         else:
-            ret = await self.bot.database.update(
-                "UPDATE info SET info = ? WHERE info_id = ?", [info, self.info_id]
+            ret = await self._bot.database.update(
+                "UPDATE info SET info = ? WHERE info_id = ?", [str(info), int(self.info_id)]
             )
 
         if ret:

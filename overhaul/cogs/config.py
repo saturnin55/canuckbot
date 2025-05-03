@@ -33,14 +33,14 @@ class ConfigCog(commands.Cog, name="config"):
     @commands.is_owner()
     @app_commands.describe(
         field="The field to set.",
-        value="The value to set for the selected field.",
+        info="The text info to set for the selected field.",
     )
     async def config_set(
-        self, context: Context, field: str = None, value: str = None
+        self, context: Context, field: str = None, info: str = None
     ) -> None:
 
         config = await Config.create(self.bot)
-        setattr(config, field, value)
+        setattr(config, field, info)
 
         if await config.update(field):
             await context.send("Configuration updated.")
