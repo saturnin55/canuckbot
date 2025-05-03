@@ -1,62 +1,67 @@
-import CanuckBot
-from CanuckBot.constants import (
-    TYPE_COLOR,
-    TYPE_DISCORD_CATEGORYID,
-    TYPE_DISCORD_CHANNELID,
-    TYPE_DISCORD_ROLEID,
-    TYPE_INT,
-    TYPE_STRING,
-    TYPE_URL,
-)
-
 from . import CanuckBotBase
+from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
+from typing import get_type_hints, Any
+from .types import *
+from .TimeZone import TimeZone
+from discord.ext.commands import Bot
 
 
 class Config(CanuckBotBase):
-    obj = "config"
-    FIELDS = {
-        "channel_cmds": {"type": TYPE_DISCORD_CHANNELID},
-        "channel_logs": {"type": TYPE_DISCORD_CHANNELID},
-        "default_category": {"type": TYPE_DISCORD_CATEGORYID},
-        "default_color": {"type": TYPE_COLOR},
-        "default_create_before": {"type": TYPE_INT},
-        "default_delete_after": {"type": TYPE_INT},
-        "default_kickoff_warning": {"type": TYPE_INT},
-        "default_logo": {"type": TYPE_URL},
-        "default_tz": {"type": TYPE_STRING},
-        "mngr_roleid": {"type": TYPE_DISCORD_ROLEID},
-    }
+
+    channel_logs: SnowflakeId = 0
+    channel_cmds: SnowflakeId = 0
+    default_add_hours_before: int = 0
+    default_del_hours_after: int = 0
+    default_category_id: SnowflakeId = 0
+    default_logo_url: HttpUrl = "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
+    default_tz: TimeZone = "America/Toronto"
+    mngr_role_id: SnowflakeId = 0
+    default_comp_color: HexColor = "#ffffff"
+    optout_all_role_id: SnowflakeId = 0
+
+    class Config:
+        arbitrary_types_allowed = True
 
     def __init__(self, bot):
         super().__init__(bot)
-        self.data = {}
 
     @classmethod
     async def create(cls, bot):
-        instance = Config(bot)
-        instance.data = await instance.list()
+        instance = cls(bot)
+        await instance.list()
+
         return instance
 
-    async def update(self, field, value) -> bool:
-        value = CanuckBot.get_field_value(self.get_field_type(field), value)
-        if not CanuckBot.is_valid_type(self.get_field_type(field), value):
-            return False
-        return await self.bot.database.update(
-            "UPDATE config SET value = ? WHERE field = ?", [value, field]
-        )
+    async def update(self, field) -> bool:
+        ret: bool
 
-    async def get(self, field=None) -> str | bool:
-        if self.data.get(field) is None:
+        ret = await self._bot.database.update(
+            "UPDATE config SET value = ? WHERE field = ?", [str(getattr(self, field, None)), str(field)]
+        )
+        return ret
+
+    async def get(self, field: str = None) -> str | bool:
+        value = getattr(self, field, None)
+
+        if value is None:
             return False
         else:
-            return self.data.get(field)
+            return  value
 
     async def list(self) -> list | bool:
-        rows = await self.bot.database.select("SELECT * FROM config ORDER BY field ASC")
+        data: dict[str, Any] = {}
+
+        rows = await self._bot.database.select("SELECT * FROM config ORDER BY field ASC")
 
         if not rows:
             return False
         else:
             for item in rows:
-                self.data[item["field"]] = item["value"]
-            return self.data
+                field = item["field"]
+                value = item["value"]
+
+                cast_value = self.cast_value(field, value)
+                setattr(self, item["field"], cast_value)
+                data[item["field"]] = cast_value
+
+        return data

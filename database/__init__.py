@@ -14,7 +14,7 @@ class DatabaseManager:
         self.connection = connection
         self.connection.row_factory = aiosqlite.Row
 
-    async def get_one(self, sql: str, values: list) -> [dict, bool]:
+    async def get_one(self, sql: str, values: list) -> dict | bool:
         try:
             rows = await self.select(sql, values)
             if not rows or len(rows) < 1:
@@ -37,7 +37,7 @@ class DatabaseManager:
             print(f"ERR Database.delete(): {e}")
             return False
 
-    async def select(self, sql: str, values: list = None) -> [list[dict], bool]:
+    async def select(self, sql: str, values: list = None) -> list[dict] | bool:
         try:
             async with self.connection.execute(sql, values) as cursor:
                 rows = await cursor.fetchall()
@@ -78,20 +78,20 @@ class DatabaseManager:
             print(f"ERR Database.insert(): {e}")
             return False
 
-    async def mngr_add(self, userid: int, invoking_user: int) -> None:
-        print(userid)
+    async def mngr_add(self, user_id: int, invoking_user: int) -> None:
+        print(user_id)
         rows = await self.connection.execute(
-            "SELECT userid FROM managers WHERE userid=? ORDER BY userid DESC LIMIT 1",
-            (userid,),
+            "SELECT user_id FROM managers WHERE user_id=? ORDER BY user_id DESC LIMIT 1",
+            (user_id,),
         )
         async with rows as cursor:
             result = await cursor.fetchone()
             if result is not None:
                 return
             await self.connection.execute(
-                "INSERT INTO managers(userid, dt_added, added_by) VALUES (?, CURRENT_TIMESTAMP, ?)",
+                "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, CURRENT_TIMESTAMP, ?)",
                 (
-                    userid,
+                    user_id,
                     invoking_user,
                 ),
             )

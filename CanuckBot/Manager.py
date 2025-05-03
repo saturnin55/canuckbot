@@ -1,46 +1,65 @@
-import aiosqlite
-
-from CanuckBot.constants import TYPE_DISCORD_USERID, TYPE_TIMESTAMP
+import time
+from datetime import date
+from typing import List, Optional
 
 from . import CanuckBotBase
+from .types import SnowflakeId
+from .User_Level import User_Level
+
 
 
 class Manager(CanuckBotBase):
-    obj = "manager"
-    FIELDS = {
-        "userid": {"type": TYPE_DISCORD_USERID},
-        "dt_added": {"type": TYPE_TIMESTAMP},
-        "added_by": {"type": TYPE_DISCORD_USERID},
-    }
+    user_id = SnowflakeId
+    created_at: date
+    created_by = SnowflakeId
+    level: User_Level
+    competitions: List[int]
 
     def __init__(self, bot):
         super().__init__(bot)
-        self.data = {}
+        self.user_id = null
+        self.created_at = null
+        self.created_by = null
+        self.level = User_Level.Public
+        self.competitions = []
 
     @classmethod
     async def create(cls, bot):
         instance = Manager(bot)
         return instance
 
-    async def get(self, userid=None) -> bool:
-        if userid is None:
+    async def get(self, user_id: Optional[int] = None) -> bool:
+        if user_id is None:
             return False
         else:
             row = await self.database.get_one(
-                "SELECT * FROM managers WHERE userid = ?", [userid]
+                "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
             )
             if not row:
                 return False
             else:
-                self.data["userid"] = int(row["userid"])
-                self.data["dt_added"] = int(row["dt_added"])
-                self.data["added_by"] = int(row["added_by"])
+                self.data["user_id"] = int(row["user_id"])
+                self.data["created_at"] = int(row["created_at"])
+                self.data["created_by"] = int(row["created_by"])
 
-                return True
+            try:
+                rows = await self.bot.database.select(
+                    "SELECT competition_id FROM manager_competitions WHERE user_id = ? ORDER BY competition_id ASC", [str(user_id)]
+                )
+                if not rows:
+                    self.competitions = []
+                else:
+                    for row in rows:
+                        c.append(int(row["competition_id"]))
+            except aiosqlite.Error as e:
+                print(f"ERR Manager.get(): {e}")
+                return False
 
-    async def add(self, userid, invoking_id) -> bool:
+        return True
+
+    async def add(self, user_id: int, invoking_id: int) -> bool:
         user = await self.database.get_one(
-            "SELECT * FROM managers WHERE userid = ?", [userid]
+            "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
 
         if user:
@@ -48,15 +67,20 @@ class Manager(CanuckBotBase):
             return False
         else:
             try:
+                now = int(time.time())
                 await self.database.insert(
-                    "INSERT INTO managers(userid, dt_added, added_by) VALUES (?, CURRENT_TIMESTAMP, ?)",
-                    (userid, invoking_id),
+                    "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, ?, ?)",
+                    [str(user_id), now, str(invoking_id)],
                 )
                 await self.database.connection.commit()
 
-                self.data["userid"] = int(userid)
-                self.data["dt_added"] = ""
-                self.data["added_by"] = int(invoking_id)
+                self.data["user_id"] = int(user_id)
+                self.data["created_at"] = int(now)
+                self.data["created_by"] = int(invoking_id)
+
+                # make sure there are no prior entries in manager_competitions
+                await self.database.delete("DELETE FROM manager_competitions WHERE user_id = ?", [str(user_id)])
+                await self.database.connection.commit()
 
                 return True
             except aiosqlite.Error as e:
@@ -65,9 +89,9 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def remove(self, userid) -> bool:
+    async def remove(self, user_id: int) -> bool:
         user = await self.database.get_one(
-            "SELECT * FROM managers WHERE userid = ?", [userid]
+            "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
 
         if not user:
@@ -76,7 +100,7 @@ class Manager(CanuckBotBase):
         else:
             try:
                 await self.database.delete(
-                    "DELETE FROM managers WHERE userid = ?", [int(userid)]
+                    "DELETE FROM managers WHERE user_id = ?", [str(user_id)]
                 )
                 await self.database.connection.commit()
 
@@ -90,17 +114,17 @@ class Manager(CanuckBotBase):
     async def list(self) -> dict | bool:
         try:
             rows = await self.bot.database.select(
-                "SELECT userid, strftime('%s', dt_added) as dt_added, added_by \
+                "SELECT user_id, strftime('%s', created_at) as created_at, created_by \
                                                    FROM managers \
-                                                   ORDER BY dt_added ASC"
+                                                   ORDER BY created_at ASC"
             )
             if not rows:
                 return False
             else:
                 for row in rows:
-                    row["userid"] = int(row["userid"])
-                    row["dt_added"] = int(row["dt_added"])
-                    row["added_by"] = int(row["added_by"])
+                    row["user_id"] = int(row["user_id"])
+                    row["created_at"] = int(row["created_at"])
+                    row["created_by"] = int(row["created_by"])
                 return rows
         except aiosqlite.Error as e:
             print(f"ERR Manager.get_all(): {e}")
