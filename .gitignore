@@ -176,5 +176,6 @@ cython_debug/
 # CanuckBot stuff
 setup/
 database/database.db
+overhaul/database/database.db
 discord.log
 *.bak
