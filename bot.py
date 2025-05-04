@@ -95,9 +95,10 @@ logger.addHandler(file_handler)
 os.environ["PREFIX"] = config["prefix"]
 config["cogs_dir"] = f"{os.path.realpath(os.path.dirname(__file__))}/cogs/"
 config["db_dir"] = f"{os.path.realpath(os.path.dirname(__file__))}/database/"
+
 bot = DiscordBot(intents, logger, config)
 
-# bot = DiscordBot(owner_id = os.getenv("OWNER"))
 TOKEN = os.getenv("TOKEN")
 assert TOKEN, "ERR: discord bot token not provided."
+
 bot.run(TOKEN)
