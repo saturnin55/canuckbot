@@ -1,6 +1,6 @@
 from . import CanuckBotBase
 from pydantic import BaseModel, Field, TypeAdapter, PrivateAttr
-from typing import get_type_hints, Any
+from typing import get_type_hints, Any, Type
 from discord.ext.commands import Bot
 
 class Info(CanuckBotBase):
@@ -9,11 +9,11 @@ class Info(CanuckBotBase):
     field: str = None
     info: str = None
 
-    def __init__(self, bot):
+    def __init__(self, bot: Bot = None):
         super().__init__(bot)
 
     @classmethod
-    async def create(cls, bot, obj, field):
+    async def create(cls: Type["Info"], bot: Bot, obj: str = None, field: str = None) -> "Info":
         instance = Info(bot)
         instance.obj = obj
         instance.field = field

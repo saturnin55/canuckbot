@@ -1,10 +1,11 @@
 import re
 from datetime import datetime
+from discord.ext.commands import Context, Bot
 
 import discord
 import validators
 
-from CanuckBot import ctx
+#from CanuckBot import ctx
 from CanuckBot.constants import (
     TYPE_BOOL,
     TYPE_COLOR,
@@ -20,27 +21,27 @@ from CanuckBot.constants import (
 )
 
 
-async def get_discord_role(context, bot, roleid) -> discord.Role | None:
+async def get_discord_role(ctx: Context, bot: Bot, roleid) -> discord.Role | None:
     """Fetch a Discord role, trying cache first, then fetching from API if necessary."""
 
     # Try to get the role from cache
     roleid = int(roleid)
-    role = context.guild.get_role(roleid)
+    role = ctx.guild.get_role(roleid)
     if role:
         return role  # Return cached role if found
 
     # If not in cache, fetch roles from API
     try:
-        roles = await context.guild.fetch_roles()  # Fetch all roles
+        roles = await ctx.guild.fetch_roles()  # Fetch all roles
         return discord.utils.get(roles, id=roleid)  # Find role in fetched list
     except discord.HTTPException as e:
         print(f"Failed to fetch role : {e}")
         return None  # Return None if role fetch fails
 
 
-async def get_discord_user(context, bot, userid):
+async def get_discord_user(ctx: Context, bot: Bot, userid):
     userid = int(userid)
-    user = context.guild.get_member(userid) or await bot.fetch_user(userid)
+    user = ctx.guild.get_member(userid) or await bot.fetch_user(userid)
     return user
 
 
@@ -82,7 +83,7 @@ async def get_discord_channel(bot, channel_id):
     return channel if channel else None
 
 
-async def get_discord_category(context, bot, categoryid):
+async def get_discord_category(ctx: Context, bot: Bot, categoryid):
     categoryid = int(categoryid)
     category = discord.utils.get(context.guild.categories, id=categoryid)
 

@@ -1,16 +1,17 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from discord.ext.commands import Context
+from discord.ext.commands import Context, Bot
 
 import CanuckBot
 from CanuckBot.Info import Info
 from CanuckBot.Manager import Manager
+from CanuckBot.utils import timestamp2str
 from decorators.checks import is_manager
 
 
 class ManagerCog(commands.Cog, name="managers"):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
     @commands.hybrid_group(
@@ -80,7 +81,7 @@ class ManagerCog(commands.Cog, name="managers"):
 
         embed = discord.Embed(title="CanuckBot Managers", color=discord.Color.blue())
         for item in managers:
-            dt_added = CanuckBot.timestamp2str(item["dt_added"])
+            dt_added = timestamp2str(item["dt_added"])
 
             manager = await CanuckBot.get_discord_user(
                 context, self.bot, item["userid"]
@@ -184,5 +185,5 @@ class ManagerCog(commands.Cog, name="managers"):
 # reload and use it's content.
 
 
-async def setup(bot) -> None:
+async def setup(bot: Bot) -> None:
     await bot.add_cog(ManagerCog(bot))

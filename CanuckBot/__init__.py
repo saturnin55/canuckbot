@@ -1,5 +1,5 @@
 from typing import Optional, Any, get_type_hints
-from discord.ext.commands import Bot
+from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, root_validator, PrivateAttr, TypeAdapter
 from database import DatabaseManager
 

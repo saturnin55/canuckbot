@@ -1,6 +1,7 @@
 import time
 from datetime import date
-from typing import List, Optional
+from typing import List, Optional, Type
+from discord.ext.commands import Bot
 
 from . import CanuckBotBase
 from .types import SnowflakeId
@@ -9,22 +10,22 @@ from .User_Level import User_Level
 
 
 class Manager(CanuckBotBase):
-    user_id = SnowflakeId
-    created_at: date
-    created_by = SnowflakeId
-    level: User_Level
-    competitions: List[int]
+    user_id: SnowflakeId = 0
+    created_at: date = None
+    created_by: SnowflakeId = 0
+    level: User_Level = User_Level.Public
+    competitions: List[int] = []
 
-    def __init__(self, bot):
+    def __init__(self, bot: Bot = None):
         super().__init__(bot)
-        self.user_id = null
-        self.created_at = null
-        self.created_by = null
-        self.level = User_Level.Public
-        self.competitions = []
+        #self.user_id = null
+        #self.created_at = null
+        #self.created_by = null
+        #self.level = User_Level.Public
+        #self.competitions = []
 
     @classmethod
-    async def create(cls, bot):
+    async def create(cls: Type["Manager"], bot: Bot = None) -> "Manager":
         instance = Manager(bot)
         return instance
 
@@ -43,7 +44,7 @@ class Manager(CanuckBotBase):
                 self.data["created_by"] = int(row["created_by"])
 
             try:
-                rows = await self.bot.database.select(
+                rows = await self._bot.database.select(
                     "SELECT competition_id FROM manager_competitions WHERE user_id = ? ORDER BY competition_id ASC", [str(user_id)]
                 )
                 if not rows:
@@ -57,7 +58,7 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def add(self, user_id: int, invoking_id: int) -> bool:
+    async def add(self, user_id: int = None, invoking_id: int = None) -> bool:
         user = await self.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
@@ -89,7 +90,7 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def remove(self, user_id: int) -> bool:
+    async def remove(self, user_id: int = None) -> bool:
         user = await self.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
@@ -113,7 +114,7 @@ class Manager(CanuckBotBase):
 
     async def list(self) -> dict | bool:
         try:
-            rows = await self.bot.database.select(
+            rows = await self._bot.database.select(
                 "SELECT user_id, strftime('%s', created_at) as created_at, created_by \
                                                    FROM managers \
                                                    ORDER BY created_at ASC"

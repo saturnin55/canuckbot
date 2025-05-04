@@ -1,6 +1,6 @@
 from . import CanuckBotBase
 from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
-from typing import get_type_hints, Any
+from typing import get_type_hints, Any, Type
 from .types import SnowflakeId, HexColor
 from .TimeZone import TimeZone
 from discord.ext.commands import Bot
@@ -26,13 +26,13 @@ class Config(CanuckBotBase):
         super().__init__(bot)
 
     @classmethod
-    async def create(cls, bot):
+    async def create(cls: Type["Config"], bot: Bot) -> "Config":
         instance = cls(bot)
         await instance.list()
 
         return instance
 
-    async def update(self, field) -> bool:
+    async def update(self, field: str = None) -> bool:
         ret: bool
 
         ret = await self._bot.database.update(
