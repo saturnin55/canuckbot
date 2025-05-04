@@ -1,9 +1,11 @@
+from typing import Optional
+
 import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
-import CanuckBot
+# from bot import DiscordBot
 from CanuckBot.Config import Config
 from CanuckBot.Info import Info
 from decorators.checks import is_manager
@@ -24,7 +26,7 @@ class ConfigCog(commands.Cog, name="config"):
                 description="Please specify a subcommand.\n\n**Subcommands:**\n`set` - Set CanuckBot's configuration.\n`list` - List CanuckBot's configuration.",
                 color=0xE02B2B,
             )
-        await context.send(embed=embed)
+            await context.send(embed=embed)
 
     @config.command(
         name="set",
@@ -36,16 +38,19 @@ class ConfigCog(commands.Cog, name="config"):
         info="The text info to set for the selected field.",
     )
     async def config_set(
-        self, context: Context, field: str = None, info: str = None
+        self, context: Context, field: Optional[str] = None, info: Optional[str] = None
     ) -> None:
-
-        config = await Config.create(self.bot)
-        setattr(config, field, info)
-
-        if await config.update(field):
-            await context.send("Configuration updated.")
+        if field and info:
+            config = await Config.create(self.bot)
+            setattr(config, field, info)
+            if await config.update(field):
+                await context.send("Configuration updated.")
+            else:
+                await context.send(
+                    "ERR: There was an error trying to update the config."
+                )
         else:
-            await context.send("ERR: There was an error trying to update the config.")
+            await context.send("ERR: no field or value was provided.")
 
     @config.command(
         name="info",
@@ -55,10 +60,10 @@ class ConfigCog(commands.Cog, name="config"):
     @app_commands.describe(
         field="The field to get info on.",
     )
-    async def config_info(self, context: Context, field: str = None) -> None:
+    async def config_info(self, context: Context, field: Optional[str] = None) -> None:
         config = await Config.create(self.bot)
 
-        #if not config.field_exists(field):
+        # if not config.field_exists(field):
         #    await context.send(f"ERR: config.{field} is not defined.")
         #    return
 
@@ -83,7 +88,12 @@ class ConfigCog(commands.Cog, name="config"):
     @app_commands.describe(
         field="The field to set info on.",
     )
-    async def config_setinfo(self, context: Context, field: str = None, info_text: str = None) -> bool:
+    async def config_setinfo(
+        self,
+        context: Context,
+        field: Optional[str] = None,
+        info_text: Optional[str] = None,
+    ) -> None:
         objinfo = await Info.create(self.bot, "config", field)
         if await objinfo.set(info_text):
             await context.send(f"config.{field} updated : `{info_text}`")
@@ -105,7 +115,7 @@ class ConfigCog(commands.Cog, name="config"):
         )
 
         for key, v in config.model_dump().items():
-            #print(f"{key}: {v}")
+            # print(f"{key}: {v}")
 
             embed.add_field(
                 name=f"{key}",

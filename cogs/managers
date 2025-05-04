@@ -25,7 +25,7 @@ class ManagerCog(commands.Cog, name="managers"):
                 description="Please specify a subcommand.\n\n**Subcommands:**\n`add` - Add a new CanuckBot manager.\n`del` - Remove a CanuckBot manager.\n`list` - List all CanuckBot managers.",
                 color=0xE02B2B,
             )
-        await context.send(embed=embed)
+            await context.send(embed=embed)
 
     @mngr.command(
         name="add",
@@ -36,6 +36,7 @@ class ManagerCog(commands.Cog, name="managers"):
         user="The user to add as a new CanuckBot manager.",
     )
     async def mngr_add(self, context: Context, user: discord.User) -> None:
+        assert context.interaction, "ERR managers.py mngr_add: interaction not available."
         invoking_user = context.interaction.user
         manager = Manager(self.bot)
         ret = await manager.add(user.id, invoking_user.id)
@@ -79,7 +80,8 @@ class ManagerCog(commands.Cog, name="managers"):
         m = Manager(self.bot)
         managers = await m.list()
 
-        embed = discord.Embed(title="CanuckBot Managers", color=discord.Color.blue())
+        embed = discord.Embed(title="CanuckBot Managers",
+                              color=discord.Color.blue())
         for item in managers:
             dt_added = timestamp2str(item["dt_added"])
 

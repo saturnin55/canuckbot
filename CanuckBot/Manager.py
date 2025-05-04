@@ -1,31 +1,31 @@
 import time
 from datetime import date
-from typing import List, Optional, Type
-from discord.ext.commands import Bot
+from typing import Any, List, Optional, Type
 
+from aiosqlite import Error as aiosqliteError
+
+# from User_Level import User_Level
 from . import CanuckBotBase
 from .types import SnowflakeId
-from .User_Level import User_Level
-
 
 
 class Manager(CanuckBotBase):
-    user_id: SnowflakeId = 0
-    created_at: date = None
-    created_by: SnowflakeId = 0
-    level: User_Level = User_Level.Public
+    user_id = SnowflakeId
+    created_at: date
+    created_by = SnowflakeId
+    # level: User_Level = User_Level.Public
     competitions: List[int] = []
 
-    def __init__(self, bot: Bot = None):
+    def __init__(self, bot):
         super().__init__(bot)
-        #self.user_id = null
-        #self.created_at = null
-        #self.created_by = null
-        #self.level = User_Level.Public
-        #self.competitions = []
+        self.user_id = None
+        # self.created_at = None
+        self.created_by = None
+        # self.level = User_Level.Public
+        self.competitions = []
 
     @classmethod
-    async def create(cls: Type["Manager"], bot: Bot = None) -> "Manager":
+    async def create(cls: Type["Manager"], bot=None) -> "Manager":
         instance = Manager(bot)
         return instance
 
@@ -33,33 +33,36 @@ class Manager(CanuckBotBase):
         if user_id is None:
             return False
         else:
-            row = await self.database.get_one(
+            assert self._bot.database, "ERR Manager.py get(): database not available."
+            row = await self._bot.database.get_one(
                 "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
             )
             if not row:
                 return False
             else:
-                self.data["user_id"] = int(row["user_id"])
-                self.data["created_at"] = int(row["created_at"])
-                self.data["created_by"] = int(row["created_by"])
+                self.user_id = int(row["user_id"])
+                self.created_at = date.fromtimestamp(int(row["created_at"]))
+                self.created_by = int(row["created_by"])
 
             try:
                 rows = await self._bot.database.select(
-                    "SELECT competition_id FROM manager_competitions WHERE user_id = ? ORDER BY competition_id ASC", [str(user_id)]
+                    "SELECT competition_id FROM manager_competitions WHERE user_id = ? ORDER BY competition_id ASC",
+                    [str(user_id)],
                 )
                 if not rows:
                     self.competitions = []
                 else:
                     for row in rows:
-                        c.append(int(row["competition_id"]))
-            except aiosqlite.Error as e:
+                        self.competitions.append(int(row["competition_id"]))
+            except aiosqliteError as e:
                 print(f"ERR Manager.get(): {e}")
                 return False
 
         return True
 
-    async def add(self, user_id: int = None, invoking_id: int = None) -> bool:
-        user = await self.database.get_one(
+    async def add(self, user_id: int, invoking_id: int) -> bool:
+        assert self._bot.database, "ERR Manager.py add(): database not available."
+        user = await self._bot.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
 
@@ -69,29 +72,32 @@ class Manager(CanuckBotBase):
         else:
             try:
                 now = int(time.time())
-                await self.database.insert(
+                await self._bot.database.insert(
                     "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, ?, ?)",
                     [str(user_id), now, str(invoking_id)],
                 )
-                await self.database.connection.commit()
+                await self._bot.database.connection.commit()
 
-                self.data["user_id"] = int(user_id)
-                self.data["created_at"] = int(now)
-                self.data["created_by"] = int(invoking_id)
+                self.user_id = int(user_id)
+                self.created_at = date.fromtimestamp(int(now))
+                self.created_by = int(invoking_id)
 
                 # make sure there are no prior entries in manager_competitions
-                await self.database.delete("DELETE FROM manager_competitions WHERE user_id = ?", [str(user_id)])
-                await self.database.connection.commit()
+                await self._bot.database.delete(
+                    "DELETE FROM manager_competitions WHERE user_id = ?", [str(user_id)]
+                )
+                await self._bot.database.connection.commit()
 
                 return True
-            except aiosqlite.Error as e:
+            except aiosqliteError as e:
                 print(f"ERR Manager.add(): {e}")
                 return False
 
         return True
 
-    async def remove(self, user_id: int = None) -> bool:
-        user = await self.database.get_one(
+    async def remove(self, user_id: int) -> bool:
+        assert self._bot.database, "ERR Manager.py remove(): database not available."
+        user = await self._bot.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
 
@@ -100,20 +106,21 @@ class Manager(CanuckBotBase):
             return True
         else:
             try:
-                await self.database.delete(
+                await self._bot.database.delete(
                     "DELETE FROM managers WHERE user_id = ?", [str(user_id)]
                 )
-                await self.database.connection.commit()
+                await self._bot.database.connection.commit()
 
                 return True
-            except aiosqlite.Error as e:
+            except aiosqliteError as e:
                 print(f"ERR Manager.add(): {e}")
                 return False
 
         return True
 
-    async def list(self) -> dict | bool:
+    async def list(self) -> list[dict[str, Any]] | bool:
         try:
+            assert self._bot.database, "ERR Manager.py list(): database not available."
             rows = await self._bot.database.select(
                 "SELECT user_id, strftime('%s', created_at) as created_at, created_by \
                                                    FROM managers \
@@ -127,6 +134,6 @@ class Manager(CanuckBotBase):
                     row["created_at"] = int(row["created_at"])
                     row["created_by"] = int(row["created_by"])
                 return rows
-        except aiosqlite.Error as e:
+        except aiosqliteError as e:
             print(f"ERR Manager.get_all(): {e}")
             return False

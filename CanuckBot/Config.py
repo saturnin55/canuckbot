@@ -1,20 +1,22 @@
+from typing import Any, Literal, Optional, Type
+
+from pydantic import HttpUrl
+
 from . import CanuckBotBase
-from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
-from typing import get_type_hints, Any, Type
-from .types import SnowflakeId, HexColor
 from .TimeZone import TimeZone
-from discord.ext.commands import Bot
+from .types import HexColor, SnowflakeId
 
 
 class Config(CanuckBotBase):
-
     channel_logs: SnowflakeId = 0
     channel_cmds: SnowflakeId = 0
     default_add_hours_before: int = 0
     default_del_hours_after: int = 0
     default_category_id: SnowflakeId = 0
-    default_logo_url: HttpUrl = "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
-    default_tz: TimeZone = "America/Toronto"
+    default_logo_url: HttpUrl = HttpUrl(
+        "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
+    )
+    default_tz: TimeZone = TimeZone("America/Toronto")
     mngr_role_id: SnowflakeId = 0
     default_comp_color: HexColor = "#ffffff"
     optout_all_role_id: SnowflakeId = 0
@@ -24,35 +26,35 @@ class Config(CanuckBotBase):
 
     def __init__(self, bot):
         super().__init__(bot)
+        assert self._bot.database
 
     @classmethod
-    async def create(cls: Type["Config"], bot: Bot) -> "Config":
+    async def create(cls: Type["Config"], bot) -> "Config":
         instance = cls(bot)
         await instance.list()
 
         return instance
 
-    async def update(self, field: str = None) -> bool:
+    async def update(self, field: str) -> bool:
         ret: bool
-
+        assert self._bot.database, "ERR Config.py update(): database not available."
         ret = await self._bot.database.update(
-            "UPDATE config SET value = ? WHERE field = ?", [
-                str(getattr(self, field, None)), str(field)]
+            "UPDATE config SET value = ? WHERE field = ?",
+            [str(getattr(self, field, None)), str(field)],
         )
         return ret
 
-    async def get(self, field: str = None) -> str | bool:
-        value = getattr(self, field, None)
+    async def get(self, field: Optional[str] = None) -> str | Literal[False]:
+        value = getattr(self, field, None) if field else False
 
-        if value is None:
-            return False
-        else:
-            return value
+        return value or False
 
-    async def list(self) -> list | bool:
+    async def list(self) -> dict[str, Any] | Literal[False]:
         data: dict[str, Any] = {}
-
-        rows = await self._bot.database.select("SELECT * FROM config ORDER BY field ASC")
+        assert self._bot.database, "ERR Config.py list(): database not available."
+        rows = await self._bot.database.select(
+            "SELECT * FROM config ORDER BY field ASC"
+        )
 
         if not rows:
             return False
@@ -65,4 +67,4 @@ class Config(CanuckBotBase):
                 setattr(self, item["field"], cast_value)
                 data[item["field"]] = cast_value
 
-        return data
+            return data
