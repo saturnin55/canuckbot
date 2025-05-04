@@ -53,7 +53,8 @@ class CompCog(commands.Cog, name="comp"):
             print(f"{e}")
 
         cursor = conn.cursor()
-        cursor.execute("SELECT name, handle FROM competitions WHERE flag_active = TRUE")
+        cursor.execute(
+            "SELECT name, handle FROM competitions WHERE flag_active = TRUE")
         results = cursor.fetchall()
         print(results)
         conn.close()
