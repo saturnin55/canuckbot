@@ -6,20 +6,15 @@ Description:
 Version: 6.2.0
 """
 
-import json
 import logging
 import os
 import platform
 import random
-import sys
 
 import aiosqlite
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
-from dotenv import load_dotenv
-from DiscordBot.LoggingFormatter import LoggingFormatter
-
 
 from database import DatabaseManager
 
@@ -56,8 +51,11 @@ intents.message_content = False
 intents.presences = False
 """
 
+
 class DiscordBot(commands.Bot):
-    def __init__(self, intents: discord.Intents, logger: LoggingFormatter, config: dict) -> None:
+    def __init__(
+        self, intents: discord.Intents, logger: logging.Logger, config: dict
+    ) -> None:
         super().__init__(
             command_prefix=commands.when_mentioned_or(config["prefix"]),
             intents=intents,
@@ -76,12 +74,8 @@ class DiscordBot(commands.Bot):
         self.database = None
 
     async def init_db(self) -> None:
-        async with aiosqlite.connect(
-            f"{self.config["db_dir"]}/database.db"
-        ) as db:
-            with open(
-                f"{self.config["db_dir"]}/schema.sql"
-            ) as file:
+        async with aiosqlite.connect(f"{self.config['db_dir']}/database.db") as db:
+            with open(f"{self.config['db_dir']}/schema.sql") as file:
                 await db.executescript(file.read())
             await db.commit()
         pass
@@ -193,6 +187,7 @@ class DiscordBot(commands.Bot):
         """
         This will just be executed when the bot starts the first time.
         """
+        assert self.user, "ERR in bot.py setup_hook(): self.user not available."
         self.logger.info(f"Logged in as {self.user.name}")
         self.logger.info(f"discord.py API version: {discord.__version__}")
         self.logger.info(f"Python version: {platform.python_version()}")
@@ -203,11 +198,9 @@ class DiscordBot(commands.Bot):
         await self.init_db()
         await self.load_cogs()
         self.status_task.start()
-        #self.database = DatabaseManager(
-        #    connection=await aiosqlite.connect(
-        #        f"{os.path.realpath(os.path.dirname(__file__))}/database/database.db"
-        #    )
-        #)
+        self.database = DatabaseManager(
+            connection=await aiosqlite.connect(f"{self.config['db_dir']}/database.db")
+        )
 
     async def on_message(self, message: discord.Message) -> None:
         """
@@ -225,6 +218,9 @@ class DiscordBot(commands.Bot):
 
         :param context: The context of the command that has been executed.
         """
+        assert context.command, (
+            "ERR in bot.py on_command_completion(): context.command not available."
+        )
         full_command_name = context.command.qualified_name
         split = full_command_name.split(" ")
         executed_command = str(split[0])

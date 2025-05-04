@@ -4,6 +4,8 @@ from typing import Any, List, Optional, Type
 
 from aiosqlite import Error as aiosqliteError
 
+from DiscordBot.DiscordBot import DiscordBot
+
 # from User_Level import User_Level
 from . import CanuckBotBase
 from .types import SnowflakeId
@@ -16,7 +18,7 @@ class Manager(CanuckBotBase):
     # level: User_Level = User_Level.Public
     competitions: List[int] = []
 
-    def __init__(self, bot):
+    def __init__(self, bot: DiscordBot):
         super().__init__(bot)
         self.user_id = None
         # self.created_at = None
@@ -25,7 +27,7 @@ class Manager(CanuckBotBase):
         self.competitions = []
 
     @classmethod
-    async def create(cls: Type["Manager"], bot=None) -> "Manager":
+    async def create(cls: Type["Manager"], bot: DiscordBot) -> "Manager":
         instance = Manager(bot)
         return instance
 

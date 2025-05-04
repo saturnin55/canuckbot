@@ -9,19 +9,13 @@ Version: 6.2.0
 import json
 import logging
 import os
-import platform
-import random
 import sys
 
-import aiosqlite
 import discord
-from discord.ext import commands, tasks
-from discord.ext.commands import Context
 from dotenv import load_dotenv
+
 from DiscordBot.DiscordBot import DiscordBot
 from DiscordBot.LoggingFormatter import LoggingFormatter
-
-from database import DatabaseManager
 
 load_dotenv()
 
@@ -104,4 +98,6 @@ config["db_dir"] = f"{os.path.realpath(os.path.dirname(__file__))}/database/"
 bot = DiscordBot(intents, logger, config)
 
 # bot = DiscordBot(owner_id = os.getenv("OWNER"))
-bot.run(os.getenv("TOKEN"))
+TOKEN = os.getenv("TOKEN")
+assert TOKEN, "ERR: discord bot token not provided."
+bot.run(TOKEN)
