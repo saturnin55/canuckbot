@@ -73,12 +73,19 @@ class DiscordBot(commands.Bot):
         self.config = config
         self.database = None
 
-    async def init_db(self) -> None:
-        async with aiosqlite.connect(f"{self.config['db_dir']}/database.db") as db:
-            with open(f"{self.config['db_dir']}/schema.sql") as file:
-                await db.executescript(file.read())
-            await db.commit()
-        pass
+
+    async def init_db(self, db_file: str = None) -> None:
+        #conn = aiosqlite.connect(db_file)
+        #self.database = DatabaseManager(conn)
+        #return conn
+        os.environ["DB_PATH"] = f"{self.config['db_dir']}/database.db"
+        return
+
+        #async with aiosqlite.connect(f"{self.config['db_dir']}/database.db") as db:
+        #    with open(f"{self.config['db_dir']}/schema.sql") as file:
+        #        await db.executescript(file.read())
+        #    await db.commit()
+        #pass
 
     async def load_cogs(self) -> None:
         """
@@ -101,75 +108,11 @@ class DiscordBot(commands.Bot):
         """
         Setup the game status task of the bot.
         """
-        # put this stuff in the database
-        statuses = [
-            "Alphonso Davies leave defenders in 2019!",
-            "Jonathan David make goalkeepers cry!",
-            "Tajon Buchanan send fullbacks to retirement!",
-            "the USA wonder why Canada is better now!",
-            "the CONCACAF refs ruin another match!",
-            "Alphonso race a cheetah (and win)!",
-            "Canada send Mexico to their winter coats!",
-            "David outscore every ‘bigger’ nation!",
-            "the USA call Canada ‘just lucky’ again!",
-            "Borjan’s sweatpants win another game!",
-            "Buchanan break ankles for fun!",
-            "Davies make defenders question their life choices!",
-            "Canada teach CONCACAF about real football!",
-            "Costa Rica wonder when Canada got good!",
-            "Davies turn a game into a track meet!",
-            "Borjan stop shots like it’s his day job!",
-            "the USA fans cope in real time!",
-            "Canada silence the Azteca crowd!",
-            "Mexico blame the altitude instead!",
-            "Canadian players dominate in Europe!",
-            "the USA claim dual-nationals as their own!",
-            "David casually outscore CONCACAF legends!",
-            "Canada own the ‘Kings of CONCACAF’ title!",
-            "USA fans google ‘Canada’s soccer history’!",
-            "Panama ask if it’s too late to switch regions!",
-            "Canada break FIFA rankings again!",
-            "Davies make defenders look like training cones!",
-            "Borjan win games in sweatpants!",
-            "the USA call it ‘a fluke’ for the 5th time!",
-            "Buchanan do stepovers for fun!",
-            "David ghost past defenses like a ninja!",
-            "Mexico wonder what happened in 2021!",
-            "Alphonso outrun Wi-Fi signals!",
-            "USA fans realize Canada has real talent!",
-            "Larin celebrate with a casual shrug!",
-            "Canada become the true giants of CONCACAF!",
-            "Canada qualify while others struggle!",
-            "Davies make 99 pace look slow!",
-            "Borjan collect another clean sheet!",
-            "the USA wonder why their golden generation isn’t winning!",
-            "Canada turn ‘underdog’ into ‘top dog’!",
-            "David steal another Golden Boot race!",
-            "Canada’s midfield run laps around the opposition!",
-            "Davies delete fullbacks from existence!",
-            "CONCACAF defenders have nightmares about Canada!",
-            "the USA wish they had Alphonso Davies!",
-            "David and Buchanan make defenders retire!",
-            "Canada dunk on ‘bigger’ nations!",
-            "the world finally respect Canadian soccer!",
-            "Borjan’s sweatpants become legendary!",
-            "Jesse Marsch turn Canada into a pressing machine!",
-            "Eustáquio make midfield look easy!",
-            "Larin casually score on every CONCACAF keeper!",
-            "Johnston slide tackle his way through history!",
-            "Jesse Marsch outcoach his former employers!",
-            "Eustáquio ping 40-yard passes for fun!",
-            "Larin become Canada's all-time top scorer!",
-            "Johnston defend like his life depends on it!",
-            "Jesse Marsch yell in three languages at once!",
-            "Eustáquio be the midfield general we needed!",
-            "Larin ghost into the box (again)!",
-            "Johnston leave wingers in his back pocket!",
-            "Eustáquio run the midfield like a CEO!",
-            "Larin score while looking half-asleep!",
-            "Johnston prove fullbacks can be cool!",
-        ]
-
+        statuses = []
+        rows = await self.database.select("SELECT status FROM bot_statuses");
+        for row in rows:
+            statuses.append(row["status"])
+ 
         await self.change_presence(
             activity=discord.Activity(
                 name=random.choice(statuses), type=discord.ActivityType.watching
@@ -195,7 +138,7 @@ class DiscordBot(commands.Bot):
             f"Running on: {platform.system()} {platform.release()} ({os.name})"
         )
         self.logger.info("-------------------")
-        await self.init_db()
+        await self.init_db(f"{self.config['db_dir']}/database.db")
         await self.load_cogs()
         self.status_task.start()
         self.database = DatabaseManager(

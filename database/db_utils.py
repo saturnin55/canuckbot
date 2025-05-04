@@ -19,6 +19,7 @@ def connect_db():
 
 
 def is_user_manager(user_id):
+    # fixme need to convert this to aiosqlite and use the DatabaseManager
     try:
         conn = connect_db()
         cursor = conn.cursor()

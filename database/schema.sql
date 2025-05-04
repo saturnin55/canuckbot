@@ -69,3 +69,8 @@ PRIMARY KEY(user_id, competition_id)
 );
 
 CREATE TABLE IF NOT EXISTS config (field TEXT PRIMARY KEY NOT NULL, value TEXT);
+
+CREATE TABLE IF NOT EXISTS bot_statuses (
+ status_id INTEGER PRIMARY KEY AUTOINCREMENT,
+ status TEXT NOT NULL
+);
