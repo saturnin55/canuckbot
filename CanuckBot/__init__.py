@@ -22,6 +22,16 @@ class CanuckBotBase(BaseModel):
         # Add custom validation if needed
         return values
 
+    def get_type(self, field):
+        hints = get_type_hints(self.__class__)
+        expected_type = hints.get(field)
+
+        if expected_type:
+            return expected_type
+        else:
+            #fixme
+            return None
+
     def cast_value(self, field, value):
 
         cast_value = None
