@@ -12,6 +12,7 @@ import os
 import platform
 import random
 import sys
+from typing import TypedDict
 
 import aiosqlite
 import discord
@@ -26,9 +27,10 @@ load_dotenv()
 if not os.path.isfile(f"{os.path.realpath(os.path.dirname(__file__))}/config.json"):
     sys.exit("'config.json' not found! Please add it and try again.")
 else:
+    ConfigType = TypedDict("ConfigType", {"prefix": str, "invite_link": str})
     with open(f"{os.path.realpath(os.path.dirname(__file__))}/config.json") as file:
-        config = json.load(file)
-        config["invite_link"] = os.getenv("INVITE_LINK")
+        config: ConfigType = json.load(file)
+        config["invite_link"] = os.getenv("INVITE_LINK") or ""
 
 """	
 Setup bot intents (events restrictions)
@@ -264,6 +266,7 @@ class DiscordBot(commands.Bot):
         """
         This will just be executed when the bot starts the first time.
         """
+        assert self.user, "ERR in bot.py setup_hook(): self.user not available."
         self.logger.info(f"Logged in as {self.user.name}")
         self.logger.info(f"discord.py API version: {discord.__version__}")
         self.logger.info(f"Python version: {platform.python_version()}")
@@ -296,6 +299,9 @@ class DiscordBot(commands.Bot):
 
         :param context: The context of the command that has been executed.
         """
+        assert context.command, (
+            "ERR in bot.py on_command_completion(): context.command not available."
+        )
         full_command_name = context.command.qualified_name
         split = full_command_name.split(" ")
         executed_command = str(split[0])
@@ -376,4 +382,4 @@ class DiscordBot(commands.Bot):
 
 bot = DiscordBot()
 # bot = DiscordBot(owner_id = os.getenv("OWNER"))
-bot.run(os.getenv("TOKEN"))
+bot.run(os.getenv("TOKEN") or "")

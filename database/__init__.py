@@ -6,6 +6,8 @@ Description:
 Version: 6.2.0
 """
 
+from typing import Any, Literal, Optional
+
 import aiosqlite
 
 
@@ -14,7 +16,7 @@ class DatabaseManager:
         self.connection = connection
         self.connection.row_factory = aiosqlite.Row
 
-    async def get_one(self, sql: str, values: list) -> dict | bool:
+    async def get_one(self, sql: str, values: list) -> dict[str, Any] | Literal[False]:
         try:
             rows = await self.select(sql, values)
             if not rows or len(rows) < 1:
@@ -25,7 +27,7 @@ class DatabaseManager:
             print(f"ERR Database.get_one(): {e}")
             return False
 
-    async def delete(self, sql: str, values: list = None) -> bool:
+    async def delete(self, sql: str, values: Optional[list] = None) -> bool:
         try:
             async with self.connection.execute(sql, values) as cursor:
                 await self.connection.commit()
@@ -37,7 +39,9 @@ class DatabaseManager:
             print(f"ERR Database.delete(): {e}")
             return False
 
-    async def select(self, sql: str, values: list = None) -> list[dict] | bool:
+    async def select(
+        self, sql: str, values: Optional[list] = None
+    ) -> list[dict[str, Any]] | Literal[False]:
         try:
             async with self.connection.execute(sql, values) as cursor:
                 rows = await cursor.fetchall()
