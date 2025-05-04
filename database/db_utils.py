@@ -3,10 +3,12 @@ import sqlite3
 import os
 from pathlib import Path
 
+
 def connect_db():
     db_path = os.getenv("DB_PATH")
     if not db_path:
-        raise EnvironmentError("DB_PATH environment variable is not set. Check your .env file.")
+        raise EnvironmentError(
+            "DB_PATH environment variable is not set. Check your .env file.")
 
     path = Path(db_path)
     if not path.exists():
@@ -22,7 +24,8 @@ def is_user_manager(user_id):
         print(f"{e}")
 
     cursor = conn.cursor()
-    cursor.execute("SELECT userid FROM managers WHERE userid = ?", (user_id,))
+    cursor.execute(
+        "SELECT user_id FROM managers WHERE user_id = ?", (user_id,))
     result = cursor.fetchone()
     conn.close()
 

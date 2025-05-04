@@ -1,7 +1,7 @@
 from . import CanuckBotBase
 from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
 from typing import get_type_hints, Any
-from .types import *
+from .types import SnowflakeId, HexColor
 from .TimeZone import TimeZone
 from discord.ext.commands import Bot
 
@@ -36,7 +36,8 @@ class Config(CanuckBotBase):
         ret: bool
 
         ret = await self._bot.database.update(
-            "UPDATE config SET value = ? WHERE field = ?", [str(getattr(self, field, None)), str(field)]
+            "UPDATE config SET value = ? WHERE field = ?", [
+                str(getattr(self, field, None)), str(field)]
         )
         return ret
 
@@ -46,7 +47,7 @@ class Config(CanuckBotBase):
         if value is None:
             return False
         else:
-            return  value
+            return value
 
     async def list(self) -> list | bool:
         data: dict[str, Any] = {}
