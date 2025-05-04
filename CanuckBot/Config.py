@@ -2,6 +2,8 @@ from typing import Any, Literal, Optional, Type
 
 from pydantic import HttpUrl
 
+from DiscordBot.DiscordBot import DiscordBot
+
 from . import CanuckBotBase
 from .TimeZone import TimeZone
 from .types import HexColor, SnowflakeId
@@ -24,12 +26,11 @@ class Config(CanuckBotBase):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, bot):
+    def __init__(self, bot: DiscordBot):
         super().__init__(bot)
-        assert self._bot.database
 
     @classmethod
-    async def create(cls: Type["Config"], bot) -> "Config":
+    async def create(cls: Type["Config"], bot: DiscordBot) -> "Config":
         instance = cls(bot)
         await instance.list()
 

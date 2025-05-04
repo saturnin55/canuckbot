@@ -3,12 +3,14 @@ from typing import Any, Optional, get_type_hints
 from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator
 
-# from bot import DiscordBot
 from database import DatabaseManager
+
+# from bot import DiscordBot
+from DiscordBot.DiscordBot import DiscordBot
 
 
 class CanuckBotBase(BaseModel):
-    _bot: Any
+    _bot: DiscordBot
 
     # Pydantic will automatically call this method, but you still need custom behavior
     # Override __init__ and call super().__init__ to ensure correct field initialization
