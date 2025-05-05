@@ -6,6 +6,7 @@ Description:
 Version: 6.2.0
 """
 
+import time
 import logging
 import os
 import platform
@@ -103,19 +104,26 @@ class DiscordBot(commands.Bot):
                         f"Failed to load extension {extension}\n{exception}"
                     )
 
+    @tasks.loop(minutes=60.0)
+    async def cleanup_task(self) -> None:
+        """
+        Clean the discord cache
+        """
+        await self.database.delete("DELETE FROM discord_cache WHERE expiration < CURRENT_TIMESTAMP")
+
+
     @tasks.loop(minutes=5.0)
     async def status_task(self) -> None:
         """
         Setup the game status task of the bot.
         """
-        statuses = []
-        rows = await self.database.select("SELECT status FROM bot_statuses");
-        for row in rows:
-            statuses.append(row["status"])
+        # select a random bot status from the database
+        row = await self.database.get_one("SELECT status FROM bot_statuses ORDER BY RANDOM() LIMIT 1", []);
+        status = row["status"]
  
         await self.change_presence(
             activity=discord.Activity(
-                name=random.choice(statuses), type=discord.ActivityType.watching
+                name=status, type=discord.ActivityType.watching
             )
         )
 
@@ -140,10 +148,11 @@ class DiscordBot(commands.Bot):
         self.logger.info("-------------------")
         await self.init_db(f"{self.config['db_dir']}/database.db")
         await self.load_cogs()
-        self.status_task.start()
         self.database = DatabaseManager(
             connection=await aiosqlite.connect(f"{self.config['db_dir']}/database.db")
         )
+        self.status_task.start()
+        self.cleanup_task.start()
 
     async def on_message(self, message: discord.Message) -> None:
         """
