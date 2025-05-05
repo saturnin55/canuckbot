@@ -1,6 +1,6 @@
 import pytz
 from enum import IntEnum
-from typing import Annotated
+from typing import Annotated, Any
 from pydantic import Field
 from pydantic_core import core_schema
 from pydantic import GetCoreSchemaHandler
@@ -12,13 +12,14 @@ HANDLE_PATTERN = r"^[a-zA-Z0-9\-]+$"
 Handle = Annotated[str, Field(pattern=HANDLE_PATTERN, max_length=24)]
 HexColor = Annotated[str, Field(pattern=HEX_COLOR_PATTERN)]
 # we'll need to store snowflakeid as TEXT into sqlite
-UnixTimestamp = Annotated[int, Field(strict=True, gt=0)]
-SnowflakeId = Annotated[int, Field(strict=True, gt=0, lt=2**64 - 1)]
+UnixTimestamp = Annotated[int, Field(strict=True, ge=0)]
+SnowflakeId = Annotated[int, Field(strict=True, ge=0, lt=2**64 - 1)]
 DiscordChannelName: str = Field(..., pattern=r"^[a-z0-9-]{1,100}$")
 DiscordRoleId = SnowflakeId
 DiscordUserId = SnowflakeId
 DiscordCategoryId = SnowflakeId
 DiscordChannelId = SnowflakeId
+DiscordMessageId = SnowflakeId
 
 class User_Level(IntEnum):
     Superadmin = 0
@@ -59,6 +60,13 @@ class TimeZone:
 
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type, handler: GetCoreSchemaHandler) -> core_schema.CoreSchema:
-        def validate(value: str) -> "TimeZone":
-            return cls(value)
+        def validate(value: Any) -> "TimeZone":
+            if isinstance(value, TimeZone):
+                return value
+            if isinstance(value, str):
+                return cls(value)
+            raise TypeError("TimeZone must be a string or TimeZone instance")
         return core_schema.no_info_plain_validator_function(validate)
+
+    def __eq__(self, other):
+        return isinstance(other, TimeZone) and self.tz == other.tz

@@ -1,20 +1,26 @@
+import inspect
 from typing import Any, Optional, get_type_hints, Type
 from discord.ext.commands import Bot, Context
-from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator
+from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator, HttpUrl
 from database import DatabaseManager
 from Discord.DiscordBot import DiscordBot
+from CanuckBot.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId, DiscordUserId, TimeZone, SnowflakeId, Handle, UnixTimestamp, HexColor, DiscordChannelName
+from Discord.DiscordCache import DiscordCache
+from Discord.DiscordUtils import DiscordUtils
 
 
 class CanuckBotBase(BaseModel):
     _bot: DiscordBot = PrivateAttr()
     _type_hints_cache = {}
     _adapters_cache = {}
+    _discord_cache = PrivateAttr()
 
     # Pydantic will automatically call this method, but you still need custom behavior
     # Override __init__ and call super().__init__ to ensure correct field initialization
     def __init__(self, bot: DiscordBot, **kwargs):
         super().__init__(**kwargs)  # Pydantic initializes the fields
         self._bot = bot
+        self._discord_cache = DiscordCache(bot.database, bot.config["cache_expire_offset"])
 
         cls = self.__class__
 
@@ -59,6 +65,10 @@ class CanuckBotBase(BaseModel):
             return adapter.validate_python(value)
         return None
 
+    def is_type(self, field: str, expected_type: Type[Any]) -> bool:
+        actual_type = self.get_type(field)
+        return isinstance(actual_type, type) and issubclass(actual_type, expected_type)
+
 #    def get_type(self, field):
 #        hints = get_type_hints(self.__class__)
 #        expected_type = hints.get(field)
@@ -84,21 +94,60 @@ class CanuckBotBase(BaseModel):
 
         return cast_value
 
-    def get_property_str(self, field: str = None) -> dict:
+    async def get_attrval_str(self, context: Context, field: str = None) -> str | None:
+
+        data = {}
+
         if field.startswith('_'):
             return None
 
-        attr = getattr(type(self), field, None)
-
-        if isinstance(attr, property):
-            try:
-                value = getattr(self, attr_name)
                 # types: int, str, UnixTimestamp, TimeZone, dict, List, DiscordUserId, DiscordChannelId, DiscordRoleId, DiscordCategoryId, HexColor, Handle, User_Level, Competition_Type, Match_Status
+
+        # Get instance attributes directly from the instance's dictionary
+        attributes = vars(self)
+
+        #print(f"Attributes: {attributes}")
+        #print(f"Field passed: {field}")
+
+        # Check if the field is in attributes
+        if field in attributes:
+            try:
+                value = getattr(self, field)
+                # Handle the different types (DiscordChannelId, TimeZone, etc.)
+                data = await self.handle_value_type(context, field, value)
+                return data
             except Exception as e:
-                #fixme
+                print(f"Error retrieving attribute '{field}': {e}")
                 pass
 
         return None
+
+    async def handle_value_type(self, context: Context, field: str, value) -> str:
+        """Helper function to handle different value types."""
+        if field.endswith('channel_id'):
+            return f"<#{value}>"
+        elif field.endswith('role_id'):
+            role_name = await DiscordUtils.get_role(context, self._bot, DiscordRoleId(value))
+            return f"{role_name}"
+        elif field.endswith('user_id'):
+            return f"<@{value}>"
+        elif field.endswith('category_id'):
+            category_name = await DiscordUtils.get_category(context, self._bot, DiscordCategoryId(value))
+            return f"{category_name}"
+        elif field == "color" or field.endswith('_color'):
+            return f"{value}"
+        elif isinstance(value, int):
+            return f"{str(value)}"
+        elif isinstance(value, TimeZone):
+            return f"{str(value.tz)}"
+        elif isinstance(value, HttpUrl):
+            return f"{str(value)}"
+        elif isinstance(value, HexColor):
+            return f"{str(value)}"
+        elif isinstance(value, str):
+            return f"{value}"
+        else:
+            return f"|{str(value)}|"
 
     def get_properties_str(self) -> dict:
 

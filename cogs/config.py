@@ -6,6 +6,7 @@ from discord.ext.commands import Context
 from CanuckBot.Config import Config
 from CanuckBot.Info import Info
 from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
+from Discord.LoggingFormatter import LoggingFormatter
 
 
 class ConfigCog(commands.Cog, name="config"):
@@ -33,14 +34,16 @@ class ConfigCog(commands.Cog, name="config"):
     @is_superadmin()
     @app_commands.describe(
         field="The field to set.",
-        info="The text info to set for the selected field.",
+        value="The text info to set for the selected field.",
     )
     async def config_set(
-        self, context: Context, field: Optional[str] = None, info: Optional[str] = None
+        self, context: Context, field: Optional[str] = None, value: Optional[str] = None
     ) -> None:
-        if field and info:
+        self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config set", context.author, context.kwargs))
+
+        if field and value:
             config = await Config.create(bot=self.bot)
-            setattr(config, field, info)
+            setattr(config, field, value)
             if await config.update(field):
                 await context.send("Configuration updated.")
             else:
@@ -106,6 +109,8 @@ class ConfigCog(commands.Cog, name="config"):
     # @app_commands.describe(
     # )
     async def config_list(self, context: Context):
+        self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config list", context.author, context.kwargs))
+
         config = await Config.create(self.bot)
 
         embed = discord.Embed(
@@ -113,8 +118,12 @@ class ConfigCog(commands.Cog, name="config"):
         )
 
         for key, v in config.model_dump().items():
-            # print(f"{key}: {v}")
+            v = await config.get_attrval_str(context, key)
 
+            if v is None:
+                v = "n/a"
+
+            # get a string representation
             embed.add_field(
                 name=f"{key}",
                 value=f"{v}",

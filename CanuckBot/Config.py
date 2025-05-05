@@ -6,8 +6,8 @@ from CanuckBot.types import HexColor, DiscordChannelId, DiscordCategoryId, Disco
 
 
 class Config(CanuckBotBase):
-    channel_logs: DiscordChannelId = 0
-    channel_cmds: DiscordChannelId = 0
+    logs_channel_id: DiscordChannelId = 0
+    cmds_channel_id: DiscordChannelId = 0
     default_add_hours_before: int = 0
     default_del_hours_after: int = 0
     default_category_id: DiscordCategoryId = 0
@@ -22,8 +22,8 @@ class Config(CanuckBotBase):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, bot: DiscordBot):
-        super().__init__(bot)
+    def __init__(self, bot: DiscordBot, **kwargs):
+        super().__init__( bot=bot, **kwargs)
 
     @classmethod
     async def create(cls: Type["Config"], bot: DiscordBot) -> "Config":
