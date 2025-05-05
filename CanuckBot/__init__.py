@@ -2,7 +2,7 @@ from typing import Any, Optional, get_type_hints, Type
 from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator
 from database import DatabaseManager
-from DiscordBot.DiscordBot import DiscordBot
+from DiscordBot import DiscordBot
 
 
 class CanuckBotBase(BaseModel):
@@ -89,7 +89,7 @@ class CanuckBotBase(BaseModel):
         if isinstance(attr, property):
             try:
                 value = getattr(self, attr_name)
-                #fixme deal with possible types
+                # types: int, str, UnixTimestamp, TimeZone, dict, List, DiscordUserId, DiscordChannelId, DiscordRoleId, DiscordCategoryId, HexColor, Handle, User_Level, Competition_Type, Match_Status
             except Exception as e:
                 #fixme
                 pass

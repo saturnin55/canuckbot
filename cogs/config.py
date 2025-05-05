@@ -1,11 +1,8 @@
-from typing import Optional
-
 import discord
+from typing import Optional
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
-
-# from bot import DiscordBot
 from CanuckBot.Config import Config
 from CanuckBot.Info import Info
 from decorators.checks import is_manager

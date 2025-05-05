@@ -14,7 +14,7 @@ import sys
 import discord
 from dotenv import load_dotenv
 
-from DiscordBot.DiscordBot import DiscordBot
+from DiscordBot import DiscordBot
 from DiscordBot.LoggingFormatter import LoggingFormatter
 
 load_dotenv()
