@@ -74,3 +74,10 @@ CREATE TABLE IF NOT EXISTS bot_statuses (
  status_id INTEGER PRIMARY KEY AUTOINCREMENT,
  status TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS discord_cache (
+ key TEXT PRIMARY KEY,
+ name TEXT,
+ timestamp INTEGER,
+ expiration INTEGER
+);
