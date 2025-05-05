@@ -7,7 +7,7 @@ import CanuckBot
 from CanuckBot.Info import Info
 from CanuckBot.Manager import Manager
 from CanuckBot.utils import timestamp2str
-from decorators.checks import is_manager
+from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
 
 
 class ManagerCog(commands.Cog, name="managers"):
@@ -31,7 +31,7 @@ class ManagerCog(commands.Cog, name="managers"):
         name="add",
         description="Add a new CanuckBot manager.",
     )
-    @commands.is_owner()
+    @is_superadmin()
     @app_commands.describe(
         user="The user to add as a new CanuckBot manager.",
     )
@@ -51,7 +51,7 @@ class ManagerCog(commands.Cog, name="managers"):
         name="del",
         description="Remove a new CanuckBot manager.",
     )
-    @commands.is_owner()
+    @is_superadmin()
     @app_commands.describe(
         user="The user to remove as a CanuckBot manager.",
     )
@@ -73,7 +73,7 @@ class ManagerCog(commands.Cog, name="managers"):
         name="list",
         description="List all CanuckBot managers.",
     )
-    @commands.is_owner()
+    @is_full_manager()
     # @app_commands.describe(
     # )
     async def mngr_list(self, context: Context):
@@ -120,7 +120,7 @@ class ManagerCog(commands.Cog, name="managers"):
         name="info",
         description="Display information about a manager parameter.",
     )
-    @is_manager()
+    @is_full_manager()
     @app_commands.describe(
         field="The field to get info on.",
     )
@@ -148,7 +148,7 @@ class ManagerCog(commands.Cog, name="managers"):
         name="setinfo",
         description="Set information about a configuration parameter.",
     )
-    @commands.is_owner()
+    @is_superadmin()
     @app_commands.describe(
         field="The field to set info on.",
     )

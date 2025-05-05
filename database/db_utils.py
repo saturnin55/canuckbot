@@ -1,25 +1,25 @@
 # db_utils.py
 import os
-import sqlite3
 from pathlib import Path
 from CanuckBot.types import User_Level, DiscordUserId
+from database import DatabaseManager
 
 
-def connect_db():
-    db_path = os.getenv("DB_PATH")
-    if not db_path:
-        raise EnvironmentError(
-            "DB_PATH environment variable is not set. Check your .env file."
-        )
+#def connect_db():
+#    db_path = os.getenv("DB_PATH")
+#    if not db_path:
+#        raise EnvironmentError(
+#            "DB_PATH environment variable is not set. Check your .env file."
+#        )
+#
+#    path = Path(db_path)
+#    if not path.exists():
+#        raise FileNotFoundError(f"Database file not found at: {db_path}")
+#
+#    return sqlite3.connect(db_path)
 
-    path = Path(db_path)
-    if not path.exists():
-        raise FileNotFoundError(f"Database file not found at: {db_path}")
 
-    return sqlite3.connect(db_path)
-
-
-def is_user_manager(user_id: DiscordUserId = None, level: User_Level = User_Level.Superadmin):
+def is_user_manager(db: DatabaseManager = None, user_id: DiscordUserId = None, level: User_Level = User_Level.Superadmin):
     # fixme need to convert this to aiosqlite and use the DatabaseManager
     try:
         conn = connect_db()

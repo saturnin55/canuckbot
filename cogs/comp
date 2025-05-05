@@ -7,7 +7,7 @@ from discord.ext.commands import Context
 import CanuckBot
 from CanuckBot.Competition import Competition
 from database.db_utils import connect_db
-from decorators.checks import is_manager
+from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
 
 
 class CompCog(commands.Cog, name="comp"):
@@ -31,7 +31,7 @@ class CompCog(commands.Cog, name="comp"):
         name="list",
         description="List all competitions.",
     )
-    @is_manager()
+    @is_trusted_manager()
     @app_commands.describe()
     async def comp_list(self, context: Context) -> None:
         try:
@@ -56,11 +56,12 @@ class CompCog(commands.Cog, name="comp"):
         name="show",
         description="Show the details of a competition.",
     )
-    @is_manager()
+    #@is_trusted_manager()
     @app_commands.describe(
         key="The competition to get info on (id_comp or handle).",
     )
     async def comp_show(self, context: Context, key: str = None) -> None:
+		# only show relevant fields to normal users
         print("a1")
         comp = await Competition.create(self.bot, key)
         print("a2")
@@ -116,7 +117,7 @@ class CompCog(commands.Cog, name="comp"):
         name="edit",
         description="Edit a competition.",
     )
-    @is_manager()
+    @is_trusted_manager()
     # @app_commands.describe(
     # )
     async def comp_edit(
