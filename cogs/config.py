@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from CanuckBot.Config import Config
 from CanuckBot.Info import Info
-from decorators.checks import is_manager
+from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
 
 
 class ConfigCog(commands.Cog, name="config"):
@@ -29,7 +29,8 @@ class ConfigCog(commands.Cog, name="config"):
         name="set",
         description="Set a CanuckBot config parameter.",
     )
-    @commands.is_owner()
+    #@commands.is_owner()
+    @is_superadmin()
     @app_commands.describe(
         field="The field to set.",
         info="The text info to set for the selected field.",
@@ -38,7 +39,7 @@ class ConfigCog(commands.Cog, name="config"):
         self, context: Context, field: Optional[str] = None, info: Optional[str] = None
     ) -> None:
         if field and info:
-            config = await Config.create(self.bot)
+            config = await Config.create(bot=self.bot)
             setattr(config, field, info)
             if await config.update(field):
                 await context.send("Configuration updated.")
@@ -53,12 +54,12 @@ class ConfigCog(commands.Cog, name="config"):
         name="info",
         description="Display information about a configuration parameter.",
     )
-    @is_manager()
+    @is_trusted_manager()
     @app_commands.describe(
         field="The field to get info on.",
     )
     async def config_info(self, context: Context, field: Optional[str] = None) -> None:
-        config = await Config.create(self.bot)
+        config = await Config.create(bot=self.bot)
 
         # if not config.field_exists(field):
         #    await context.send(f"ERR: config.{field} is not defined.")
@@ -81,7 +82,7 @@ class ConfigCog(commands.Cog, name="config"):
         name="setinfo",
         description="Set information about a configuration parameter.",
     )
-    @commands.is_owner()
+    @is_superadmin()
     @app_commands.describe(
         field="The field to set info on.",
     )
@@ -101,7 +102,7 @@ class ConfigCog(commands.Cog, name="config"):
         name="list",
         description="List CanuckBot's configuration.",
     )
-    @is_manager()
+    @is_trusted_manager()
     # @app_commands.describe(
     # )
     async def config_list(self, context: Context):

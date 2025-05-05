@@ -6,13 +6,13 @@ from DiscordBot import DiscordBot
 
 
 class CanuckBotBase(BaseModel):
-    _bot: DiscordBot
+    _bot: DiscordBot = PrivateAttr()
     _type_hints_cache = {}
     _adapters_cache = {}
 
     # Pydantic will automatically call this method, but you still need custom behavior
     # Override __init__ and call super().__init__ to ensure correct field initialization
-    def __init__(self, bot, **kwargs):
+    def __init__(self, bot: DiscordBot, **kwargs):
         super().__init__(**kwargs)  # Pydantic initializes the fields
         self._bot = bot
 
@@ -26,7 +26,11 @@ class CanuckBotBase(BaseModel):
                 if base is object:
                     continue
                 try:
-                    full_hints.update(get_type_hints(base))
+                    base_hints = get_type_hints(base)
+                    for field, hint in base_hints.items():
+                        # Only add fields that don't start with '_'
+                        if not field.startswith('_'):
+                            full_hints[field] = hint
                 except Exception:
                     pass  # In case any base class has invalid or missing annotations
 

@@ -2,6 +2,7 @@
 import os
 import sqlite3
 from pathlib import Path
+from CanuckBot.types import User_Level, DiscordUserId
 
 
 def connect_db():
@@ -18,12 +19,12 @@ def connect_db():
     return sqlite3.connect(db_path)
 
 
-def is_user_manager(user_id):
+def is_user_manager(user_id: DiscordUserId = None, level: User_Level = User_Level.Superadmin):
     # fixme need to convert this to aiosqlite and use the DatabaseManager
     try:
         conn = connect_db()
         cursor = conn.cursor()
-        cursor.execute("SELECT user_id FROM managers WHERE user_id = ?", (user_id,))
+        cursor.execute("SELECT user_id FROM managers WHERE user_id = ? AND access_level <= ?", (user_id, level.value))
         result = cursor.fetchone()
         conn.close()
 
