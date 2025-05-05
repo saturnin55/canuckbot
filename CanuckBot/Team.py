@@ -1,6 +1,5 @@
 from datetime import date
 from typing import List
-
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import TimeZone, Handle
 

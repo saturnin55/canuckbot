@@ -1,5 +1,4 @@
 from typing import Any, Literal, Optional, Type
-
 from CanuckBot import CanuckBotBase
 
 

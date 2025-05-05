@@ -2,7 +2,6 @@ from datetime import date
 from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
 from typing import Type, List, Any, Optional
 from discord.ext.commands import Bot
-
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import Handle, HexColor, DiscordRoleId, DiscordCategoryId, Competition_Type
 
