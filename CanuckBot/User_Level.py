@@ -6,3 +6,6 @@ class User_Level(IntEnum):
     Full = 10
     Trusted = 20
     Public = 99
+
+    def __str__(self):
+        return self.name

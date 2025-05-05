@@ -6,3 +6,6 @@ class Match_Status(IntEnum):
     Ready = 1       # We reached match's hours_before_kickoff, channel should be created
     Active = 2      # Match in progress
     Completed = 3   # Match reached match's hours_after_kickoff, time to cleanup
+
+    def __str__(self):
+        return self.name

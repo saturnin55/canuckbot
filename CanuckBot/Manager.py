@@ -7,8 +7,8 @@ from aiosqlite import Error as aiosqliteError
 from DiscordBot.DiscordBot import DiscordBot
 
 # from User_Level import User_Level
-from . import CanuckBotBase
-from .types import SnowflakeId, DiscordUserId
+from CanuckBot import CanuckBotBase
+from CanuckBot.types import SnowflakeId, DiscordUserId
 
 
 class Manager(CanuckBotBase):

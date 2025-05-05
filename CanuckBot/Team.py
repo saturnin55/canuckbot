@@ -1,9 +1,9 @@
 from datetime import date
 from typing import List
 
-from . import CanuckBotBase
-from .TimeZone import TimeZone
-from .types import Handle
+from CanuckBot import CanuckBotBase
+from CanuckBot.TimeZone import TimeZone
+from CanuckBot.types import Handle
 
 
 class Team(CanuckBotBase):

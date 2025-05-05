@@ -1,6 +1,6 @@
 from typing import Any, Literal, Optional, Type
 
-from . import CanuckBotBase
+from CanuckBot import CanuckBotBase
 
 
 class Info(CanuckBotBase):

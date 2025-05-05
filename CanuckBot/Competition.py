@@ -3,9 +3,9 @@ from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
 from typing import Type, List, Any, Optional
 from discord.ext.commands import Bot
 
-from . import CanuckBotBase
-from .Competition_Type import Competition_Type
-from .types import Handle, HexColor, SnowflakeId, DiscordRoleId, DiscordCategoryId
+from CanuckBot import CanuckBotBase
+from CanuckBot.Competition_Type import Competition_Type
+from CanuckBot.types import Handle, HexColor, SnowflakeId, DiscordRoleId, DiscordCategoryId
 
 
 class Competition(CanuckBotBase):
