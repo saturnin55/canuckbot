@@ -2,8 +2,7 @@ from datetime import date
 from typing import List
 
 from CanuckBot import CanuckBotBase
-from CanuckBot.TimeZone import TimeZone
-from CanuckBot.types import Handle
+from CanuckBot.types import TimeZone, Handle
 
 
 class Team(CanuckBotBase):

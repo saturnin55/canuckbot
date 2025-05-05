@@ -1,11 +1,7 @@
 from typing import Any, Optional, get_type_hints, Type
-
 from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator
-
 from database import DatabaseManager
-
-# from bot import DiscordBot
 from DiscordBot.DiscordBot import DiscordBot
 
 

@@ -5,8 +5,7 @@ from pydantic import HttpUrl
 from DiscordBot.DiscordBot import DiscordBot
 
 from CanuckBot import CanuckBotBase
-from CanuckBot.TimeZone import TimeZone
-from CanuckBot.types import HexColor, SnowflakeId, DiscordChannelId, DiscordCategoryId, DiscordRoleId
+from CanuckBot.types import HexColor, DiscordChannelId, DiscordCategoryId, DiscordRoleId, TimeZone
 
 
 class Config(CanuckBotBase):

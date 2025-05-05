@@ -8,7 +8,7 @@ from DiscordBot.DiscordBot import DiscordBot
 
 # from User_Level import User_Level
 from CanuckBot import CanuckBotBase
-from CanuckBot.types import SnowflakeId, DiscordUserId
+from CanuckBot.types import DiscordUserId
 
 
 class Manager(CanuckBotBase):
