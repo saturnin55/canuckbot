@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Get current version from setuptools-scm
+VERSION=$(python -c "import setuptools_scm; print(setuptools_scm.get_version())")
+
+# Check if the version is already tagged
+if git tag | grep -q "v$VERSION"; then
+    echo "Version v$VERSION already tagged."
+else
+    echo "Tagging version v$VERSION"
+    git tag "v$VERSION"
+    git push origin "v$VERSION"
+fi
+
