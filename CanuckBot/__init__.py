@@ -52,3 +52,42 @@ class CanuckBotBase(BaseModel):
             pass
 
         return cast_value
+
+    def get_property_str(self, field: str = None) -> dict:
+        if field.startswith('_'):
+            return None
+
+        attr = getattr(type(self), field, None)
+
+        if isinstance(attr, property):
+            try:
+                value = getattr(self, attr_name)
+                #fixme deal with possible types
+            except Exception as e:
+                #fixme
+                pass
+
+        return None
+
+    def get_properties_str(self) -> dict:
+
+        data = {}
+
+        for attr_name in dir(self):
+            # Filter out private/protected attributes and methods
+            if attr_name.startswith('_'):
+                continue
+
+            attr = getattr(type(self), attr_name, None)
+
+            if isinstance(attr, property):
+                try:
+                    value = getattr(self, attr_name)
+                    #fixme deal with possible types
+                    # types: int, str, UnixTimestamp, TimeZone, dict, List, DiscordUserId, DiscordChannelId, DiscordRoleId, DiscordCategoryId, HexColor, Handle, User_Level, Competition_Type, Match_Status
+
+                    data[field] = value
+                except Exception as e:
+                    #fixme
+                    pass
+        return data

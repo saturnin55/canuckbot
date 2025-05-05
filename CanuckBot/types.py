@@ -12,3 +12,7 @@ HexColor = Annotated[str, Field(pattern=HEX_COLOR_PATTERN)]
 UnixTimestamp = Annotated[int, Field(strict=True, gt=0)]
 SnowflakeId = Annotated[int, Field(strict=True, gt=0, lt=2**64 - 1)]
 DiscordChannelName: str = Field(..., pattern=r"^[a-z0-9-]{1,100}$")
+DiscordRoleId = SnowflakeId
+DiscordUserId = SnowflakeId
+DiscordCategoryId = SnowflakeId
+DiscordChannelId = SnowflakeId

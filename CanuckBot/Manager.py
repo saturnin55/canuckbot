@@ -8,13 +8,13 @@ from DiscordBot.DiscordBot import DiscordBot
 
 # from User_Level import User_Level
 from . import CanuckBotBase
-from .types import SnowflakeId
+from .types import SnowflakeId, DiscordUserId
 
 
 class Manager(CanuckBotBase):
-    user_id = SnowflakeId
+    user_id = DiscordUserId
     created_at: date
-    created_by = SnowflakeId
+    created_by = DiscordUserId
     # level: User_Level = User_Level.Public
     competitions: List[int] = []
 

@@ -6,22 +6,22 @@ from DiscordBot.DiscordBot import DiscordBot
 
 from . import CanuckBotBase
 from .TimeZone import TimeZone
-from .types import HexColor, SnowflakeId
+from .types import HexColor, SnowflakeId, DiscordChannelId, DiscordCategoryId, DiscordRoleId
 
 
 class Config(CanuckBotBase):
-    channel_logs: SnowflakeId = 0
-    channel_cmds: SnowflakeId = 0
+    channel_logs: DiscordChannelId = 0
+    channel_cmds: DiscordChannelId = 0
     default_add_hours_before: int = 0
     default_del_hours_after: int = 0
-    default_category_id: SnowflakeId = 0
+    default_category_id: DiscordCategoryId = 0
     default_logo_url: HttpUrl = HttpUrl(
         "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
     )
     default_tz: TimeZone = TimeZone("America/Toronto")
-    mngr_role_id: SnowflakeId = 0
+    mngr_role_id: DiscordRoleId = 0
     default_comp_color: HexColor = "#ffffff"
-    optout_all_role_id: SnowflakeId = 0
+    optout_all_role_id: DiscordRoleId = 0
 
     class Config:
         arbitrary_types_allowed = True
