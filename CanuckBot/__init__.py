@@ -1,4 +1,4 @@
-from typing import Any, Optional, get_type_hints
+from typing import Any, Optional, get_type_hints, Type
 
 from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator
@@ -11,12 +11,34 @@ from DiscordBot.DiscordBot import DiscordBot
 
 class CanuckBotBase(BaseModel):
     _bot: DiscordBot
+    _type_hints_cache = {}
+    _adapters_cache = {}
 
     # Pydantic will automatically call this method, but you still need custom behavior
     # Override __init__ and call super().__init__ to ensure correct field initialization
     def __init__(self, bot, **kwargs):
         super().__init__(**kwargs)  # Pydantic initializes the fields
         self._bot = bot
+
+        cls = self.__class__
+
+        # Only initialize caches if this class hasn't already
+        if cls not in self._type_hints_cache:
+            # Merge hints from MRO
+            full_hints = {}
+            for base in cls.__mro__:
+                if base is object:
+                    continue
+                try:
+                    full_hints.update(get_type_hints(base))
+                except Exception:
+                    pass  # In case any base class has invalid or missing annotations
+
+            self._type_hints_cache[cls] = full_hints
+
+            # Precompute TypeAdapters
+            for field, expected_type in full_hints.items():
+                self._adapters_cache[(cls, field)] = TypeAdapter(expected_type)
 
     def print(self):
         for key, value in self.model_dump().items():
@@ -28,28 +50,37 @@ class CanuckBotBase(BaseModel):
         # Add custom validation if needed
         return values
 
-    def get_type(self, field):
-        hints = get_type_hints(self.__class__)
-        expected_type = hints.get(field)
+    def get_type(self, field: str) -> Optional[Type[Any]]:
+        return self._type_hints_cache.get(self.__class__, {}).get(field)
 
-        if expected_type:
-            return expected_type
-        else:
-            # fixme
-            return None
+    def cast_value(self, field: str, value: Any) -> Any:
+        adapter = self._adapters_cache.get((self.__class__, field))
+        if adapter:
+            return adapter.validate_python(value)
+        return None
 
-    def cast_value(self, field, value):
-        cast_value = None
-
-        # fixme: "cache" this data
-        hints = get_type_hints(self.__class__)
-        expected_type = hints.get(field)
-
-        if expected_type:
-            cast_value = TypeAdapter(expected_type).validate_python(value)
-        else:
-            # fixme
-            pass
+#    def get_type(self, field):
+#        hints = get_type_hints(self.__class__)
+#        expected_type = hints.get(field)
+#
+#        if expected_type:
+#            return expected_type
+#        else:
+#            # fixme
+#            return None
+#
+#    def cast_value(self, field, value):
+#        cast_value = None
+#
+#        # fixme: "cache" this data
+#        hints = get_type_hints(self.__class__)
+#        expected_type = hints.get(field)
+#
+#        if expected_type:
+#            cast_value = TypeAdapter(expected_type).validate_python(value)
+#        else:
+#            # fixme
+#            pass
 
         return cast_value
 
