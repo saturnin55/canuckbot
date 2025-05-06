@@ -1,4 +1,5 @@
 import re
+import json
 import time
 import discord
 import validators
@@ -24,7 +25,7 @@ class DiscordUtils:
         cache = DiscordCache(bot.database, bot.config["cache_expire_offset"])
         cacheobj = await cache.retrieve(SnowflakeId(userid))
         if cacheobj:
-            return cacheobj["name"]
+            return json.loads(cacheobj["data"])
         else:
             # else we fetch it via discord api
 
@@ -39,9 +40,15 @@ class DiscordUtils:
                     #return "Permission Denied"  # Bot lacks permissions
                     return None  # Channel does not exist
 
-                await cache.store(SnowflakeId(channelid), channel.name)
+                data = { "object": "channel",
+                        "id": channel.id,
+                        "name": channel.name,
+                        "guild_id": channel.guild.id,
+                        "guild_name": channel.guild.name,
+                        "mention": channel.mention }
+                await cache.store(SnowflakeId(channelid), json.dumps(data))
         
-                return user.name
+                return data
         return None
 
 
@@ -53,7 +60,7 @@ class DiscordUtils:
         cache = DiscordCache(bot.database, bot.config["cache_expire_offset"])
         cacheobj = await cache.retrieve(SnowflakeId(userid))
         if cacheobj:
-            return cacheobj["name"]
+            return json.loads(cacheobj["data"])
         else:
             # else we fetch it via discord api
             try:
@@ -64,9 +71,19 @@ class DiscordUtils:
             if not user:
                 return None
     
-            await cache.store(SnowflakeId(userid), user.name)
+            data = { "object": "user",
+                    "id": user.id,
+                    "name": user.name,
+                    "discriminator": user.discriminator,
+                    "display_name": user.display_name,
+                    "global_name": user.global_name,
+                    "avatar_url": user.avatar.url.name,
+                    "mention": user.mention,
+                    "bot": user.bot
+                     }
+            await cache.store(SnowflakeId(userid), json.dumps(data))
         
-            return user.name
+            return data
         return None
 
     @staticmethod
@@ -77,7 +94,7 @@ class DiscordUtils:
         cache = DiscordCache(bot.database, bot.config["cache_expire_offset"])
         cacheobj = await cache.retrieve(SnowflakeId(roleid))
         if cacheobj:
-            return cacheobj["name"]
+            return json.loads(cacheobj["data"])
         else:
             # else we fetch it via discord api
             role = context.guild.get_role(roleid)
@@ -91,9 +108,16 @@ class DiscordUtils:
                     #print(f"Failed to fetch role : {e}")
                     return None  # Return None if role fetch fails
 
-            await cache.store(SnowflakeId(roleid), role.name)
+            data = { "object": "role",
+                    "id": role.id,
+                    "name": role.name,
+                    "guild_id": role.guild.id,
+                    "color": str(role.color),
+                    "mention": role.mention
+                     }
+            await cache.store(SnowflakeId(roleid), json.dumps(data))
 
-            return role.name
+            return data
         return None
         
 
@@ -106,7 +130,7 @@ class DiscordUtils:
         cache = DiscordCache(bot.database, bot.config["cache_expire_offset"])
         cacheobj = await cache.retrieve(SnowflakeId(categoryid))
         if cacheobj:
-            return cacheobj["name"]
+            return json.loads(cacheobj["data"])
         else:
             # else we fetch it via discord api
             category = discord.utils.get(context.guild.categories, id=categoryid)
@@ -128,7 +152,13 @@ class DiscordUtils:
                     #await ctx.send(f"ERR[Forbidden: {categoryid}]")
                     return None
 
-            await cache.store(SnowflakeId(categoryid), category.name)
+            data = { "object": "category",
+                    "id": category.id,
+                    "name": category.name,
+                    "guild_id": category.guild.id,
+                    "guild_name": category.guild.name,
+                    "mention": category.mention }
+            await cache.store(SnowflakeId(categoryid), json.dumps(data))
 
-            return category.name
+            return data
         return None

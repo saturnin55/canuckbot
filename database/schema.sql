@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS managers (
 user_id TEXT NOT NULL PRIMARY KEY,
 created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 created_by TEXT DEFAULT NULL,
-access_level INTEGER default 99
+`level` INTEGER default 99
 );
 
 CREATE TABLE IF NOT EXISTS manager_competitions (
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS bot_statuses (
 
 CREATE TABLE IF NOT EXISTS discord_cache (
  key TEXT PRIMARY KEY,
- name TEXT,
+ data TEXT,
  timestamp INTEGER,
  expiration INTEGER
 );

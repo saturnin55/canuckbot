@@ -7,10 +7,11 @@ from CanuckBot.Config import Config
 from CanuckBot.Info import Info
 from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
 from Discord.LoggingFormatter import LoggingFormatter
+from Discord.DiscordBot import DiscordBot
 
 
 class ConfigCog(commands.Cog, name="config"):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: DiscordBot) -> None:
         self.bot = bot
 
     @commands.hybrid_group(

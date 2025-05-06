@@ -127,12 +127,16 @@ class CanuckBotBase(BaseModel):
         if field.endswith('channel_id'):
             return f"<#{value}>"
         elif field.endswith('role_id'):
-            role_name = await DiscordUtils.get_role(context, self._bot, DiscordRoleId(value))
+            role_data = await DiscordUtils.get_role(context, self._bot, DiscordRoleId(value))
+            print(role_data)
+            role_name = role_data["name"]
             return f"{role_name}"
         elif field.endswith('user_id'):
             return f"<@{value}>"
         elif field.endswith('category_id'):
-            category_name = await DiscordUtils.get_category(context, self._bot, DiscordCategoryId(value))
+            category_data = await DiscordUtils.get_category(context, self._bot, DiscordCategoryId(value))
+            print(category_data)
+            category_name = category_data["name"]
             return f"{category_name}"
         elif field == "color" or field.endswith('_color'):
             return f"{value}"
