@@ -4,7 +4,8 @@ from typing import Any, List, Optional, Type
 from aiosqlite import Error as aiosqliteError
 from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
-from CanuckBot.types import DiscordUserId, User_Level
+from CanuckBot.types import User_Level
+from Discord.types import DiscordUserId
 
 
 class Manager(CanuckBotBase):
@@ -138,9 +139,7 @@ class Manager(CanuckBotBase):
             data = []
 
             rows = await self._bot.database.select(
-                "SELECT user_id, strftime('%s', created_at) as created_at, created_by \
-                                                   FROM managers \
-                                                   ORDER BY created_at ASC"
+                "SELECT user_id, created_at, created_by FROM managers ORDER BY created_at ASC"
             )
             if not rows:
                 return False

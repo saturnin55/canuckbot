@@ -4,6 +4,7 @@ from typing import Type, List, Any, Optional
 from discord.ext.commands import Bot
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import Handle, HexColor, DiscordRoleId, DiscordCategoryId, Competition_Type
+from Discord.types import DiscordRoleId, DiscordCategoryId
 
 
 class Competition(CanuckBotBase):

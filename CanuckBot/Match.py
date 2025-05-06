@@ -1,8 +1,7 @@
 from datetime import date
 from CanuckBot import CanuckBotBase
-from CanuckBot.types import Match_Status, DiscordChannelName, DiscordChannelId, DiscordMessageId
-from .TimeZone import TimeZone
-from .types import DiscordChannelName, SnowflakeId
+from CanuckBot.types import Match_Status, TimeZone
+from Discord.types import DiscordChannelName, SnowflakeId, DiscordChannelName, DiscordChannelId, DiscordMessageId
 
 
 class Match(CanuckBotBase):

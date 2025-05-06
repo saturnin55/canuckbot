@@ -7,7 +7,7 @@ from datetime import datetime
 from discord.ext.commands import Context
 from Discord.DiscordBot import DiscordBot
 from database import DatabaseManager
-from CanuckBot.types import DiscordCategoryId, SnowflakeId, DiscordRoleId, DiscordUserId, DiscordChannelId
+from Discord.types import DiscordCategoryId, SnowflakeId, DiscordRoleId, DiscordUserId, DiscordChannelId
 from typing import Any
 from Discord.DiscordCache import DiscordCache
 
@@ -112,7 +112,6 @@ class DiscordUtils:
                     "id": role.id,
                     "name": role.name,
                     "guild_id": role.guild.id,
-                    "color": str(role.color),
                     "mention": role.mention
                      }
             await cache.store(SnowflakeId(roleid), json.dumps(data))

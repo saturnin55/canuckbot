@@ -1,7 +1,8 @@
 # db_utils.py
 import os
 from pathlib import Path
-from CanuckBot.types import User_Level, DiscordUserId
+from CanuckBot.types import User_Level
+from Discord.types import DiscordUserId
 from database import DatabaseManager
 
 async def is_user_manager(db: DatabaseManager = None, user_id: DiscordUserId = None, level: User_Level = User_Level.Superadmin):

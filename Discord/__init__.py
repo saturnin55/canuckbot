@@ -2,13 +2,13 @@ import re
 import time
 import discord
 import validators
+from typing import Any
 from datetime import datetime
+from database import DatabaseManager
 from discord.ext.commands import Context
 from Discord.DiscordBot import DiscordBot
-from database import DatabaseManager
-from CanuckBot.types import DiscordCategoryId, SnowflakeId
-from typing import Any
 from Discord.DiscordCache import DiscordCache
+from Discord.types import DiscordCategoryId, SnowflakeId
 
 #@staticmethod
 #async def get_discord_role(ctx: Context, bot: DiscordBot, roleid: DiscordRoleId) -> discord.Role | None:

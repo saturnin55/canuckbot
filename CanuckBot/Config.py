@@ -2,7 +2,8 @@ from typing import Any, Literal, Optional, Type
 from pydantic import HttpUrl
 from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
-from CanuckBot.types import HexColor, DiscordChannelId, DiscordCategoryId, DiscordRoleId, TimeZone
+from CanuckBot.types import HexColor, TimeZone
+from Discord.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId
 
 
 class Config(CanuckBotBase):

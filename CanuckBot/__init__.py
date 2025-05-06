@@ -4,7 +4,8 @@ from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator, HttpUrl
 from database import DatabaseManager
 from Discord.DiscordBot import DiscordBot
-from CanuckBot.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId, DiscordUserId, TimeZone, SnowflakeId, Handle, UnixTimestamp, HexColor, DiscordChannelName
+from CanuckBot.types import TimeZone, Handle, UnixTimestamp, HexColor
+from Discord.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId, DiscordUserId, SnowflakeId, DiscordChannelName
 from Discord.DiscordCache import DiscordCache
 from Discord.DiscordUtils import DiscordUtils
 
@@ -128,14 +129,14 @@ class CanuckBotBase(BaseModel):
             return f"<#{value}>"
         elif field.endswith('role_id'):
             role_data = await DiscordUtils.get_role(context, self._bot, DiscordRoleId(value))
-            print(role_data)
             role_name = role_data["name"]
             return f"{role_name}"
         elif field.endswith('user_id'):
-            return f"<@{value}>"
+            user_data = await DiscordUtils.get_user(context, self._bot, DiscordUserId(value))
+            user_displayname = role_data["display_name"]
+            return f"{user_displayname}"
         elif field.endswith('category_id'):
             category_data = await DiscordUtils.get_category(context, self._bot, DiscordCategoryId(value))
-            print(category_data)
             category_name = category_data["name"]
             return f"{category_name}"
         elif field == "color" or field.endswith('_color'):

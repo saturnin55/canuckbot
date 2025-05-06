@@ -1,6 +1,6 @@
 import time
 from database import DatabaseManager
-from CanuckBot.types import SnowflakeId
+from Discord.types import SnowflakeId
 
 class DiscordCache():
     def __init__(self, db: DatabaseManager = None, expire_offset: int = 3600) -> None:
