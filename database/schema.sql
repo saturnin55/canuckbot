@@ -45,7 +45,9 @@ is_warned BOOLEAN default FALSE,
 welcome_message_id TEXT default NULL,
 hours_before_kickoff INTEGER default NULL,
 hours_after_kickoff INTEGER default NULL,
-created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+watch TEXT default NULL,
+streams TEXT default NULL
 );
 
 CREATE TABLE IF NOT EXISTS info (
