@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
 from discord.ext.commands import Context, Bot
-from Discord import get_discord_category
 
 import discord
 import validators
@@ -22,30 +21,6 @@ from CanuckBot.constants import (
 )
 
 
-async def get_discord_role(ctx: Context, bot: Bot, roleid) -> discord.Role | None:
-    """Fetch a Discord role, trying cache first, then fetching from API if necessary."""
-
-    # Try to get the role from cache
-    roleid = int(roleid)
-    role = ctx.guild.get_role(roleid)
-    if role:
-        return role  # Return cached role if found
-
-    # If not in cache, fetch roles from API
-    try:
-        roles = await ctx.guild.fetch_roles()  # Fetch all roles
-        return discord.utils.get(roles, id=roleid)  # Find role in fetched list
-    except discord.HTTPException as e:
-        print(f"Failed to fetch role : {e}")
-        return None  # Return None if role fetch fails
-
-
-async def get_discord_user(ctx: Context, bot: Bot, userid):
-    userid = int(userid)
-    user = ctx.guild.get_member(userid) or await bot.fetch_user(userid)
-    return user
-
-
 def timestamp2str(t, format="%Y-%m-%d %H:%M"):
     return datetime.fromtimestamp(t).strftime(format)
 
@@ -60,49 +35,6 @@ def key_value_exists(data_list, key, value):
     :return: True if found, otherwise False.
     """
     return any(entry.get(key) == value for entry in data_list)
-
-
-async def get_discord_channel(bot, channel_id):
-    """
-    Fetches a channel name from a given channel ID.
-
-    :param bot: The Discord bot instance.
-    :param channel_id: The channel ID (int).
-    :return: The channel name as a string (e.g., #general), or None if not found.
-    """
-    channel_id = int(channel_id)
-    channel = bot.get_channel(channel_id)  # Try to get the channel from cache
-    if not channel:
-        try:
-            # Fetch from API if not in cache
-            channel = await bot.fetch_channel(channel_id)
-        except discord.NotFound:
-            return None  # Channel does not exist
-        except discord.Forbidden:
-            return "Permission Denied"  # Bot lacks permissions
-
-    return channel if channel else None
-
-
-async def get_discord_category(ctx: Context, bot: Bot, categoryid):
-    categoryid = int(categoryid)
-    category = discord.utils.get(context.guild.categories, id=categoryid)
-
-    if not category:
-        try:
-            # Fetch from API if not in cache
-            category = await context.guild.fetch_channel(categoryid)
-            if not isinstance(category, discord.CategoryChannel):
-                await ctx.send(f"ERR[not_a_category: {categoryid}]")
-                return False
-        except discord.NotFound:
-            await ctx.send(f"ERR[not_found: {categoryid}]")
-            return False
-        except discord.Forbidden:
-            await ctx.send(f"ERR[Forbidden: {categoryid}]")
-            return False
-
-    return category
 
 
 def is_valid_type(_type, value) -> bool:

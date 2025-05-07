@@ -6,8 +6,7 @@ from database import DatabaseManager
 from Discord.DiscordBot import DiscordBot
 from CanuckBot.types import TimeZone, Handle, UnixTimestamp, HexColor
 from Discord.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId, DiscordUserId, SnowflakeId, DiscordChannelName
-from Discord.DiscordCache import DiscordCache
-from Discord.DiscordUtils import DiscordUtils
+from Discord import Discord 
 
 
 class CanuckBotBase(BaseModel):
@@ -21,7 +20,6 @@ class CanuckBotBase(BaseModel):
     def __init__(self, bot: DiscordBot, **kwargs):
         super().__init__(**kwargs)  # Pydantic initializes the fields
         self._bot = bot
-        self._discord_cache = DiscordCache(bot.database, bot.config["cache_expire_offset"])
 
         cls = self.__class__
 
@@ -128,17 +126,14 @@ class CanuckBotBase(BaseModel):
         if field.endswith('channel_id'):
             return f"<#{value}>"
         elif field.endswith('role_id'):
-            role_data = await DiscordUtils.get_role(context, self._bot, DiscordRoleId(value))
-            role_name = role_data["name"]
-            return f"{role_name}"
-        elif field.endswith('user_id'):
-            user_data = await DiscordUtils.get_user(context, self._bot, DiscordUserId(value))
-            user_displayname = role_data["display_name"]
-            return f"{user_displayname}"
+            role = await Discord.get_role(context, int(value))
+            return f"{role.name}"
+        elif field.endswith('user_id') or fields.endswith('_by'):
+            user  = await Discord.get_user(context, int(value))
+            return f"{user.display_name}"
         elif field.endswith('category_id'):
-            category_data = await DiscordUtils.get_category(context, self._bot, DiscordCategoryId(value))
-            category_name = category_data["name"]
-            return f"{category_name}"
+            category  = await Discord.get_category(context, int(value))
+            return f"{category.name}"
         elif field == "color" or field.endswith('_color'):
             return f"{value}"
         elif isinstance(value, int):

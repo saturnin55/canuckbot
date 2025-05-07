@@ -1,9 +1,9 @@
-from datetime import date
+from datetime import date, datetime
 from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
 from typing import Type, List, Any, Optional
 from discord.ext.commands import Bot
 from CanuckBot import CanuckBotBase
-from CanuckBot.types import Handle, HexColor, DiscordRoleId, DiscordCategoryId, Competition_Type
+from CanuckBot.types import Handle, HexColor, Competition_Type
 from Discord.types import DiscordRoleId, DiscordCategoryId
 
 
@@ -17,7 +17,7 @@ class Competition(CanuckBotBase):
     is_monitored: bool = False
     is_international: bool = False
     optout_role_id: DiscordRoleId = 0
-    category_id: DiscordCategoryId = 0
+    category_id: DiscordCategoryId | None = 0
     hours_before_kickoff: int = 0
     hours_after_kickoff: int = 0
     created_at: date | None = Field(default=None)
@@ -34,11 +34,38 @@ class Competition(CanuckBotBase):
 
         return instance
 
-    async def load_by_id(self, competition_id: int = 0):
-        pass
+    async def load(self, key: str = 'competition_id', keyval: str | int = None):
+        if keyval is None or key not in ['competition_id', 'shortname']:
+            return False
+        else:
+            assert self._bot.database, "ERR Competition.py load(): database not available."
+            row = await self._bot.database.get_one(
+                f"SELECT * FROM competitions WHERE {key} = ?", [keyval]
+            )
+            if not row:
+                return False
+            else:
+                self.competition_id = int(row["competition_id"])
+                self.name = str(row["name"])
+                self.shortname = Handle(row["shortname"])
+                self.logo_url = HttpUrl(row["logo_url"])
+                self.color = HexColor(row["color"])
+                self.competition_type = Competition_Type(row["competition_type"])
+                self.is_monitored = bool(row["is_monitored"])
+                self.is_international = bool(row["is_international"])
+                self.optout_role_id = DiscordRoleId(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
+                self.category_id = DiscordCategoryId(row["category_id"])
+                self.hours_before_kickoff = int(row["hours_before_kickoff"])
+                self.hours_after_kickoff = int(row["hours_after_kickoff"])
+                self.created_at = datetime.fromtimestamp(int(row["created_at"]))
 
-    async def load_by_handle(self, handle: Handle = None):
-        pass
+    async def load_by_id(self, competition_id: int = 0):
+
+        await self.load('competition_id', int(competition_id))
+
+
+    async def load_by_handle(self, shortname: Handle = None):
+        await self.load('shortname', str(shortname))
 
     async def update(self, field: str = None, value: Any = None)-> bool:
         pass

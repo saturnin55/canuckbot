@@ -1,5 +1,5 @@
 import time
-from datetime import date
+from datetime import date, datetime
 from typing import Any, List, Optional, Type
 from aiosqlite import Error as aiosqliteError
 from Discord.DiscordBot import DiscordBot
@@ -38,9 +38,9 @@ class Manager(CanuckBotBase):
                 return False
             else:
                 self.user_id = DiscordUserId(row["user_id"])
-                self.created_at = date.fromtimestamp(int(row["created_at"]))
+                self.created_at = datetime.fromtimestamp(int(row["created_at"]))
                 self.created_by = DiscordUserId(row["created_by"])
-                self.level = row["level"]
+                self.level = User_Level(row["level"])
 
             try:
                 rows = await self._bot.database.select(
@@ -77,7 +77,7 @@ class Manager(CanuckBotBase):
                 print("a1")
 
                 self.user_id = DiscordUserId(user_id)
-                self.created_at = date.fromtimestamp(int(now))
+                self.created_at = datetime.fromtimestamp(int(now))
                 self.created_by = DiscordUserId(invoking_id)
                 self.level = level.value
 
@@ -146,7 +146,7 @@ class Manager(CanuckBotBase):
             else:
                 for row in rows:
                     row["user_id"] = DiscordUserId(row["user_id"])
-                    row["created_at"] = date.fromtimestamp(int(row["created_at"]))
+                    row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
                     row["created_by"] = DiscordUserId(row["created_by"])
                     row["competitions"] = []
 
@@ -155,8 +155,9 @@ class Manager(CanuckBotBase):
                     [row["user_id"]],
                 )
                 if crows:
-                    for row in crows:
-                        row["competitions"].append(int(row["competition_id"]))
+                    row["competitions"] = []
+                    for crow in crows:
+                        row["competitions"].append(int(crow["competition_id"]))
 
             return rows
         except aiosqliteError as e:
