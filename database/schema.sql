@@ -8,7 +8,10 @@ team_id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 shortname TEXT DEFAULT NULL,
 tz TEXT default "America/Toronto",
-created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+created_by TEXT default NULL,
+created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+lastmodified_by TEXT default NULL,
+lastmodified_at timestamp default NULL
 );
 
 CREATE TABLE IF NOT EXISTS competitions (
@@ -24,7 +27,10 @@ optout_role_id TEXT default NULL,
 category_id TEXT default NULL,
 hours_before_kickoff default NULL,
 hours_after_kickoff default NULL,
-created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+created_by TEXT default NULL,
+created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+lastmodified_by TEXT default NULL,
+lastmodified_at timestamp default NULL
 );
 
 CREATE TABLE IF NOT EXISTS matches (
@@ -34,7 +40,6 @@ away_id INTEGER NOT NULL,
 competition_id INTEGER NOT NULL,
 status INTEGER default 0,
 kickoff_at TIMESTAMP DEFAULT NULL,
-delete_at TIMESTAMP DEFAULT  NULL,
 tz TEXT NOT NULL,
 venue TEXT NOT NULL,
 description TEXT default NULL,
@@ -42,12 +47,15 @@ channel_name TEXT default NULL,
 channel_id TEXT default NULL,
 channel_topic TEXT default NULL,
 is_warned BOOLEAN default FALSE,
-welcome_message_id TEXT default NULL,
+welcome_msg_id TEXT default NULL,
 hours_before_kickoff INTEGER default NULL,
 hours_after_kickoff INTEGER default NULL,
-created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 watch TEXT default NULL,
-streams TEXT default NULL
+streams TEXT default NULL,
+created_by TEXT default NULL,
+created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+lastmodified_by TEXT default NULL,
+lastmodified_at timestamp default NULL
 );
 
 CREATE TABLE IF NOT EXISTS info (

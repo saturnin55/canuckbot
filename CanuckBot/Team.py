@@ -2,6 +2,7 @@ from datetime import date
 from typing import List
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import TimeZone, Handle
+from Discord.types import DiscordUserId
 
 
 class Team(CanuckBotBase):
@@ -9,5 +10,8 @@ class Team(CanuckBotBase):
     name: str
     shortname = Handle
     tz: TimeZone
-    created_at: date
     aliases: List[str]
+    created_by: DiscordUserId
+    created_at: date
+    lastmodified_by: DiscordUserId | None
+    lastmodified_at: date | None

@@ -20,7 +20,11 @@ class Competition(CanuckBotBase):
     category_id: DiscordCategoryId | None = 0
     hours_before_kickoff: int = 0
     hours_after_kickoff: int = 0
-    created_at: date | None = Field(default=None)
+    created_by: DiscordUserId
+    created_at: date
+    lastmodified_by: DiscordUserId | None
+    lastmodified_at: date | None
+
 
     class Competition:
         arbitrary_types_allowed = True
