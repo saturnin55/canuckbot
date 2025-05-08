@@ -8,6 +8,7 @@ from CanuckBot.Info import Info
 from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
+from Discord import Discord
 
 
 class ConfigCog(commands.Cog, name="config"):
@@ -115,21 +116,40 @@ class ConfigCog(commands.Cog, name="config"):
         config = await Config.create(self.bot)
 
         embed = discord.Embed(
-            title="CanuckBot Configuration", color=discord.Color.blue()
+            title="CanuckBot Configuration", color=int(config.default_comp_color,16)
         )
 
-        for key, v in config.model_dump().items():
-            v = await config.get_attrval_str(context, key)
+        #embed.set_author(name=mngrname, icon_url=avatar_url)
+        #embed.set_footer(text=f"Added by {creatorname} - {formatted_date}")
+        logs_channel = await Discord.get_channel(context, int(config.logs_channel_id))
+        cmds_channel = await Discord.get_channel(context, int(config.cmds_channel_id))
+        category = await Discord.get_category(context, int(config.default_category_id))
+        mngr_role = await Discord.get_role(context, int(config.mngr_role_id))
+        optout_role = await Discord.get_role(context, int(config.optout_all_role_id))
 
-            if v is None:
-                v = "n/a"
+        embed.add_field(name="logs_channel_id", value=logs_channel.mention, inline=False)
+        embed.add_field(name="cmds_channel_id", value=cmds_channel.mention, inline=False)
+        embed.add_field(name="default_add_hours_before", value=config.default_add_hours_before, inline=False)
+        embed.add_field(name="default_del_hours_after", value=config.default_del_hours_after, inline=False)
+        embed.add_field(name="default_category_id", value=f"{category.id} [{category.name}]", inline=False)
+        embed.add_field(name="default_logo_url", value=config.default_logo_url, inline=False)
+        embed.add_field(name="default_tz", value=config.default_tz, inline=False)
+        embed.add_field(name="mngr_role_id", value=mngr_role.mention, inline=False)
+        embed.add_field(name="default_comp_color", value=config.default_comp_color, inline=False)
+        embed.add_field(name="optout_all_role_id", value=optout_role.mention, inline=False)
+
+        #for key, v in config.model_dump().items():
+        #    v = await config.get_attrval_str(context, key)
+#
+#            if v is None:
+#                v = "n/a"
 
             # get a string representation
-            embed.add_field(
-                name=f"{key}",
-                value=f"{v}",
-                inline=True,  # Set to True to make columns
-            )
+#            embed.add_field(
+#                name=f"{key}",
+#                value=f"{v}",
+#                inline=True,  # Set to True to make columns
+#            )
         await context.send(embed=embed)
 
 

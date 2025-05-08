@@ -12,7 +12,7 @@ class Manager(CanuckBotBase):
     user_id: DiscordUserId = 0
     created_at: date = 0
     created_by: DiscordUserId = 0
-    level: User_Level = User_Level.Public
+    level: User_Level = User_Level.Disabled
     competitions: List[int] = []
 
     class Manager:
@@ -90,10 +90,8 @@ class Manager(CanuckBotBase):
                         "INSERT INTO manager_competitions (user_id, competition_id) VALUES (?, ?)", 
                         [str(user_id), str(competition_id)]
                     )
-                print("a3")
 
                 await self._bot.database.connection.commit()
-                print("a4")
 
                 return True
             except aiosqliteError as e:
@@ -103,7 +101,7 @@ class Manager(CanuckBotBase):
         return True
 
     async def remove(self, user_id: DiscordUserId) -> bool:
-        assert self._bot.database, "ERR Manager.py remove(): database not available."
+        assert self._bot.database, "ERR Manager.remove(): database not available."
         user = await self._bot.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
         )
@@ -132,7 +130,7 @@ class Manager(CanuckBotBase):
 
     async def list(self) -> list[dict[str, Any]] | bool:
         try:
-            assert self._bot.database, "ERR Manager.py list(): database not available."
+            assert self._bot.database, "ERR Manager.list(): database not available."
 
             data = []
 
@@ -140,7 +138,7 @@ class Manager(CanuckBotBase):
                 "SELECT user_id, created_at, created_by, level FROM managers ORDER BY level ASC, created_at ASC"
             )
             if not rows:
-                return False
+                return data
             else:
                 for row in rows:
                     row["user_id"] = DiscordUserId(row["user_id"])
@@ -164,7 +162,7 @@ class Manager(CanuckBotBase):
             return False
 
     async def addcomp(self, competition_id: int = None) -> bool:
-        assert self._bot.database, "ERR Manager.py addcomp(): database not available."
+        assert self._bot.database, "ERR Manager.addcomp(): database not available."
             
         if self.user_id is None or competition_id is None:
             return False
@@ -180,7 +178,7 @@ class Manager(CanuckBotBase):
         return True
 
     async def delcomp(self, competition_id: int = None) -> bool:
-        assert self._bot.database, "ERR Manager.py delcomp(): database not available."
+        assert self._bot.database, "ERR Manager.delcomp(): database not available."
         
         if self.user_id is None or competition_id is None:
             return False
@@ -194,3 +192,18 @@ class Manager(CanuckBotBase):
             return False
 
         return True
+
+    async def update(self, field: str = None, value: Any = None) -> bool:
+        if not field:
+            return False
+
+        assert self._bot.database, "ERR Manager.update(): database not available."
+
+        cast_value = self.cast_value(field, value)
+        setattr(self, field, cast_value)
+
+        await self._bot.database.update(
+            f"UPDATE managers SET {field} = ? WHERE manager_id = ?", [cast_value, self.manager_id]
+        )
+
+

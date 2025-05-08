@@ -17,7 +17,7 @@ class User_Level(IntEnum):
     Superadmin = 0
     Full = 10
     Trusted = 20
-    Public = 99
+    Disabled = 99
 
     def __str__(self):
         return self.name

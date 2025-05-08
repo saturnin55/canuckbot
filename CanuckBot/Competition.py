@@ -70,6 +70,38 @@ class Competition(CanuckBotBase):
     async def update(self, field: str = None, value: Any = None)-> bool:
         pass
 
+    async def list(self) -> list[dict[str, Any]] | bool:
+        try:
+            assert self._bot.database, "ERR Competition.list(): database not available."
+
+            data = []
+
+            rows = await self._bot.database.select(
+                "SELECT * FROM competitions ORDER by is_international DESC, shortname ASC"
+            )
+            if not rows:
+                return data
+            else:
+                for row in rows:
+                    row["competition_id"] = int(row["competition_id"])
+                    row["name"] = str(row["name"])
+                    row["shortname"] = Handle(row["shortname"])
+                    row["logo_url"] = HttpUrl(row["logo_url"])
+                    row["color"] = HexColor(row["color"])
+                    row["competition_type"] = Competition_Type(row["competition_type"])
+                    row["is_monitored"] = bool(row["is_monitored"])
+                    row["is_international"] = bool(row["is_international"])
+                    row["optout_role_id"] = DiscordRoleId(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
+                    row["category_id"] = DiscordCategoryId(row["category_id"])
+                    row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
+                    row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
+                    row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
+
+            return rows
+        except:
+            print(f"ERR Competition.liste()")
+            return False
+                
     def get(self, field: str = None) -> str | bool:
         pass
 
