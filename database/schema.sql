@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS bot_statuses (
  status TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS discord_cache (
+CREATE TABLE IF NOT EXISTS canuckbot_cache (
  key TEXT PRIMARY KEY,
  data TEXT,
  timestamp INTEGER,

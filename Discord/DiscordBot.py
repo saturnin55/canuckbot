@@ -107,9 +107,9 @@ class DiscordBot(commands.Bot):
     @tasks.loop(minutes=60.0)
     async def cleanup_task(self) -> None:
         """
-        Clean the discord cache
+        Clean the canuckbot cache
         """
-        await self.database.delete("DELETE FROM discord_cache WHERE expiration < CURRENT_TIMESTAMP")
+        await self.database.delete("DELETE FROM canuckbot_cache WHERE expiration < CURRENT_TIMESTAMP")
 
 
     @tasks.loop(minutes=5.0)

@@ -74,7 +74,6 @@ class Manager(CanuckBotBase):
                     "INSERT INTO managers(user_id, created_at, created_by, level) VALUES (?, ?, ?, ?)",
                     [str(user_id), now, str(invoking_id), str(level.value)]
                 )
-                print("a1")
 
                 self.user_id = DiscordUserId(user_id)
                 self.created_at = datetime.fromtimestamp(int(now))
@@ -85,7 +84,6 @@ class Manager(CanuckBotBase):
                 await self._bot.database.delete(
                     "DELETE FROM manager_competitions WHERE user_id = ?", [str(user_id)]
                 )
-                print("a2")
 
                 for competition_id in self.competitions:
                     await self._bot.database.insert(
@@ -139,7 +137,7 @@ class Manager(CanuckBotBase):
             data = []
 
             rows = await self._bot.database.select(
-                "SELECT user_id, created_at, created_by FROM managers ORDER BY created_at ASC"
+                "SELECT user_id, created_at, created_by, level FROM managers ORDER BY level ASC, created_at ASC"
             )
             if not rows:
                 return False
@@ -148,6 +146,7 @@ class Manager(CanuckBotBase):
                     row["user_id"] = DiscordUserId(row["user_id"])
                     row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
                     row["created_by"] = DiscordUserId(row["created_by"])
+                    row["level"] = User_Level(int(row["level"]))
                     row["competitions"] = []
 
                 crows = await self._bot.database.select(
@@ -161,5 +160,37 @@ class Manager(CanuckBotBase):
 
             return rows
         except aiosqliteError as e:
-            print(f"ERR Manager.get_all(): {e}")
+            print(f"ERR Manager.list(): {e}")
             return False
+
+    async def addcomp(self, competition_id: int = None) -> bool:
+        assert self._bot.database, "ERR Manager.py addcomp(): database not available."
+            
+        if self.user_id is None or competition_id is None:
+            return False
+
+        try:
+            await self._bot.database.delete(
+                "INSERT INTO manager_competitions (user_id, competition_id) VALUES (?, ?)", [int(self.user_id), int(competition_id)]
+            )
+            await self._bot.database.connection.commit()
+        except:
+            return False
+
+        return True
+
+    async def delcomp(self, competition_id: int = None) -> bool:
+        assert self._bot.database, "ERR Manager.py delcomp(): database not available."
+        
+        if self.user_id is None or competition_id is None:
+            return False
+
+        try:
+            await self._bot.database.delete(
+                "DELETE FROM manager_competitions WHERE user_id = ? AND competition_id = ?", [int(self.user_id), int(competition_id)]
+            )
+            await self._bot.database.connection.commit()
+        except:
+            return False
+
+        return True
