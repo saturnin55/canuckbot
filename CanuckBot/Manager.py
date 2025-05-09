@@ -1,4 +1,5 @@
 import time
+from enum import Enum
 from datetime import date, datetime
 from typing import Any, List, Optional, Type
 from aiosqlite import Error as aiosqliteError
@@ -7,6 +8,8 @@ from CanuckBot import CanuckBotBase
 from CanuckBot.types import User_Level
 from Discord.types import DiscordUserId
 
+class MANAGER_FIELDS_EDITABLE(str, Enum):
+    level = "level"
 
 class Manager(CanuckBotBase):
     user_id: DiscordUserId = 0

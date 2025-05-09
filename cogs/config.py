@@ -1,9 +1,10 @@
+from __future__ import annotations
 import discord
 from typing import Optional
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
-from CanuckBot.Config import Config
+from CanuckBot.Config import Config, CONFIG_FIELD_EDITABLE
 from CanuckBot.Info import Info
 from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
 from Discord.LoggingFormatter import LoggingFormatter
@@ -38,8 +39,22 @@ class ConfigCog(commands.Cog, name="config"):
         field="The field to set.",
         value="The text info to set for the selected field.",
     )
+#    @app_commands.choices(field=[
+#        app_commands.Choice(name="logs_channel_id", value="logs_channel_id"),
+#        app_commands.Choice(name="cmds_channel_id", value="cmds_channel_id"),
+#        app_commands.Choice(name="default_add_hours_before", value="default_add_hours_before"),
+#        app_commands.Choice(name="default_del_hours_after", value="default_del_hours_after"),
+#        app_commands.Choice(name="default_category", value="default_category"),
+#        app_commands.Choice(name="default_logo_url", value="default_logo_url"),
+#        app_commands.Choice(name="default_tz", value="default_tz"),
+#        app_commands.Choice(name="mngr_role_id", value="mngr_role_id"),
+#        app_commands.Choice(name="default_comp_color", value="default_comp_color"),
+#        app_commands.Choice(name="optout_all_role_id", value="optout_all_role_id")
+#    ])
     async def config_set(
-        self, context: Context, field: Optional[str] = None, value: Optional[str] = None
+        self, context: Context, field: CONFIG_FIELD_EDITABLE, value: Optional[str] = None
+        #self, context: Context, field: Optional[str] = None, value: Optional[str] = None
+#        self, context: Context, interaction: discord.Interaction, field: Optional[str] = None, value: Optional[str] = None
     ) -> None:
         self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config set", context.author, context.kwargs))
 

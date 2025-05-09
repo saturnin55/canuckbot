@@ -1,10 +1,21 @@
 from typing import Any, Literal, Optional, Type
+from enum import Enum
 from pydantic import HttpUrl
 from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import HexColor, TimeZone
 from Discord.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId
 
+class CONFIG_FIELDS_EDITABLE(str, Enum):
+    logs_channel_id = "logs_channel_id"
+    cmds_channel_id = "cmds_channel_id"
+    default_add_hours_before = "default_add_hours_before"
+    default_del_hours_after = "default_del_hours_after"
+    default_category_id = "default_category_id"
+    default_logo_url = "default_logo_url"
+    default_tz = "default_tz"
+    mngr_role_id = "mngr_role_id"
+    default_comp_color = "default_comp_color"
 
 class Config(CanuckBotBase):
     logs_channel_id: DiscordChannelId = 0

@@ -1,11 +1,24 @@
+from enum import Enum
 from datetime import date, datetime
 from pydantic import HttpUrl, BaseModel, Field, TypeAdapter, PrivateAttr
 from typing import Type, List, Any, Optional
 from discord.ext.commands import Bot
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import Handle, HexColor, Competition_Type
-from Discord.types import DiscordRoleId, DiscordCategoryId
+from Discord.types import DiscordRoleId, DiscordCategoryId, DiscordUserId
 
+
+class COMPETITION_FIELDS_EDITABLE(str, Enum):
+    name = "name"
+    shortname = "shortname"
+    logo_url = "logo_url"
+    competition_type = "competition_type"
+    is_monitored = "is_monitored"
+    is_international = "is_international"
+    optout_role_id = "optout_role_id"
+    category_id = "category_id"
+    hours_before_kickoff = "hours_before_kickoff"
+    hours_after_kickoff = "hours_after_kickoff"
 
 class Competition(CanuckBotBase):
     competition_id: int = 0
@@ -20,10 +33,10 @@ class Competition(CanuckBotBase):
     category_id: DiscordCategoryId | None = 0
     hours_before_kickoff: int = 0
     hours_after_kickoff: int = 0
-    created_by: DiscordUserId
-    created_at: date
-    lastmodified_by: DiscordUserId | None
-    lastmodified_at: date | None
+    created_by: DiscordUserId = None
+    created_at: date = None
+    lastmodified_by: DiscordUserId | None = None
+    lastmodified_at: date | None = None
 
 
     class Competition:
@@ -61,7 +74,14 @@ class Competition(CanuckBotBase):
                 self.category_id = DiscordCategoryId(row["category_id"])
                 self.hours_before_kickoff = int(row["hours_before_kickoff"])
                 self.hours_after_kickoff = int(row["hours_after_kickoff"])
-                self.created_at = datetime.fromtimestamp(int(row["created_at"]))
+                if row["created_by"] is not None:
+                    self.created_by = DiscordUserId(row["created_by"])
+                if row["created_at"] is not None:
+                    self.created_at = datetime.fromtimestamp(int(row["created_at"]))
+                if row["lastmodified_by"] is not None:
+                    self.lastmodified_by = DiscordUserId(row["lastmodified_by"])
+                if row["lastmodified_at"] is not None:
+                    self.lastmodified_at = datetime.fromtimestamp(int(row["lastmodified_at"]))
 
     async def load_by_id(self, competition_id: int = 0):
 
@@ -99,7 +119,14 @@ class Competition(CanuckBotBase):
                     row["category_id"] = DiscordCategoryId(row["category_id"])
                     row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
                     row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
-                    row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
+                    if row["created_by"] is not None:
+                        row["created_by"] = DiscordUserId(row["created_by"])
+                    if row["created_at"] is not None:
+                        row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
+                    if row["lastmodified_at"] is not None:
+                        row["lastmodified_at"] = datetime.fromtimestamp(int(row["lastmodified_at"]))
+                    if row["lastmodified_by"] is not None:
+                        row["lastmodified_by"] = DiscordUserId(row["lastmodified_by"])
 
             return rows
         except:
