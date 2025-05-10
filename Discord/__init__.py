@@ -73,7 +73,7 @@ class Discord:
 
 
     @staticmethod
-    async def get_message(ctx: commands.Context, channel: discord.TextChannel, message_id: int) -> Optional[discord.Message]:
+    async def get_message(ctx: commands.Context, channel: discord.TextChannel, msg_id: int) -> Optional[discord.Message]:
         """
         Fetches a message by ID from a specific text channel using the API.
 
@@ -81,7 +81,7 @@ class Discord:
             Optional[discord.Message]: The message object or None.
         """
         try:
-            message =  await channel.fetch_message(message_id)
+            message =  await channel.fetch_message(msg_id)
             if isinstance(message, discord.Message):
                 return message
         except (discord.NotFound, discord.Forbidden, discord.HTTPException):

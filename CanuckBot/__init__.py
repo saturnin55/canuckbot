@@ -134,6 +134,10 @@ class CanuckBotBase(BaseModel):
         elif field.endswith('category_id'):
             category  = await Discord.get_category(context, int(value))
             return f"{category.name}"
+        elif field.endswith('msg_id'):
+            msg  = await Discord.get_message(context, int(value))
+            #return f"{mcategory.name}"
+            pass
         elif field == "color" or field.endswith('_color'):
             return f"{value}"
         elif isinstance(value, int):

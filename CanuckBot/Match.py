@@ -32,11 +32,11 @@ class Match(CanuckBotBase):
     tz: TimeZone
     venue: str
     description: str
-    channel_name = DiscordChannelName
-    channel_id = DiscordChannelId
+    channel_name: DiscordChannelName
+    channel_id: DiscordChannelId
     channel_topic: str
     is_warned: bool
-    welcome_msg_id = DiscordMessageId
+    welcome_msg_id: DiscordMessageId
     hours_before_kickoff: int
     hours_after_kickoff: int
     watch: str
