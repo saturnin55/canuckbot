@@ -4,9 +4,9 @@ from typing import Optional
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
-from CanuckBot.Config import Config, CONFIG_FIELD_EDITABLE
+from CanuckBot.Config import Config, CONFIG_FIELDS_EDITABLE
 from CanuckBot.Info import Info
-from decorators.checks import is_superadmin, is_full_manager, is_comp_user, is_trusted_user
+from decorators.checks import is_superadmin, is_full_manager, is_comp_manager, is_trusted_user
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
 from Discord import Discord
@@ -52,7 +52,7 @@ class ConfigCog(commands.Cog, name="config"):
 #        app_commands.Choice(name="optout_all_role_id", value="optout_all_role_id")
 #    ])
     async def config_set(
-        self, context: Context, field: CONFIG_FIELD_EDITABLE, value: Optional[str] = None
+        self, context: Context, field: CONFIG_FIELDS_EDITABLE, value: Optional[str] = None
         #self, context: Context, field: Optional[str] = None, value: Optional[str] = None
 #        self, context: Context, interaction: discord.Interaction, field: Optional[str] = None, value: Optional[str] = None
     ) -> None:

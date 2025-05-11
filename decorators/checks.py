@@ -46,6 +46,7 @@ def is_comp_manager():
         return True
 
     return predicate
+
 def is_trusted_user():
     @commands.check
     async def predicate(ctx: commands.Context):
@@ -59,31 +60,3 @@ def is_trusted_user():
         return True
 
     return predicate
-'''
-def is_full_manager(db: DatabaseManager = None):
-    async def predicate(ctx):
-        if not is_user_manager(db, ctx.author.id, User_Level.Full):
-            raise commands.MissingPermissions(["CanuckBot Full Manager"])
-        else:
-            return True
-
-    return commands.check(predicate)
-
-def is_superadmin(db: DatabaseManager = None):
-    async def predicate(ctx):
-        if not is_user_manager(db, ctx.author.id, User_Level.Superadmin):
-            raise commands.MissingPermissions(["CanuckBot Superadmin Manager"])
-        else:
-            return True
-
-    return commands.check(predicate)
-
-def is_trusted_manager(db: DatabaseManager = None):
-    async def predicate(ctx):
-        if not is_user_manager(db, ctx.author.id, User_Level.Trusted):
-            raise commands.MissingPermissions(["CanuckBot Trusted Manager"])
-        else:
-            return True
-
-    return commands.check(predicate)
-'''
