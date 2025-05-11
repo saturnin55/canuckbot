@@ -14,9 +14,7 @@ class MATCH_FIELDS_EDITABLE(str, Enum):
     tz = "tz"
     venue = "venue"
     description = "description"
-    channel_name = "description"
     channel_id = "channel_id"
-    is_warned = "is_warned"
     hours_before_kickoff = "hours_before_kickoff"
     hours_after_kickoff = "hours_after_kickoff"
     watch = "watch"
@@ -32,11 +30,8 @@ class Match(CanuckBotBase):
     tz: TimeZone
     venue: str
     description: str
-    channel_name: DiscordChannelName
     channel_id: DiscordChannelId
-    channel_topic: str
-    is_warned: bool
-    welcome_msg_id: DiscordMessageId
+    info_msg_id: DiscordMessageId
     hours_before_kickoff: int
     hours_after_kickoff: int
     watch: str
@@ -46,3 +41,8 @@ class Match(CanuckBotBase):
     lastmodified_by: DiscordUserId | None
     lastmodified_at: date | None
 
+    async def generate_channel_topic:
+        pass
+
+    async def generate_channel_name:
+        pass

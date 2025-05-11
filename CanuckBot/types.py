@@ -16,7 +16,8 @@ UnixTimestamp = Annotated[int, Field(strict=True, ge=0)]
 class User_Level(IntEnum):
     Superadmin = 0
     Full = 10
-    Trusted = 20
+    CompMngr = 20
+    Trusted = 30
     Disabled = 99
 
     def __str__(self):

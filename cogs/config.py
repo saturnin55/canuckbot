@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from CanuckBot.Config import Config, CONFIG_FIELD_EDITABLE
 from CanuckBot.Info import Info
-from decorators.checks import is_superadmin, is_full_manager, is_trusted_manager
+from decorators.checks import is_superadmin, is_full_manager, is_comp_user, is_trusted_user
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
 from Discord import Discord
@@ -74,7 +74,7 @@ class ConfigCog(commands.Cog, name="config"):
         name="info",
         description="Display information about a configuration parameter.",
     )
-    @is_trusted_manager()
+    @is_comp_manager()
     @app_commands.describe(
         field="The field to get info on.",
     )
@@ -122,7 +122,7 @@ class ConfigCog(commands.Cog, name="config"):
         name="list",
         description="List CanuckBot's configuration.",
     )
-    @is_trusted_manager()
+    @is_comp_manager()
     # @app_commands.describe(
     # )
     async def config_list(self, context: Context):
