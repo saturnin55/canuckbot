@@ -9,6 +9,10 @@ from Discord.types import Snowflake
 class CONFIG_FIELDS_EDITABLE(str, Enum):
     logs_channel_id = "logs_channel_id"
     cmds_channel_id = "cmds_channel_id"
+    interval_cleanup_task = "interval_cleanup_task"
+    interval_status_task = "interval_status_task"
+    interval_match_task = "interval_match_task"
+    interval_ = "cmds_channel_id"
     default_add_hours_before = "default_add_hours_before"
     default_del_hours_after = "default_del_hours_after"
     default_category_id = "default_category_id"
@@ -20,6 +24,9 @@ class CONFIG_FIELDS_EDITABLE(str, Enum):
 class Config(CanuckBotBase):
     logs_channel_id: Snowflake = 0
     cmds_channel_id: Snowflake = 0
+    interval_cleanup_task: float = 0
+    interval_status_task: float = 0
+    interval_match_task: float = 0
     default_add_hours_before: int = 0
     default_del_hours_after: int = 0
     default_category_id: Snowflake = 0

@@ -74,21 +74,42 @@ class DiscordBot(commands.Bot):
         self.config = config
         self.database = None
 
+        self.cleanup_task = tasks.loop(minutes=9999.0)(self._cleanup_task)
+        self.status_task = tasks.loop(minutes=9999.0)(self._status_task)
+        self.match_task = tasks.loop(minutes=9999.0)(self._match_task)
+
+        @self.status_task.before_loop
+        async def before_status_task() -> None:
+            """
+            Before starting the status changing task, we make sure the bot is ready
+            """
+            await self.wait_until_ready()
+
+        @self.cleanup_task.before_loop
+        async def before_cleanup_task() -> None:
+            """
+            Before starting the cleanup changing task, we make sure the bot is ready
+            """
+            await self.wait_until_ready()
+
+        @self.match_task.before_loop
+        async def before_match_task() -> None:
+            """
+            Before starting the match changing task, we make sure the bot is ready
+            """
+            await self.wait_until_ready()
+
 
     async def init_db(self, db_file: str = None) -> None:
-        #conn = aiosqlite.connect(db_file)
-        #self.database = DatabaseManager(conn)
-        #return conn
         os.environ["DB_PATH"] = f"{self.config['db_dir']}/database.db"
         return
 
-        #async with aiosqlite.connect(f"{self.config['db_dir']}/database.db") as db:
-        #    with open(f"{self.config['db_dir']}/schema.sql") as file:
-        #        await db.executescript(file.read())
-        #    await db.commit()
-        #pass
-
     async def load_cogs(self) -> None:
+
+        self.cleanup_task.start()
+        self.status_task.start()
+        self.match_task.start()
+
         """
         The code in this function is executed whenever the bot will start.
         """
@@ -104,16 +125,14 @@ class DiscordBot(commands.Bot):
                         f"Failed to load extension {extension}\n{exception}"
                     )
 
-    @tasks.loop(minutes=60.0)
-    async def cleanup_task(self) -> None:
+    async def _cleanup_task(self) -> None:
         """
         Clean the canuckbot cache
         """
         await self.database.delete("DELETE FROM canuckbot_cache WHERE expiration < CURRENT_TIMESTAMP")
 
 
-    @tasks.loop(minutes=5.0)
-    async def status_task(self) -> None:
+    async def _status_task(self) -> None:
         """
         Setup the game status task of the bot.
         """
@@ -127,12 +146,11 @@ class DiscordBot(commands.Bot):
             )
         )
 
-    @status_task.before_loop
-    async def before_status_task(self) -> None:
+    async def _match_task(self) -> None:
         """
-        Before starting the status changing task, we make sure the bot is ready
+        Setup matches and channels
         """
-        await self.wait_until_ready()
+        pass
 
     async def setup_hook(self) -> None:
         """
@@ -151,8 +169,26 @@ class DiscordBot(commands.Bot):
         self.database = DatabaseManager(
             connection=await aiosqlite.connect(f"{self.config['db_dir']}/database.db")
         )
-        self.status_task.start()
-        self.cleanup_task.start()
+
+        rows = await self.database.select("SELECT field, value FROM config WHERE field like 'interval_%'")
+        if not rows or len(rows) < 3:
+            #fixme
+            pass
+        else:
+            for row in rows:
+                self.config[row['field']] = float(row['value'])
+ 
+        if not self.cleanup_task.is_running():
+            self.cleanup_task.start()
+        self.cleanup_task.change_interval(minutes=float(self.config['interval_cleanup_task']))
+
+        if not self.status_task.is_running():
+            self.status_task.start()
+        self.status_task.change_interval(minutes=float(self.config['interval_status_task']))
+
+        if not self.match_task.is_running():
+            self.match_task.start()
+        self.match_task.change_interval(minutes=float(self.config['interval_match_task']))
 
     async def on_message(self, message: discord.Message) -> None:
         """

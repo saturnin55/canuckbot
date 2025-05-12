@@ -144,6 +144,9 @@ class ConfigCog(commands.Cog, name="config"):
 
         embed.add_field(name="logs_channel_id", value=logs_channel.mention, inline=False)
         embed.add_field(name="cmds_channel_id", value=cmds_channel.mention, inline=False)
+        embed.add_field(name="interval_cleanup_task", value=config.interval_cleanup_task, inline=False)
+        embed.add_field(name="interval_status_task", value=config.interval_status_task, inline=False)
+        embed.add_field(name="interval_match_task", value=config.interval_match_task, inline=False)
         embed.add_field(name="default_add_hours_before", value=config.default_add_hours_before, inline=False)
         embed.add_field(name="default_del_hours_after", value=config.default_del_hours_after, inline=False)
         embed.add_field(name="default_category_id", value=f"{category.id} [{category.name}]", inline=False)
