@@ -3,7 +3,7 @@ from datetime import date
 from typing import List
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import TimeZone, Handle
-from Discord.types import DiscordUserId
+from Discord.types import Snowflake
 
 
 class TEAM_FIELDS_EDITABLE(str, Enum):
@@ -17,7 +17,7 @@ class Team(CanuckBotBase):
     shortname = Handle
     tz: TimeZone
     aliases: List[str]
-    created_by: DiscordUserId
+    created_by: Snowflake
     created_at: date
-    lastmodified_by: DiscordUserId | None
+    lastmodified_by: Snowflake | None
     lastmodified_at: date | None

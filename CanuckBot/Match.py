@@ -2,7 +2,7 @@ from enum import Enum
 from datetime import date
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import Match_Status, TimeZone
-from Discord.types import DiscordChannelName, DiscordChannelId, DiscordMessageId, DiscordUserId
+from Discord.types import Snowflake
 
 
 class MATCH_FIELDS_EDITABLE(str, Enum):
@@ -30,15 +30,15 @@ class Match(CanuckBotBase):
     tz: TimeZone
     venue: str
     description: str
-    channel_id: DiscordChannelId
-    info_msg_id: DiscordMessageId
+    channel_id: Snowflake
+    info_msg_id: Snowflake
     hours_before_kickoff: int
     hours_after_kickoff: int
     watch: str
     stream: HttpUrl
-    created_by: DiscordUserId
+    created_by: Snowflake
     created_at: date
-    lastmodified_by: DiscordUserId | None
+    lastmodified_by: Snowflake | None
     lastmodified_at: date | None
 
     async def generate_channel_topic:

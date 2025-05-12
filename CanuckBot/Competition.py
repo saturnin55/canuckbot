@@ -5,7 +5,7 @@ from typing import Type, List, Any, Optional
 from discord.ext.commands import Bot
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import Handle, HexColor, Competition_Type
-from Discord.types import DiscordRoleId, DiscordCategoryId, DiscordUserId
+from Discord.types  import Snowflake
 
 
 class COMPETITION_FIELDS_EDITABLE(str, Enum):
@@ -29,13 +29,13 @@ class Competition(CanuckBotBase):
     competition_type: Competition_Type = Competition_Type.Men
     is_monitored: bool = False
     is_international: bool = False
-    optout_role_id: DiscordRoleId = 0
-    category_id: DiscordCategoryId | None = 0
+    optout_role_id: Snowflake = 0
+    category_id: Snowflake | None = 0
     hours_before_kickoff: int = 0
     hours_after_kickoff: int = 0
-    created_by: DiscordUserId = None
+    created_by: Snowflake = None
     created_at: date = None
-    lastmodified_by: DiscordUserId | None = None
+    lastmodified_by: Snowflake | None = None
     lastmodified_at: date | None = None
 
 
@@ -70,16 +70,16 @@ class Competition(CanuckBotBase):
                 self.competition_type = Competition_Type(row["competition_type"])
                 self.is_monitored = bool(row["is_monitored"])
                 self.is_international = bool(row["is_international"])
-                self.optout_role_id = DiscordRoleId(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
-                self.category_id = DiscordCategoryId(row["category_id"])
+                self.optout_role_id = int(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
+                self.category_id = int(row["category_id"])
                 self.hours_before_kickoff = int(row["hours_before_kickoff"])
                 self.hours_after_kickoff = int(row["hours_after_kickoff"])
                 if row["created_by"] is not None:
-                    self.created_by = DiscordUserId(row["created_by"])
+                    self.created_by = int(row["created_by"])
                 if row["created_at"] is not None:
                     self.created_at = datetime.fromtimestamp(int(row["created_at"]))
                 if row["lastmodified_by"] is not None:
-                    self.lastmodified_by = DiscordUserId(row["lastmodified_by"])
+                    self.lastmodified_by = int(row["lastmodified_by"])
                 if row["lastmodified_at"] is not None:
                     self.lastmodified_at = datetime.fromtimestamp(int(row["lastmodified_at"]))
 
@@ -115,18 +115,18 @@ class Competition(CanuckBotBase):
                     row["competition_type"] = Competition_Type(row["competition_type"])
                     row["is_monitored"] = bool(row["is_monitored"])
                     row["is_international"] = bool(row["is_international"])
-                    row["optout_role_id"] = DiscordRoleId(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
-                    row["category_id"] = DiscordCategoryId(row["category_id"])
+                    row["optout_role_id"] = int(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
+                    row["category_id"] = int(row["category_id"])
                     row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
                     row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
                     if row["created_by"] is not None:
-                        row["created_by"] = DiscordUserId(row["created_by"])
+                        row["created_by"] = int(row["created_by"])
                     if row["created_at"] is not None:
                         row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
                     if row["lastmodified_at"] is not None:
                         row["lastmodified_at"] = datetime.fromtimestamp(int(row["lastmodified_at"]))
                     if row["lastmodified_by"] is not None:
-                        row["lastmodified_by"] = DiscordUserId(row["lastmodified_by"])
+                        row["lastmodified_by"] = int(row["lastmodified_by"])
 
             return rows
         except:

@@ -5,7 +5,7 @@ from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator, HttpUr
 from database import DatabaseManager
 from Discord.DiscordBot import DiscordBot
 from CanuckBot.types import TimeZone, Handle, UnixTimestamp, HexColor
-from Discord.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId, DiscordUserId, SnowflakeId, DiscordChannelName
+from Discord.types import Snowflake
 from Discord import Discord 
 
 

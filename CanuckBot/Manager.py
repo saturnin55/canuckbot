@@ -6,15 +6,15 @@ from aiosqlite import Error as aiosqliteError
 from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import User_Level
-from Discord.types import DiscordUserId
+from Discord.types import Snowflake
 
 class MANAGER_FIELDS_EDITABLE(str, Enum):
     level = "level"
 
 class Manager(CanuckBotBase):
-    user_id: DiscordUserId = 0
+    user_id: Snowflake = 0
     created_at: date = 0
-    created_by: DiscordUserId = 0
+    created_by: Snowflake = 0
     level: User_Level = User_Level.Disabled
     competitions: List[int] = []
 
@@ -40,9 +40,9 @@ class Manager(CanuckBotBase):
             if not row:
                 return False
             else:
-                self.user_id = DiscordUserId(row["user_id"])
+                self.user_id = int(row["user_id"])
                 self.created_at = datetime.fromtimestamp(int(row["created_at"]))
-                self.created_by = DiscordUserId(row["created_by"])
+                self.created_by = int(row["created_by"])
                 self.level = User_Level(row["level"])
 
             try:
@@ -61,7 +61,7 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def add(self, user_id: DiscordUserId, invoking_id: DiscordUserId, level: User_Level) -> bool:
+    async def add(self, user_id: int, invoking_id: int, level: User_Level) -> bool:
         assert self._bot.database, "ERR Manager.py add(): database not available."
         user = await self._bot.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
@@ -78,9 +78,9 @@ class Manager(CanuckBotBase):
                     [str(user_id), now, str(invoking_id), str(level.value)]
                 )
 
-                self.user_id = DiscordUserId(user_id)
+                self.user_id = int(user_id)
                 self.created_at = datetime.fromtimestamp(int(now))
-                self.created_by = DiscordUserId(invoking_id)
+                self.created_by = int(invoking_id)
                 self.level = level.value
 
                 # make sure there are no prior entries in manager_competitions
@@ -103,7 +103,7 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def remove(self, user_id: DiscordUserId) -> bool:
+    async def remove(self, user_id: int) -> bool:
         assert self._bot.database, "ERR Manager.remove(): database not available."
         user = await self._bot.database.get_one(
             "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
@@ -144,9 +144,9 @@ class Manager(CanuckBotBase):
                 return data
             else:
                 for row in rows:
-                    row["user_id"] = DiscordUserId(row["user_id"])
+                    row["user_id"] = int(row["user_id"])
                     row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
-                    row["created_by"] = DiscordUserId(row["created_by"])
+                    row["created_by"] = int(row["created_by"])
                     row["level"] = User_Level(int(row["level"]))
                     row["competitions"] = []
 

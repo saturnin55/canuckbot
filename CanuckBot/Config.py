@@ -4,7 +4,7 @@ from pydantic import HttpUrl
 from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import HexColor, TimeZone
-from Discord.types import DiscordChannelId, DiscordCategoryId, DiscordRoleId
+from Discord.types import Snowflake
 
 class CONFIG_FIELDS_EDITABLE(str, Enum):
     logs_channel_id = "logs_channel_id"
@@ -18,18 +18,18 @@ class CONFIG_FIELDS_EDITABLE(str, Enum):
     default_comp_color = "default_comp_color"
 
 class Config(CanuckBotBase):
-    logs_channel_id: DiscordChannelId = 0
-    cmds_channel_id: DiscordChannelId = 0
+    logs_channel_id: Snowflake = 0
+    cmds_channel_id: Snowflake = 0
     default_add_hours_before: int = 0
     default_del_hours_after: int = 0
-    default_category_id: DiscordCategoryId = 0
+    default_category_id: Snowflake = 0
     default_logo_url: HttpUrl = HttpUrl(
         "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
     )
     default_tz: TimeZone = TimeZone("America/Toronto")
-    mngr_role_id: DiscordRoleId = 0
+    mngr_role_id: Snowflake = 0
     default_comp_color: HexColor = "#ffffff"
-    optout_all_role_id: DiscordRoleId = 0
+    optout_all_role_id: Snowflake = 0
 
     class Config:
         arbitrary_types_allowed = True
