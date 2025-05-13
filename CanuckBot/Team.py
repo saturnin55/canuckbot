@@ -10,7 +10,7 @@ from Discord.DiscordBot import DiscordBot
 
 
 class TEAM_FIELDS_INFO(str, Enum):
-    team_id = "team_id"
+    team_id = "team_id" 
     name = "name"
     shortname = "shortname"
     tz = "tz"
@@ -26,15 +26,15 @@ class TEAM_FIELDS_EDITABLE(str, Enum):
     tz = "tz"
 
 class Team(CanuckBotBase):
-    team_id: int
-    name: str
-    shortname: Handle
-    tz: TimeZone
-    aliases: List[str]
-    created_by: Snowflake
-    created_at: date
-    lastmodified_by: Snowflake | None
-    lastmodified_at: date | None
+    team_id: int = 0
+    name: str = None
+    shortname: Handle = None
+    tz: TimeZone = None
+    aliases: List[str] = []
+    created_by: Snowflake | None = None
+    created_at: date = 0
+    lastmodified_by: Snowflake | None = None
+    lastmodified_at: date | None = None
 
     class Team:
         arbitrary_types_allowed = True
@@ -97,7 +97,7 @@ class Team(CanuckBotBase):
         else:
             assert self._bot.database, "ERR Team.py load(): database not available."
             row = await self._bot.database.get_one(
-                f"SELECT * FROM team WHERE {key} = ?", [keyval]
+                f"SELECT * FROM teams WHERE {key} = ?", [keyval]
             )
 
             if not row:
@@ -107,6 +107,7 @@ class Team(CanuckBotBase):
                 self.name = str(row["name"])
                 self.shortname = Handle(row["shortname"])
                 self.tz = TimeZone(row["tz"])
+
                 if row["created_by"] is not None:
                     self.created_by = int(row["created_by"])
                 if row["created_at"] is not None:
@@ -157,6 +158,31 @@ class Team(CanuckBotBase):
         )
         return True
 
+    async def add(self) -> bool:
+
+        try:
+            await self._bot.database.insert(
+                "INSERT INTO teams (name, shortname, tz, created_at, created_by) VALUES (?, ?, ?, ?, ?)",
+                [str(self.name), str(self.shortname), str(self.tz), str(self.created_at), int(self.created_by)]
+                )
+
+            print("a1")
+            self.team_id = int(self._bot.database.lastrowid())
+            print("a2")
+
+            await self._bot.database.connection.commit()
+            print("a3")
+
+            # make sure there are no prior entries in team_aliases
+            await self.clear_aliases()
+            print("a4")
+
+            return True
+        except Exception as e:
+            raise ValueError(e)
+            return False
+                
+
     async def setmodified(self) -> bool:
         try:
             await self.update('lastmodified_by', self.lastmodified_by)
@@ -192,5 +218,21 @@ class Team(CanuckBotBase):
             return True
 
         # delete the alias from the database
+
+        return True
+
+    async def clear_aliases(self) -> bool:
+
+        if self.team_id is None:
+            return False
+
+        try:
+            await self._bot.database.delete(
+                "DELETE FROM team_aliases WHERE team_id = ?", [int(self.team_id)]
+                )
+
+            await self._bot.database.connection.commit()
+        except:
+            return False
 
         return True

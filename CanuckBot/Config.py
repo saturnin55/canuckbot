@@ -67,6 +67,9 @@ class Config(CanuckBotBase):
 
         return instance
 
+    async def reload(self):
+        self.list
+
     async def update(self, field: str) -> bool:
         ret: bool
         assert self._bot.database, "ERR Config.py update(): database not available."

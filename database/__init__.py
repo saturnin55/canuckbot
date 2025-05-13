@@ -15,6 +15,7 @@ class DatabaseManager:
     def __init__(self, *, connection: aiosqlite.Connection) -> None:
         self.connection = connection
         self.connection.row_factory = aiosqlite.Row
+        self._lastrowid: Any | None = None
 
     async def get_one(self, sql: str, values: list) -> dict[str, Any] | Literal[False]:
         try:
@@ -72,11 +73,15 @@ class DatabaseManager:
             print(f"ERR Database.update(): {e}, query : |{formatted_sql}|")
             return False
 
+    def lastrowid(self) -> Any:
+        return self._lastrowid
+
     async def insert(self, sql: str, values: list) -> bool:
         try:
             async with self.connection.execute(sql, values) as cursor:
                 await self.connection.commit()
                 if cursor.rowcount > 0:
+                    self._lastrowid = cursor.lastrowid
                     return True
                 else:
                     return False
@@ -84,21 +89,21 @@ class DatabaseManager:
             print(f"ERR Database.insert(): {e}")
             return False
 
-    async def mngr_add(self, user_id: int, invoking_user: int) -> None:
-        print(user_id)
-        rows = await self.connection.execute(
-            "SELECT user_id FROM managers WHERE user_id=? ORDER BY user_id DESC LIMIT 1",
-            (user_id,),
-        )
-        async with rows as cursor:
-            result = await cursor.fetchone()
-            if result is not None:
-                return
-            await self.connection.execute(
-                "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, CURRENT_TIMESTAMP, ?)",
-                (
-                    user_id,
-                    invoking_user,
-                ),
-            )
-            await self.connection.commit()
+    
+    #async def mngr_add(self, user_id: int, invoking_user: int) -> None:
+    #    rows = await self.connection.execute(
+    #        "SELECT user_id FROM managers WHERE user_id=? ORDER BY user_id DESC LIMIT 1",
+    #        (user_id,),
+    #    )
+    #    async with rows as cursor:
+    #        result = await cursor.fetchone()
+    #        if result is not None:
+    #            return
+    #        await self.connection.execute(
+    #            "INSERT INTO managers(user_id, created_at, created_by) VALUES (?, CURRENT_TIMESTAMP, ?)",
+    #            (
+    #                user_id,
+    #                invoking_user,
+    #            ),
+    #        )
+    #        await self.connection.commit()
