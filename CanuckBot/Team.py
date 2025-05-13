@@ -131,10 +131,29 @@ class Team(CanuckBotBase):
         await self.load('team_id', int(team_id))
 
 
+    async def load_by_alias(self, alias: str = None):
+
+        row = await self._bot.database.get_one(
+            f"SELECT a.team_id FROM teams a, team_aliases b WHERE a.team_id = b.team_id AND b.alias = ?", [str(alias)]
+        )
+        if not row:
+            self.team_id = 0
+            return False
+        else:
+            self.load_by_id(row["team_id"])
+            return True
+
     async def load_by_shortname(self, shortname: Handle = None):
-        await self.load('shortname', str(shortname))
+        if await self.load('shortname', str(shortname)):
+            return True
+        else:
+            # check by aliases
+            return self.load_by_alias(shortname)
+
+        return False
 
     async def is_shortname_unique(self, shortname: Handle = None) -> bool:
+
         t = Team(self.bot)
 
         await t.load_by_shortname(shortname)
@@ -158,6 +177,28 @@ class Team(CanuckBotBase):
         )
         return True
 
+    async def remove(self) -> bool:
+
+        try:
+            await self._bot.database.delete("DELETE FROM teams WHERE team_id = ?", [int(self.team_id)])
+
+            await self.clear_aliases()
+
+            self.team_id = 0
+            self.name = None
+            self.shortname = None
+            self.tz = None
+            self.aliases = []
+            self.created_at = 0
+            self.created_by = None
+            self.lastmodified_at = None
+            self.lastmodified_by = None
+
+            return True
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
     async def add(self) -> bool:
 
         try:
@@ -166,16 +207,12 @@ class Team(CanuckBotBase):
                 [str(self.name), str(self.shortname), str(self.tz), str(self.created_at), int(self.created_by)]
                 )
 
-            print("a1")
             self.team_id = int(self._bot.database.lastrowid())
-            print("a2")
 
             await self._bot.database.connection.commit()
-            print("a3")
 
             # make sure there are no prior entries in team_aliases
             await self.clear_aliases()
-            print("a4")
 
             return True
         except Exception as e:
@@ -188,8 +225,8 @@ class Team(CanuckBotBase):
             await self.update('lastmodified_by', self.lastmodified_by)
             await self.update('lastmodified_at', int(time.time()))
             return True
-        except:
-            #fixme
+        except Exception as e:
+            raise ValueError(e)
             return False
         
     async def add_alias(self, alias: str = None) -> bool:
@@ -209,7 +246,7 @@ class Team(CanuckBotBase):
 
         return True
 
-    async def del_alias(self, alias: str = None) -> bool:
+    async def remove_alias(self, alias: str = None) -> bool:
         # alias must be a valid Handle
         if not is_valid_handle(alias):
             return False
@@ -218,6 +255,7 @@ class Team(CanuckBotBase):
             return True
 
         # delete the alias from the database
+        #fixme
 
         return True
 
@@ -232,7 +270,8 @@ class Team(CanuckBotBase):
                 )
 
             await self._bot.database.connection.commit()
-        except:
+        except Exception as e:
+            raise ValueError(e)
             return False
 
         return True

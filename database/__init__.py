@@ -57,8 +57,8 @@ class DatabaseManager:
 
     async def update(self, sql: str, values: list) -> bool:
         try:
-            print(f"SQL : |{sql}")
-            print(f"values : |{values}")
+            #print(f"SQL : |{sql}")
+            #print(f"values : |{values}")
             async with self.connection.execute(sql, values) as cursor:
                 await self.connection.commit()
 
