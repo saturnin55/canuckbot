@@ -1,7 +1,9 @@
+import re
 import hashlib
 import requests
 from io import BytesIO
 from CanuckBot.Cache import Cache
+from CanuckBot.types import HANDLE_PATTERN
 from colorthief import ColorThief
 from database import DatabaseManager
 
@@ -39,3 +41,6 @@ async def get_dominant_color_from_url(db: DatabaseManager = None, image_url: str
 
     except Exception as e:
         return 0xffffff
+
+def is_valid_handle(s):
+    return re.match(HANDLE_PATTERN, s) is not None

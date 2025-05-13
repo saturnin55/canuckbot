@@ -4,7 +4,7 @@ from typing import Optional
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
-from CanuckBot.Config import Config, CONFIG_FIELDS_EDITABLE
+from CanuckBot.Config import Config, CONFIG_FIELDS_EDITABLE, CONFIG_FIELDS_INFO
 from CanuckBot.Info import Info
 from decorators.checks import is_superadmin, is_full_manager, is_comp_manager, is_trusted_user
 from Discord.LoggingFormatter import LoggingFormatter
@@ -39,29 +39,22 @@ class ConfigCog(commands.Cog, name="config"):
         field="The field to set.",
         value="The text info to set for the selected field.",
     )
-#    @app_commands.choices(field=[
-#        app_commands.Choice(name="logs_channel_id", value="logs_channel_id"),
-#        app_commands.Choice(name="cmds_channel_id", value="cmds_channel_id"),
-#        app_commands.Choice(name="default_add_hours_before", value="default_add_hours_before"),
-#        app_commands.Choice(name="default_del_hours_after", value="default_del_hours_after"),
-#        app_commands.Choice(name="default_category", value="default_category"),
-#        app_commands.Choice(name="default_logo_url", value="default_logo_url"),
-#        app_commands.Choice(name="default_tz", value="default_tz"),
-#        app_commands.Choice(name="mngr_role_id", value="mngr_role_id"),
-#        app_commands.Choice(name="default_comp_color", value="default_comp_color"),
-#        app_commands.Choice(name="optout_all_role_id", value="optout_all_role_id")
-#    ])
+
     async def config_set(
         self, context: Context, field: CONFIG_FIELDS_EDITABLE, value: Optional[str] = None
-        #self, context: Context, field: Optional[str] = None, value: Optional[str] = None
-#        self, context: Context, interaction: discord.Interaction, field: Optional[str] = None, value: Optional[str] = None
     ) -> None:
         self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config set", context.author, context.kwargs))
 
-        if field and value:
+        if field.name and value:
             config = await Config.create(bot=self.bot)
-            setattr(config, field, value)
-            if await config.update(field):
+            setattr(config, field.name, value)
+            if await config.update(field.name):
+                if field.name == 'interval_cleanup_task':
+                    self.bot.cleanup_task.change_interval(minutes=float(value))
+                elif field.name == 'interval_status_task':
+                    self.bot.status_task.change_interval(minutes=float(value))
+                elif field.name == 'interval_match_task':
+                    self.bot.match_task.change_interval(minutes=float(value))
                 await context.send("Configuration updated.")
             else:
                 await context.send(
@@ -72,31 +65,36 @@ class ConfigCog(commands.Cog, name="config"):
 
     @config.command(
         name="info",
-        description="Display information about a configuration parameter.",
+        description="Display information about config options.",
     )
     @is_comp_manager()
     @app_commands.describe(
-        field="The field to get info on.",
     )
-    async def config_info(self, context: Context, field: Optional[str] = None) -> None:
-        config = await Config.create(bot=self.bot)
+    async def config_info(self, context: Context) -> None:
+        if context.interaction:
+            await context.interaction.response.defer()
 
-        # if not config.field_exists(field):
-        #    await context.send(f"ERR: config.{field} is not defined.")
-        #    return
+        try:
+            config = await Config.create(bot=self.bot)
 
-        objinfo = await Info.create(self.bot, "config", field)
-        if objinfo.info == "":
-            info = "n/a"
-        else:
-            info = objinfo.info
+            embed = discord.Embed()
 
-        if info:
-            await context.send(f"config.{field} : `{info}`")
-        else:
-            await context.send(
-                "ERR: There was an error trying to get info from the database."
-            )
+            attributes = vars(config)
+            for attr in attributes:
+                objinfo = await Info.create(self.bot, "config", attr)
+                if objinfo.info == "":
+                    info = "n/a"
+                else:
+                    info = objinfo.info
+
+                embed.add_field(name=attr, value=info, inline=False)
+
+            if context.interaction:
+                await context.interaction.followup.send(content="**CanuckBot config info**", embed=embed)
+            else:
+                await context.reply(content="**CanuckBot config info**", embed=embed, ephemeral=False)
+        except:
+                await context.send("ERR: There was an error trying to get info from the database.", ephemeral=True)
 
     @config.command(
         name="setinfo",
@@ -106,17 +104,13 @@ class ConfigCog(commands.Cog, name="config"):
     @app_commands.describe(
         field="The field to set info on.",
     )
-    async def config_setinfo(
-        self,
-        context: Context,
-        field: Optional[str] = None,
-        info_text: Optional[str] = None,
-    ) -> None:
-        objinfo = await Info.create(self.bot, "config", field)
+    async def config_setinfo( self, context: Context, field: CONFIG_FIELDS_INFO, info_text: Optional[str] = None) -> None:
+        objinfo = await Info.create(self.bot, "config", field.name)
         if await objinfo.set(info_text):
-            await context.send(f"config.{field} updated : `{info_text}`")
+            await context.send(f"config.{field.name} updated : `{info_text}`")
         else:
-            await context.send(f"ERR: couldn't update config.{field}")
+            await context.send(f"config.{field.name} updated : `{info_text}`")
+            await context.send(f"ERR: couldn't update config.{field.name}")
 
     @config.command(
         name="list",
@@ -126,7 +120,7 @@ class ConfigCog(commands.Cog, name="config"):
     # @app_commands.describe(
     # )
     async def config_list(self, context: Context):
-        self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config list", context.author, context.kwargs))
+        #self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config list", context.author, context.kwargs))
 
         config = await Config.create(self.bot)
 

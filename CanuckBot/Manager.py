@@ -8,6 +8,13 @@ from CanuckBot import CanuckBotBase
 from CanuckBot.types import User_Level
 from Discord.types import Snowflake
 
+class MANAGER_FIELDS_INFO(str, Enum):
+    user_id = "user_id"
+    created_at = "created_at"
+    created_by = "created_by"
+    level = "level"
+    competitions = "competitions"
+
 class MANAGER_FIELDS_EDITABLE(str, Enum):
     level = "level"
 
@@ -206,7 +213,23 @@ class Manager(CanuckBotBase):
         setattr(self, field, cast_value)
 
         await self._bot.database.update(
-            f"UPDATE managers SET {field} = ? WHERE manager_id = ?", [cast_value, self.manager_id]
+            f"UPDATE managers SET {field} = ? WHERE user_id = ?", [cast_value, self.user_id]
         )
+        return True
 
+    def is_loaded(self) -> bool:
+        if self.user_id == 0:
+            return False
+        else:
+            return True
+
+    async def clear_competitions(self) -> bool:
+        try:
+            await self._bot.database.delete(
+                "DELETE FROM manager_competitions WHERE user_id = ?", [int(self.user_id)]
+            )
+            await self._bot.database.connection.commit()
+            return True
+        except:
+            return False
 

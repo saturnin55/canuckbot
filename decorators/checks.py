@@ -41,7 +41,7 @@ def is_comp_manager():
             raise commands.CheckFailure("This command must be part of a Cog with a 'bot' attribute.")
 
         db = cog.bot.database
-        if not await is_user_manager(db, ctx.author.id, User_Level.CompMngr):
+        if not await is_user_manager(db, ctx.author.id, User_Level.Comp):
             raise commands.MissingPermissions(["CanuckBot Comp Manager"])
         return True
 

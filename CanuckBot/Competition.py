@@ -83,6 +83,12 @@ class Competition(CanuckBotBase):
                 if row["lastmodified_at"] is not None:
                     self.lastmodified_at = datetime.fromtimestamp(int(row["lastmodified_at"]))
 
+    async def load_by_key(self, key: str = None):
+        if key.isdigit():
+            await self.load_by_id(int(key))
+        else:
+            await self.load_by_handle(str(key))
+
     async def load_by_id(self, competition_id: int = 0):
 
         await self.load('competition_id', int(competition_id))
@@ -138,3 +144,9 @@ class Competition(CanuckBotBase):
 
     async def list(self) -> List[dict] | bool:
         pass
+
+    def is_loaded(self) -> bool:
+        if self.competition_id == 0:
+            return False
+        else:
+            return True

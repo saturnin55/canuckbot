@@ -6,6 +6,22 @@ from CanuckBot import CanuckBotBase
 from CanuckBot.types import HexColor, TimeZone
 from Discord.types import Snowflake
 
+class CONFIG_FIELDS_INFO(str, Enum):
+    logs_channel_id = "logs_channel_id"
+    cmds_channel_id = "cmds_channel_id"
+    interval_cleanup_task = "interval_cleanup_task"
+    interval_status_task = "interval_status_task"
+    interval_match_task = "interval_match_task"
+    interval_ = "cmds_channel_id"
+    default_add_hours_before = "default_add_hours_before"
+    default_del_hours_after = "default_del_hours_after"
+    default_category_id = "default_category_id"
+    default_logo_url = "default_logo_url"
+    default_tz = "default_tz"
+    mngr_role_id = "mngr_role_id"
+    default_comp_color = "default_comp_color"
+    optout_all_role_id = "optout_all_role_id"
+
 class CONFIG_FIELDS_EDITABLE(str, Enum):
     logs_channel_id = "logs_channel_id"
     cmds_channel_id = "cmds_channel_id"

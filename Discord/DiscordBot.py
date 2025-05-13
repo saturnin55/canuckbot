@@ -18,6 +18,7 @@ from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
 from database import DatabaseManager
+from Discord.LoggingFormatter import LoggingFormatter
 
 """	
 Setup bot intents (events restrictions)
@@ -209,16 +210,33 @@ class DiscordBot(commands.Bot):
         assert context.command, (
             "ERR in bot.py on_command_completion(): context.command not available."
         )
-        full_command_name = context.command.qualified_name
-        split = full_command_name.split(" ")
-        executed_command = str(split[0])
+        if context.interaction:
+            data = context.interaction.data
+            name = data.get("name")
+            options = data.get("options", [])
+
+            def format_options(opts):
+                return " ".join(
+                    f"{opt['name']}:{opt['value']}" if "value" in opt else opt["name"]
+                    for opt in opts
+                )
+
+            args_str = format_options(options)
+            _cmd = f"/{name} {args_str}"
+        else:
+            _cmd = context.message.content
+            
+        #full_command_name = context.command.qualified_name
+        #split = full_command_name.split(" ")
+        #executed_command = str(split[0])
         if context.guild is not None:
             self.logger.info(
-                f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id})"
+                LoggingFormatter.format_invoked_slash_cmd(f"{_cmd}", context.author, context.kwargs)
+                #f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id})"
             )
         else:
             self.logger.info(
-                f"Executed {executed_command} command by {context.author} (ID: {context.author.id}) in DMs"
+                f"Executed {_cmd} command by {context.author} (ID: {context.author.id}) in DMs"
             )
 
     async def on_command_error(self, context: Context, error) -> None:

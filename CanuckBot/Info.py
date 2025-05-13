@@ -3,10 +3,10 @@ from CanuckBot import CanuckBotBase
 
 
 class Info(CanuckBotBase):
-    info_id: int
-    obj: str
-    field: str
-    info: str
+    info_id: Optional[int] = None
+    obj: Optional[str] = None
+    field: Optional[str] = None
+    info: Optional[str] = None
 
     def __init__(self, bot):
         super().__init__(bot)
