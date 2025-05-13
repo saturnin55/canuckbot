@@ -72,34 +72,49 @@ class Config(CanuckBotBase):
 
     async def update(self, field: str) -> bool:
         ret: bool
-        assert self._bot.database, "ERR Config.py update(): database not available."
-        ret = await self._bot.database.update(
-            "UPDATE config SET value = ? WHERE field = ?",
-            [str(getattr(self, field, None)), str(field)],
-        )
+    
+        try:
+            assert self._bot.database, "ERR Config.py update(): database not available."
+            ret = await self._bot.database.update(
+                "UPDATE config SET value = ? WHERE field = ?",
+                [str(getattr(self, field, None)), str(field)],
+            )
+        except Exception as e:
+            raise ValueError(e)
+            return False
+ 
         return ret
 
     async def get(self, field: Optional[str] = None) -> str | Literal[False]:
-        value = getattr(self, field, None) if field else False
+        try:
+            value = getattr(self, field, None) if field else False
+        except Exception as e:
+            raise ValueError(e)
+            return False
 
         return value or False
 
     async def list(self) -> dict[str, Any] | Literal[False]:
         data: dict[str, Any] = {}
-        assert self._bot.database, "ERR Config.py list(): database not available."
-        rows = await self._bot.database.select(
-            "SELECT * FROM config ORDER BY field ASC"
-        )
 
-        if not rows:
+        try:
+            assert self._bot.database, "ERR Config.py list(): database not available."
+            rows = await self._bot.database.select(
+                "SELECT * FROM config ORDER BY field ASC"
+            )
+
+            if not rows:
+                return False
+            else:
+                for item in rows:
+                    field = item["field"]
+                    value = item["value"]
+
+                    cast_value = self.cast_value(field, value)
+                    setattr(self, item["field"], cast_value)
+                    data[item["field"]] = cast_value
+        except Exception as e:
+            raise ValueError(e)
             return False
-        else:
-            for item in rows:
-                field = item["field"]
-                value = item["value"]
-
-                cast_value = self.cast_value(field, value)
-                setattr(self, item["field"], cast_value)
-                data[item["field"]] = cast_value
 
             return data

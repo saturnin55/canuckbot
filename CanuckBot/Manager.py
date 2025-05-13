@@ -40,30 +40,33 @@ class Manager(CanuckBotBase):
         if user_id is None:
             return False
         else:
-            assert self._bot.database, "ERR Manager.py get(): database not available."
-            row = await self._bot.database.get_one(
-                "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
-            )
-            if not row:
-                return False
-            else:
-                self.user_id = int(row["user_id"])
-                self.created_at = datetime.fromtimestamp(int(row["created_at"]))
-                self.created_by = int(row["created_by"])
-                self.level = User_Level(row["level"])
-
             try:
+                assert self._bot.database, "ERR Manager.py get(): database not available."
+                row = await self._bot.database.get_one(
+                    "SELECT * FROM managers WHERE user_id = ?", [str(user_id)]
+                )
+                if not row:
+                    return False
+                else:
+                    self.user_id = int(row["user_id"])
+                    self.created_at = datetime.fromtimestamp(int(row["created_at"]))
+                    self.created_by = int(row["created_by"])
+                    self.level = User_Level(row["level"])
+
                 rows = await self._bot.database.select(
                     "SELECT competition_id FROM manager_competitions WHERE user_id = ? ORDER BY competition_id ASC",
                     [str(user_id)],
                 )
+
                 if not rows:
                     self.competitions = []
                 else:
                     for row in rows:
                         self.competitions.append(int(row["competition_id"]))
-            except aiosqliteError as e:
-                print(f"ERR Manager.get(): {e}")
+            #except aiosqliteError as e:
+                #print(f"ERR Manager.get(): {e}")
+            except Exception as e:
+                raise ValueError(e)
                 return False
 
         return True
