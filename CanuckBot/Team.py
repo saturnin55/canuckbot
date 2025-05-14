@@ -276,10 +276,6 @@ class Team(CanuckBotBase):
     async def add_alias(self, alias: str = None) -> bool:
 
         try:
-            # alias must be a valid Handle
-            if not is_valid_handle(alias):
-                return False
-
             # check if alias isn't already in the team's aliases
             if await self.is_alias(alias):
                 return True

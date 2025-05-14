@@ -8,6 +8,23 @@ from CanuckBot.types import Handle, HexColor, Competition_Type
 from Discord.types  import Snowflake
 
 
+class COMPETITION_FIELDS_INFO(str, Enum):
+    competition_id = "competition_id"
+    name = "name"
+    shortname = "shortname"
+    logo_url = "logo_url"
+    competition_type = "competition_type"
+    is_monitored = "is_monitored"
+    is_international = "is_international"
+    optout_role_id = "optout_role_id"
+    category_id = "category_id"
+    hours_before_kickoff = "hours_before_kickoff"
+    hours_after_kickoff = "hours_after_kickoff"
+    created_by = "created_by"
+    created_at = "created_at"
+    lastmodified_by = "lastmodified_by"
+    lastmodified_at = "lastmodified_at"
+
 class COMPETITION_FIELDS_EDITABLE(str, Enum):
     name = "name"
     shortname = "shortname"
@@ -25,7 +42,6 @@ class Competition(CanuckBotBase):
     name: str | None = Field(default=None)
     shortname: Handle | None = None
     logo_url: HttpUrl = "https://raw.githubusercontent.com/saturnin55/CanuckBot/main/images/1x1-transparent.png"
-    color: HexColor = "#ffffff"
     competition_type: Competition_Type = Competition_Type.Men
     is_monitored: bool = False
     is_international: bool = False
@@ -51,8 +67,9 @@ class Competition(CanuckBotBase):
 
         return instance
 
-    async def load(self, key: str = 'competition_id', keyval: str | int = None):
+    async def load(self, key: str = 'competition_id', keyval: str | int = None) -> bool:
         if keyval is None or key not in ['competition_id', 'shortname']:
+            raise ValueError(f"Can't load competition `{keyval}` using `{key}` field!")
             return False
         else:
             assert self._bot.database, "ERR Competition.py load(): database not available."
@@ -66,7 +83,6 @@ class Competition(CanuckBotBase):
                 self.name = str(row["name"])
                 self.shortname = Handle(row["shortname"])
                 self.logo_url = HttpUrl(row["logo_url"])
-                self.color = HexColor(row["color"])
                 self.competition_type = Competition_Type(row["competition_type"])
                 self.is_monitored = bool(row["is_monitored"])
                 self.is_international = bool(row["is_international"])
@@ -83,19 +99,33 @@ class Competition(CanuckBotBase):
                 if row["lastmodified_at"] is not None:
                     self.lastmodified_at = datetime.fromtimestamp(int(row["lastmodified_at"]))
 
-    async def load_by_key(self, key: str = None):
-        if key.isdigit():
-            await self.load_by_id(int(key))
-        else:
-            await self.load_by_handle(str(key))
+        return True
 
-    async def load_by_id(self, competition_id: int = 0):
+    async def load_by_key(self, key: str = None) -> bool:
+        try:
+            if key.isdigit():
+                return await self.load_by_id(int(key))
+            else:
+                return await self.load_by_handle(str(key))
+        except Exception as e:
+            raise ValueError(e)
+            return False
 
-        await self.load('competition_id', int(competition_id))
+    async def load_by_id(self, competition_id: int = 0) -> bool:
+
+        try:
+            return await self.load('competition_id', int(competition_id))
+        except Exception as e:
+            raise ValueError(e)
+            return False
 
 
-    async def load_by_handle(self, shortname: Handle = None):
-        await self.load('shortname', str(shortname))
+    async def load_by_handle(self, shortname: Handle = None) -> bool:
+        try:
+            return await self.load('shortname', str(shortname))
+        except Exception as e:
+            raise ValueError(e)
+            return False
 
     async def update(self, field: str = None, value: Any = None)-> bool:
         pass
@@ -117,7 +147,6 @@ class Competition(CanuckBotBase):
                     row["name"] = str(row["name"])
                     row["shortname"] = Handle(row["shortname"])
                     row["logo_url"] = HttpUrl(row["logo_url"])
-                    row["color"] = HexColor(row["color"])
                     row["competition_type"] = Competition_Type(row["competition_type"])
                     row["is_monitored"] = bool(row["is_monitored"])
                     row["is_international"] = bool(row["is_international"])
