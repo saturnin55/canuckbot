@@ -69,21 +69,28 @@ class Team(CanuckBotBase):
                 self.lastmodified_by = int(row["lastmodified_by"])
 
             try:
-                rows = await self._bot.database.select(
-                    "SELECT alias FROM team_aliases WHERE team_id = ? ORDER BY alias ASC",
-                    [str(team_id)],
-                )
-                if not rows:
-                    self.aliases = []
-                else:
-                    for row in rows:
-                        self.aliases.append(str(row["alias"]))
-            except aiosqliteError as e:
-                print(f"ERR Team.get(): {e}")
+                await self.load_aliases()
+            except Exception as e:
+                raise ValueError(e)
                 return False
 
         return True
 
+
+    async def load_aliases(self) -> bool:
+        try:
+            rows = await self._bot.database.select(
+                "SELECT alias FROM team_aliases WHERE team_id = ? ORDER BY alias ASC",
+                [str(self.team_id)],
+            )
+            if not rows:
+                self.aliases = []
+            else:
+                for row in rows:
+                    self.aliases.append(str(row["alias"]))
+        except Exception as e:
+            raise ValueError(e)
+            return False
 
     def is_loaded(self) -> bool:
         if self.team_id == 0:
@@ -92,6 +99,7 @@ class Team(CanuckBotBase):
             return True
 
     async def load(self, key: str = 'team_id', keyval: str | int = None) -> bool:
+
         if keyval is None or key not in ['team_id', 'shortname']:
             return False
         else:
@@ -117,6 +125,8 @@ class Team(CanuckBotBase):
                 if row["lastmodified_at"] is not None:
                     self.lastmodified_at = datetime.fromtimestamp(int(row["lastmodified_at"]))
 
+                await self.load_aliases()
+
                 return True
 
 
@@ -131,51 +141,85 @@ class Team(CanuckBotBase):
         await self.load('team_id', int(team_id))
 
 
+    async def is_alias(self, alias: str = None) -> bool | int:
+
+        if not alias:
+            return False
+
+        try:
+            row = await self._bot.database.get_one(
+                f"SELECT a.team_id FROM teams a, team_aliases b WHERE a.team_id = b.team_id AND LOWER(b.alias) = LOWER(?)", [str(alias)]
+            )
+            if not row:
+                return False
+            else:
+                return row["team_id"]
+
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
+    
     async def load_by_alias(self, alias: str = None):
 
-        row = await self._bot.database.get_one(
-            f"SELECT a.team_id FROM teams a, team_aliases b WHERE a.team_id = b.team_id AND b.alias = ?", [str(alias)]
-        )
-        if not row:
-            self.team_id = 0
+        #if not is_valid_handle(alias):
+        #    return False
+
+        if not alias:
             return False
-        else:
-            self.load_by_id(row["team_id"])
-            return True
+
+        team_id = await self.is_alias(alias)
+
+        try:
+            if not team_id:
+                self.team_id = 0
+                return False
+            else:
+                await self.load_by_id(team_id)
+                return True
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
 
     async def load_by_shortname(self, shortname: Handle = None):
         if await self.load('shortname', str(shortname)):
             return True
         else:
             # check by aliases
-            return self.load_by_alias(shortname)
+            return await self.load_by_alias(shortname)
 
         return False
 
     async def is_shortname_unique(self, shortname: Handle = None) -> bool:
 
-        t = Team(self.bot)
+        t = Team(self._bot)
 
         await t.load_by_shortname(shortname)
 
-        return t.is_loaded()
+        if t.is_loaded():
+            return t.team_id
+        else:
+            return False
         
-    #async def search(self, criteria: str = None) -> List[int]:
-    #    pass
-
     async def update(self, field: str = None, value: Any = None) -> bool:
-        if not field:
+        try:
+            if not field:
+                return False
+
+            assert self._bot.database, "ERR Manager.update(): database not available."
+
+            cast_value = self.cast_value(field, value)
+            setattr(self, field, cast_value)
+
+            await self._bot.database.update(
+                f"UPDATE teams SET {field} = ? WHERE user_id = ?", [cast_value, self.user_id]
+            )
+            return True
+        except Exception as e:
+            raise ValueError(e)
             return False
 
-        assert self._bot.database, "ERR Manager.update(): database not available."
-
-        cast_value = self.cast_value(field, value)
-        setattr(self, field, cast_value)
-
-        await self._bot.database.update(
-            f"UPDATE teams SET {field} = ? WHERE user_id = ?", [cast_value, self.user_id]
-        )
-        return True
 
     async def remove(self) -> bool:
 
@@ -230,34 +274,68 @@ class Team(CanuckBotBase):
             return False
         
     async def add_alias(self, alias: str = None) -> bool:
-        # alias must be a valid Handle
-        if not is_valid_handle(alias):
-            return False
 
-        # check if alias isn't already in the team's aliases
-        if alias in self.aliases:
+        try:
+            # alias must be a valid Handle
+            if not is_valid_handle(alias):
+                return False
+
+            # check if alias isn't already in the team's aliases
+            if await self.is_alias(alias):
+                return True
+
+            # check if new alias is unique
+            ret = await self.is_shortname_unique(alias)
+
+            if ret:
+                raise ValueError(f"Alias `{alias}` is used by another team: `team_id : {ret}`")
+                return False
+
+            # add the alias to the database
+            await self._bot.database.insert(
+                "INSERT INTO team_aliases (team_id, alias) VALUES (?, ?)",
+                [int(self.team_id), str(alias)]
+                )
+
+            # add the alias to the database
+            await self._bot.database.connection.commit()
+
+            self.aliases.append(alias)
+
             return True
 
-        # check if new alias is unique
-        if not self.is_shortname_unique(alias):
+        except Exception as e:
+            raise ValueError(e) 
             return False
-
-        # add the alias to the database
-
-        return True
 
     async def remove_alias(self, alias: str = None) -> bool:
-        # alias must be a valid Handle
-        if not is_valid_handle(alias):
-            return False
+    
+        try:
+            if not alias:
+                return False
 
-        if alias not in self.aliases:
+            # alias must be a valid Handle
+            if not is_valid_handle(alias):
+                return False
+
+            if alias.lower() not in (val.lower() for val in self.aliases): 
+                return True
+
+            # delete the alias from the database
+            await self._bot.database.delete(
+                "DELETE FROM team_aliases WHERE team_id = ? and alias = ?",
+                [int(self.team_id), str(alias)]
+                )
+
+            await self._bot.database.connection.commit()
+
+            self.aliases.remove(alias)
+
             return True
 
-        # delete the alias from the database
-        #fixme
-
-        return True
+        except Exception as e:
+            raise ValueError(e)
+            return False
 
     async def clear_aliases(self) -> bool:
 
@@ -270,6 +348,7 @@ class Team(CanuckBotBase):
                 )
 
             await self._bot.database.connection.commit()
+
         except Exception as e:
             raise ValueError(e)
             return False
