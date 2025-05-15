@@ -50,9 +50,9 @@ class Competition(CanuckBotBase):
     hours_before_kickoff: int = 0
     hours_after_kickoff: int = 0
     created_by: Snowflake = None
-    created_at: date = None
+    created_at: datetime = None
     lastmodified_by: Snowflake | None = None
-    lastmodified_at: date | None = None
+    lastmodified_at: datetime | None = None
 
 
     class Competition:
@@ -101,15 +101,17 @@ class Competition(CanuckBotBase):
 
         return True
 
+
     async def load_by_key(self, key: str = None) -> bool:
         try:
             if key.isdigit():
                 return await self.load_by_id(int(key))
             else:
-                return await self.load_by_handle(str(key))
+                return await self.load_by_shortname(str(key))
         except Exception as e:
             raise ValueError(e)
             return False
+
 
     async def load_by_id(self, competition_id: int = 0) -> bool:
 
@@ -120,15 +122,89 @@ class Competition(CanuckBotBase):
             return False
 
 
-    async def load_by_handle(self, shortname: Handle = None) -> bool:
+    async def add(self) -> bool:
+
         try:
-            return await self.load('shortname', str(shortname))
+            await self._bot.database.insert(
+                "INSERT INTO competitions (name, shortname, logo_url, competition_type, is_monitored, is_international, optout_role_id, category_id, hours_before_kickoff, hours_after_kickoff, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [str(self.name), str(self.shortname), str(self.logo_url), str(self.competition_type), int(self.is_monitored), int(self.is_international), int(self.optout_role_id), int(self.category_id), int(self.hours_before_kickoff), int(self.hours_after_kickoff), int(self.created_at), int(self.created_by)]
+                )
+
+            self.competition_id = int(self._bot.database.lastrowid())
+
+            await self._bot.database.connection.commit()
+
+            return True
         except Exception as e:
             raise ValueError(e)
             return False
 
+
     async def update(self, field: str = None, value: Any = None)-> bool:
-        pass
+        if not field:
+            return False
+
+        try:
+            assert self._bot.database, "ERR Competition.update(): database not available."
+
+            cast_value = self.cast_value(field, value)
+            setattr(self, field, cast_value)
+
+            if self.is_type(field, bool):
+                value = int(getattr(self, field))
+            elif self.is_type(field, int):
+                value = int(getattr(self, field))
+            elif self.is_type(field, str):
+                value = str(getattr(self, field))
+            elif self.is_type(field, Snowflake):
+                value = int(getattr(self, field))
+            elif self.is_type(field, datetime):
+                value = (getattr(self, field)).timestamp()
+            elif self.is_type(field, Handle):
+                value = str(getattr(self, field))
+            elif self.is_type(field, HttpUrl):
+                value = str(getattr(self, field))
+            elif self.is_type(field, Competition_Type):
+                value = str(getattr(self, field))
+            else:
+                raise ValueError(f"ERR Competition.update(): unknown type for field `{field}`")
+
+
+            await self._bot.database.update(
+                f"UPDATE competitions SET {field} = ? WHERE competition_id = ?", [value, self.competition_id]
+            )
+            return True
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
+
+    async def remove(self) -> bool:
+
+        try:
+            await self._bot.database.delete("DELETE FROM competitions WHERE competition_id = ?", [int(self.competition_id)])
+
+            # fixme : check for active, pending matches ?
+
+            self.competition_id = 0
+            self.name = None
+            self.shortname = None
+            self.is_monitored = False
+            self.is_international = False
+            self.optout_role_id = 0
+            self.category_id = 0
+            self.hours_before_kickoff = 0
+            self.hours_after_kickoff = 0
+            self.created_at = 0
+            self.created_by = None
+            self.lastmodified_at = None
+            self.lastmodified_by = None
+
+            return True
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
 
     async def list(self) -> list[dict[str, Any]] | bool:
         try:
@@ -137,7 +213,7 @@ class Competition(CanuckBotBase):
             data = []
 
             rows = await self._bot.database.select(
-                "SELECT * FROM competitions ORDER by is_international DESC, shortname ASC"
+                "SELECT * FROM competitions ORDER by shortname ASC"
             )
             if not rows:
                 return data
@@ -165,13 +241,10 @@ class Competition(CanuckBotBase):
 
             return rows
         except:
-            print(f"ERR Competition.liste()")
+            raise ValueError(e)
             return False
                 
     def get(self, field: str = None) -> str | bool:
-        pass
-
-    async def list(self) -> List[dict] | bool:
         pass
 
     def is_loaded(self) -> bool:
@@ -179,3 +252,23 @@ class Competition(CanuckBotBase):
             return False
         else:
             return True
+
+
+    async def load_by_shortname(self, shortname: Handle = None):
+        return await self.load('shortname', str(shortname))
+
+        return False
+
+
+    async def is_shortname_unique(self, shortname: Handle = None) -> bool:
+
+        comp = Competition(self._bot)
+
+        await comp.load_by_shortname(shortname)
+
+        if comp.is_loaded():
+            return comp.competition_id
+        else:
+            return False
+
+

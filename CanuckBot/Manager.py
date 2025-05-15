@@ -20,7 +20,7 @@ class MANAGER_FIELDS_EDITABLE(str, Enum):
 
 class Manager(CanuckBotBase):
     user_id: Snowflake = 0
-    created_at: date = 0
+    created_at: datetime = 0
     created_by: Snowflake = 0
     level: User_Level = User_Level.Disabled
     competitions: List[int] = []

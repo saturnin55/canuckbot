@@ -29,12 +29,12 @@ class Team(CanuckBotBase):
     team_id: int = 0
     name: str = None
     shortname: Handle = None
-    tz: TimeZone = None
+    tz: TimeZone | None = None
     aliases: List[str] = []
     created_by: Snowflake | None = None
-    created_at: date = 0
+    created_at: datetime = 0
     lastmodified_by: Snowflake | None = None
-    lastmodified_at: date | None = None
+    lastmodified_at: datetime | None = None
 
     class Team:
         arbitrary_types_allowed = True
@@ -101,6 +101,7 @@ class Team(CanuckBotBase):
     async def load(self, key: str = 'team_id', keyval: str | int = None) -> bool:
 
         if keyval is None or key not in ['team_id', 'shortname']:
+            raise ValueError(f"Can't load team `{keyval}` using `{key}` field!")
             return False
         else:
             assert self._bot.database, "ERR Team.py load(): database not available."
@@ -202,18 +203,35 @@ class Team(CanuckBotBase):
         else:
             return False
         
-    async def update(self, field: str = None, value: Any = None) -> bool:
-        try:
-            if not field:
-                return False
+    async def update(self, field: str = None, value: Any = None)-> bool:
+        if not field:
+            return False
 
-            assert self._bot.database, "ERR Manager.update(): database not available."
+        try:
+            assert self._bot.database, "ERR Team.update(): database not available."
 
             cast_value = self.cast_value(field, value)
             setattr(self, field, cast_value)
 
+            if self.is_type(field, bool):
+                value = int(getattr(self, field))
+            elif self.is_type(field, int):
+                value = int(getattr(self, field))
+            elif self.is_type(field, str):
+                value = str(getattr(self, field))
+            elif self.is_type(field, Snowflake):
+                value = int(getattr(self, field))
+            elif self.is_type(field, datetime):
+                value = (getattr(self, field)).timestamp()
+            elif self.is_type(field, Handle):
+                value = str(getattr(self, field))
+            elif self.is_type(field, TimeZone):
+                value = str(getattr(self, field))
+            else:
+                raise ValueError(f"ERR Team.update(): unknown type for field `{field}`")
+
             await self._bot.database.update(
-                f"UPDATE teams SET {field} = ? WHERE user_id = ?", [cast_value, self.user_id]
+                f"UPDATE teams SET {field} = ? WHERE team_id = ?", [value, self.team_id]
             )
             return True
         except Exception as e:
@@ -350,3 +368,49 @@ class Team(CanuckBotBase):
             return False
 
         return True
+
+
+    async def search(self, criteria: str = None) -> list[dict[str, Any]] | bool:
+        try:
+            assert self._bot.database, "ERR Team.list(): database not available."
+
+            data = []
+
+            if not criteria:
+                return data
+
+            rows = await self._bot.database.select(
+                "SELECT DISTINCT t.*"
+                "FROM teams t "
+                "LEFT JOIN team_aliases a ON t.team_id = a.team_id "
+                "WHERE LOWER(t.name) LIKE LOWER(?) "
+                "   OR LOWER(t.shortname) LIKE LOWER(?) "
+                "   OR LOWER(a.alias) LIKE LOWER(?)",
+                [str(criteria), str(criteria), str(criteria)]
+            )
+
+            if not rows:
+                return data
+            else:
+                for row in rows:
+                    row["team_id"] = int(row["team_id"])
+                    row["name"] = str(row["name"])
+                    row["shortname"] = Handle(row["shortname"])
+                    if not row["tz"]:
+                        row["tz"] = None 
+                    else:
+                        row["tz"] = TimeZone(row["tz"])
+                    
+                    if row["created_by"] is not None:
+                        row["created_by"] = int(row["created_by"])
+                    if row["created_at"] is not None:
+                        row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
+                    if row["lastmodified_at"] is not None:
+                        row["lastmodified_at"] = datetime.fromtimestamp(int(row["lastmodified_at"]))
+                    if row["lastmodified_by"] is not None:
+                        row["lastmodified_by"] = int(row["lastmodified_by"])
+
+            return rows
+        except Exception as e:
+            raise ValueError(e)
+            return False

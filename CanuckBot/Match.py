@@ -1,5 +1,5 @@
 from enum import Enum
-from datetime import date
+from datetime import datetime
 from CanuckBot import CanuckBotBase
 from CanuckBot.types import Match_Status, TimeZone
 from Discord.types import Snowflake
@@ -26,7 +26,7 @@ class Match(CanuckBotBase):
     away_id: int
     competition_id: int
     status: Match_Status
-    kickoff_at: date
+    kickoff_at: datetime
     tz: TimeZone
     venue: str
     description: str
@@ -37,9 +37,9 @@ class Match(CanuckBotBase):
     watch: str
     stream: HttpUrl
     created_by: Snowflake
-    created_at: date
+    created_at: datetime
     lastmodified_by: Snowflake | None
-    lastmodified_at: date | None
+    lastmodified_at: datetime | None
 
     async def generate_channel_topic:
         pass

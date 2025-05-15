@@ -1,5 +1,5 @@
 import inspect
-from typing import Any, Optional, get_type_hints, Type
+from typing import get_origin, get_args, Union, Type, Any, Optional, get_type_hints, Annotated
 from discord.ext.commands import Bot, Context
 from pydantic import BaseModel, PrivateAttr, TypeAdapter, root_validator, HttpUrl
 from database import DatabaseManager
@@ -64,34 +64,34 @@ class CanuckBotBase(BaseModel):
             return adapter.validate_python(value)
         return None
 
+    @staticmethod
+    def unwrap_type(tp: Any) -> list[type]:
+        origin = get_origin(tp)
+        args = get_args(tp)
+
+        if origin is Union:
+            return [t for t in args if isinstance(t, type)]
+        elif origin is Annotated:
+            return CanuckBotBase.unwrap_type(args[0])
+        elif origin is not None:
+            return [origin]
+        elif isinstance(tp, type):
+            return [tp]
+        return []
+
     def is_type(self, field: str, expected_type: Type[Any]) -> bool:
         actual_type = self.get_type(field)
-        return isinstance(actual_type, type) and issubclass(actual_type, expected_type)
+        if actual_type is None:
+            return False
 
-#    def get_type(self, field):
-#        hints = get_type_hints(self.__class__)
-#        expected_type = hints.get(field)
-#
-#        if expected_type:
-#            return expected_type
-#        else:
-#            # fixme
-#            return None
-#
-#    def cast_value(self, field, value):
-#        cast_value = None
-#
-#        # fixme: "cache" this data
-#        hints = get_type_hints(self.__class__)
-#        expected_type = hints.get(field)
-#
-#        if expected_type:
-#            cast_value = TypeAdapter(expected_type).validate_python(value)
-#        else:
-#            # fixme
-#            pass
+        actual_types = self.unwrap_type(actual_type)
+        expected_types = self.unwrap_type(expected_type)
 
-        return cast_value
+        for a in actual_types:
+            for e in expected_types:
+                if issubclass(a, e):
+                    return True
+        return False
 
     async def get_attrval_str(self, context: Context, field: str = None) -> str | None:
 
