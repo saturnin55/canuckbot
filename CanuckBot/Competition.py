@@ -32,7 +32,6 @@ class COMPETITION_FIELDS_EDITABLE(str, Enum):
     competition_type = "competition_type"
     is_monitored = "is_monitored"
     is_international = "is_international"
-    optout_role_id = "optout_role_id"
     category_id = "category_id"
     hours_before_kickoff = "hours_before_kickoff"
     hours_after_kickoff = "hours_after_kickoff"

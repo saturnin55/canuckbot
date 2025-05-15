@@ -1,8 +1,199 @@
-from typing import Optional
+from typing import Optional, Union
 import discord
 from discord.ext import commands
+from discord.ext.commands import Context
 
 class Discord:
+
+    @staticmethod
+    async def join_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str], reason: Optional[str] = None) -> bool:
+        """
+        Adds a role to a user by role name or ID.
+
+        Args:
+            guild (discord.Guild): The guild where the role and user exist.
+            user_id (int): The user's Discord ID.
+            role_identifier (Union[int, str]): The role ID or role name.
+
+        Returns:
+            bool: True if the role was added, False otherwise.
+        """
+        try:
+            member: discord.Member = await guild.fetch_member(user_id)
+        except (discord.NotFound, discord.HTTPException):
+            return False
+
+        # Find the role by ID or name
+        if isinstance(role_identifier, int):
+            role = guild.get_role(role_identifier)
+        else:
+            role = discord.utils.get(guild.roles, name=role_identifier)
+
+        if role is None:
+            return False
+
+        if role in member.roles:
+            return False  # Already has the role
+
+        try:
+            await member.add_roles(role, reason=reason[:512])
+            return True
+        except discord.Forbidden:
+            return False  # Missing permissions
+        except discord.HTTPException:
+            return False  # Discord API error
+
+
+    @staticmethod
+    async def is_member_of_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str]) -> bool:
+        """
+        Checks if a member has a specific role by name or ID.
+
+        Args:
+            guild (discord.Guild): The guild to search in.
+            user_id (int): The Discord user ID of the member.
+            role_identifier (Union[int, str]): The role ID (int) or name (str).
+
+        Returns:
+            bool: True if the user has the role, False otherwise.
+        """
+        try:
+            member: discord.Member = await guild.fetch_member(user_id)
+        except discord.NotFound:
+            return False
+        except discord.HTTPException:
+            return False
+
+        # Determine the role by name or ID
+        if isinstance(role_identifier, int):
+            role = guild.get_role(role_identifier)
+        else:
+            role = discord.utils.get(guild.roles, name=role_identifier)
+
+        if role is None:
+            return False
+
+        return role in member.roles
+
+
+    @staticmethod
+    async def leave_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str], reason: Optional[str] = None) -> bool:
+        """
+        Removes a role from a user by role name or ID.
+
+        Args:
+            guild (discord.Guild): The guild where the role and user exist.
+            user_id (int): The user's Discord ID.
+            role_identifier (Union[int, str]): The role ID or role name.
+
+        Returns:
+            bool: True if role was removed, False if not (e.g., role/user not found).
+        """
+        try:
+            member: discord.Member = await guild.fetch_member(user_id)
+        except (discord.NotFound, discord.HTTPException):
+            return False
+
+        # Find the role by ID or name
+        if isinstance(role_identifier, int):
+            role = guild.get_role(role_identifier)
+        else:
+            role = discord.utils.get(guild.roles, name=role_identifier)
+
+        if role is None:
+            return False
+
+        if role not in member.roles:
+            return False  # Role already not assigned
+
+        try:
+            await member.remove_roles(role, reason=reason[:512])
+            return True
+        except discord.Forbidden:
+            return False  # Missing permissions
+        except discord.HTTPException:
+            return False  # Discord API error
+
+
+    @staticmethod
+    async def delete_role(context: commands.Context, role_id: int, *, reason: Optional[str] = None) -> bool:
+        """
+        Deletes a role from the guild by its ID.
+
+        Args:
+            guild (discord.Guild): The guild to delete the role from.
+            role_id (int): The ID of the role to delete.
+            reason (Optional[str]): Reason for audit logs.
+
+        Returns:
+            bool: True if deleted successfully, False otherwise.
+        """
+
+        guild: discord.Guild = context.guild
+
+        role: Optional[discord.Role] = guild.get_role(role_id)
+        if role is None:
+            # Role with ID {role_id} not found.
+            return False
+
+        try:
+            await role.delete(reason=reason)
+            return True
+        except discord.Forbidden:
+            #print("Missing permissions to delete the role.")
+            return False
+        except discord.HTTPException as e:
+            #print(f"Failed to delete role: {e}")
+            return False
+
+
+    @staticmethod
+    async def create_role(context: Context, name: str, reason:str = None) -> bool | Optional[discord.Role]:
+
+        guild: discord.Guild = context.guild
+
+        try:
+            new_role: discord.Role = await guild.create_role(
+                name=name,
+                reason=reason
+            )
+            #await context.send(f"✅ Role `{new_role.name}` created successfully!")
+            return new_role
+
+        except discord.Forbidden:
+            raise ValueError("Bot missing permissions to create roles.")
+        except discord.HTTPException as e:
+            raise ValueError("Bot failed to create roles.")
+
+        return False
+
+
+    @staticmethod
+    def role_exists(context: commands.Context, identifier: Union[str, int]) -> Union[discord.Role, bool]:
+        """
+        Checks if a role exists in the guild by name (case-insensitive) or ID.
+
+        Args:
+            guild (discord.Guild): The guild to search in.
+            identifier (Union[str, int]): Role name or ID.
+
+        Returns:
+            discord.Role | False: The matching role if found, else False.
+        """
+
+        guild = context.guild
+
+        if isinstance(identifier, int):
+            role = guild.get_role(identifier)
+            return role if role is not None else False
+
+        name = identifier.lower()
+        for role in guild.roles:
+            if role.name.lower() == name:
+                return role
+
+        return False
+
 
     @staticmethod
     async def get_role(ctx: commands.Context, role_id: int) -> Optional[discord.Role]:
@@ -10,18 +201,12 @@ class Discord:
         Gets a role by ID using cache only (API fetch is not available for roles).
 
         Returns:
-            Optional[discord.Role]: Role object or None if not found or on error.
+            Optional[discord.Role]: Role object or None if not found.
         """
         if ctx.guild is None:
             return None
-        try:
-            role = ctx.guild.get_role(role_id)
-            if isinstance(role, discord.Role):
-                return role
-        except Exception:
-            pass
 
-        return None
+        return ctx.guild.get_role(role_id)
 
     @staticmethod
     async def get_channel(ctx: commands.Context, channel_id: int) -> Optional[discord.abc.GuildChannel]:

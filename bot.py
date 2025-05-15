@@ -61,7 +61,7 @@ intents.presences = False
 
 intents = discord.Intents.default()
 intents.presences = False
-intents.members = False
+intents.members = True
 intents.message_content = True
 
 
