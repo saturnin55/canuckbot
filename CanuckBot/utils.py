@@ -6,6 +6,10 @@ from CanuckBot.Cache import Cache
 from CanuckBot.types import HANDLE_PATTERN
 from colorthief import ColorThief
 from database import DatabaseManager
+from discord.ext.commands import Context
+from Discord.DiscordBot import DiscordBot
+from typing import List
+from CanuckBot.Config import Config
 
 def md5_hash(text: str):
     return hashlib.md5(text.encode('utf-8')).hexdigest()
@@ -52,5 +56,22 @@ async def get_dominant_color_from_url(db: DatabaseManager = None, image_url: str
 
     except Exception:
         return 0xffffff
+
+
 def is_valid_handle(s):
     return re.match(HANDLE_PATTERN, s) is not None
+
+
+async def validate_invoking_channel(bot:DiscordBot = None, context:Context = None, more_channels: List[int] = None) -> bool:
+
+    config = await Config.create(bot)
+
+    allowed_channels = []
+    allowed_channels.append(config.cmds_channel_id)
+    if more_channels:
+        allowed_channels.extend(more_channels)
+
+    if context.channel.id in allowed_channels:
+        return True
+    else:
+        return False

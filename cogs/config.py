@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from CanuckBot.Config import Config, CONFIG_FIELDS_EDITABLE, CONFIG_FIELDS_INFO
 from CanuckBot.Info import Info
+from CanuckBot.utils import validate_invoking_channel
 from decorators.checks import is_superadmin, is_full_manager, is_comp_manager, is_trusted_user
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
@@ -24,7 +25,7 @@ class ConfigCog(commands.Cog, name="config"):
     async def config(self, context: Context) -> None:
         if context.invoked_subcommand is None:
             embed = discord.Embed(
-                description="Please specify a subcommand.\n\n**Subcommands:**\n`set` - Set CanuckBot's configuration.\n`list` - List CanuckBot's configuration.",
+                description="Use /config commands",
                 color=0xE02B2B,
             )
             await context.send(embed=embed)
@@ -43,11 +44,22 @@ class ConfigCog(commands.Cog, name="config"):
     async def config_set(
         self, context: Context, field: CONFIG_FIELDS_EDITABLE, value: Optional[str] = None
     ) -> None:
-        self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config set", context.author, context.kwargs))
+
+        if not await validate_invoking_channel(self.bot, context):
+            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+            return
+
+        if context.interaction:
+            await context.interaction.response.defer(ephemeral=False)
+        else:
+            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+            return
+
 
         if field.name and value:
             config = await Config.create(bot=self.bot)
             setattr(config, field.name, value)
+
             if await config.update(field.name):
                 if field.name == 'interval_cleanup_task':
                     self.bot.cleanup_task.change_interval(minutes=float(value))
@@ -57,11 +69,12 @@ class ConfigCog(commands.Cog, name="config"):
                     self.bot.match_task.change_interval(minutes=float(value))
                 await context.send("Configuration updated.")
             else:
-                await context.send(
+                await context.interaction.followup.send(
                     "ERR: There was an error trying to update the config."
                 )
         else:
-            await context.send("ERR: no field or value was provided.")
+            await context.interaction.followup.send("ERR: no field or value was provided.")
+
 
     @config.command(
         name="info",
@@ -71,8 +84,16 @@ class ConfigCog(commands.Cog, name="config"):
     @app_commands.describe(
     )
     async def config_info(self, context: Context) -> None:
+
+        if not await validate_invoking_channel(self.bot, context):
+            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+            return
+
         if context.interaction:
-            await context.interaction.response.defer()
+            await context.interaction.response.defer(ephemeral=True)
+        else:
+            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+            return
 
         try:
             config = await Config.create(bot=self.bot)
@@ -89,12 +110,10 @@ class ConfigCog(commands.Cog, name="config"):
 
                 embed.add_field(name=attr, value=info, inline=False)
 
-            if context.interaction:
-                await context.interaction.followup.send(content="**CanuckBot config info**", embed=embed)
-            else:
-                await context.reply(content="**CanuckBot config info**", embed=embed, ephemeral=False)
-        except:
-                await context.send("ERR: There was an error trying to get info from the database.", ephemeral=True)
+            await context.interaction.followup.send(content="**CanuckBot config info**", embed=embed)
+        except Exception as e:
+                await context.interaction.followup.send("ERR: There was an error trying to get info from the database: {e}")
+
 
     @config.command(
         name="setinfo",
@@ -105,12 +124,27 @@ class ConfigCog(commands.Cog, name="config"):
         field="The field to set info on.",
     )
     async def config_setinfo( self, context: Context, field: CONFIG_FIELDS_INFO, info_text: Optional[str] = None) -> None:
-        objinfo = await Info.create(self.bot, "config", field.name)
-        if await objinfo.set(info_text):
-            await context.send(f"config.{field.name} updated : `{info_text}`")
+
+        if not await validate_invoking_channel(self.bot, context):
+            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+            return
+
+        if context.interaction:
+            await context.interaction.response.defer(ephemeral=False)
         else:
-            await context.send(f"config.{field.name} updated : `{info_text}`")
-            await context.send(f"ERR: couldn't update config.{field.name}")
+            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+            return
+
+        try:
+            objinfo = await Info.create(self.bot, "config", field.name)
+            if await objinfo.set(info_text):
+                await context.interaction.followup.send(f"config.{field.name} updated : `{info_text}`")
+            else:
+                await context.interaction.followup.send(f"config.{field.name} updated : `{info_text}`")
+                await context.interaction.followup.send(f"ERR: couldn't update config.{field.name}")
+        except Exception as e:
+            await context.interaction.followup.send(f"ERR: couldn't update config.{field.name}: {e}")
+
 
     @config.command(
         name="list",
@@ -120,7 +154,16 @@ class ConfigCog(commands.Cog, name="config"):
     # @app_commands.describe(
     # )
     async def config_list(self, context: Context):
-        #self.bot.logger.info(LoggingFormatter.format_invoked_slash_cmd("/config list", context.author, context.kwargs))
+
+        if not await validate_invoking_channel(self.bot, context):
+            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+            return
+
+        if context.interaction:
+            await context.interaction.response.defer(ephemeral=True)
+        else:
+            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+            return
 
         config = await Config.create(self.bot)
 
@@ -150,19 +193,7 @@ class ConfigCog(commands.Cog, name="config"):
         embed.add_field(name="default_comp_color", value=config.default_comp_color, inline=False)
         embed.add_field(name="optout_all_role_id", value=optout_role.mention, inline=False)
 
-        #for key, v in config.model_dump().items():
-        #    v = await config.get_attrval_str(context, key)
-#
-#            if v is None:
-#                v = "n/a"
-
-            # get a string representation
-#            embed.add_field(
-#                name=f"{key}",
-#                value=f"{v}",
-#                inline=True,  # Set to True to make columns
-#            )
-        await context.send(embed=embed)
+        await context.interaction.followup.send(embed=embed)
 
 
 async def setup(bot) -> None:
