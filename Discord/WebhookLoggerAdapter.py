@@ -55,10 +55,14 @@ class WebhookLoggerAdapter:
                 channel = "DM"
                 channel_id = "-"
 
+            if context.kwargs:
+                args = " ".join(f"{k}='{v}'" for k, v in context.kwargs.items() if v is not None)
+                cmd = f"{cmd} {args}"
+            
             embed = discord.Embed(color=int(0x3664a8))
             embed.set_author(name=f"{context.author.name} [{context.author.id}]", icon_url=context.author.avatar.url)
-            embed.add_field(name="Command", value=cmd, inline=False)
-            embed.add_field(name="Channel", value=f"{channel} [{channel_id}]", inline=False)
+            embed.add_field(name="", value=cmd, inline=False)
+            embed.add_field(name="", value=f"{channel} [{channel_id}]", inline=False)
 
             await self._send_webhook(embed)
 

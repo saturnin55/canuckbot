@@ -44,4 +44,8 @@ class LoggingFormatter(logging.Formatter):
             channel = "DM"
             channel_id = "-"
 
+        if context.kwargs:
+            args = " ".join(f"{k}='{v}'" for k, v in context.kwargs.items() if v is not None)
+            cmd = f"{cmd} {args}"
+
         return f"{LoggingFormatter.blue}{LoggingFormatter.bold}{cmd}{LoggingFormatter.reset} by {LoggingFormatter.green}{context.author}{LoggingFormatter.reset} (ID: {context.author.id}) in #{channel} (ID: {channel_id})"
