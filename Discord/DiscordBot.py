@@ -20,6 +20,7 @@ from discord.ext.commands import Context
 from database import DatabaseManager
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.WebhookLoggerAdapter import WebhookLoggerAdapter
+from Discord import LogTarget
 
 """	
 Setup bot intents (events restrictions)
@@ -126,12 +127,14 @@ class DiscordBot(commands.Bot):
                     await self.logger.error(
                         f"Failed to load extension {extension}\n{exception}"
                     )
+        await self.logger.info(f"{self.user.name} started!", target=LogTarget.BOTH)
 
     async def _cleanup_task(self) -> None:
         """
         Clean the canuckbot cache
         """
         await self.database.delete("DELETE FROM canuckbot_cache WHERE expiration < CURRENT_TIMESTAMP")
+        #await self.logger.info("Cleanup tasks executed.", target=LogTarget.BOTH)
 
 
     async def _status_task(self) -> None:
@@ -147,11 +150,13 @@ class DiscordBot(commands.Bot):
                 name=status, type=discord.ActivityType.watching
             )
         )
+        await self.logger.info(f"CanuckBot status changed to : `{status}`", target=LogTarget.BOTH)
 
     async def _match_task(self) -> None:
         """
         Setup matches and channels
         """
+        #await self.logger.info(f"Match tasks executed", target=LogTarget.BOTH)
         pass
 
     async def setup_hook(self) -> None:
@@ -159,7 +164,7 @@ class DiscordBot(commands.Bot):
         This will just be executed when the bot starts the first time.
         """
         assert self.user, "ERR in bot.py setup_hook(): self.user not available."
-        await self.logger.info(f"Logged in as {self.user.name}", webhook=True)
+        await self.logger.info(f"Logged in as {self.user.name}")
         await self.logger.info(f"discord.py API version: {discord.__version__}")
         await self.logger.info(f"Python version: {platform.python_version()}")
         await self.logger.info(
@@ -231,14 +236,10 @@ class DiscordBot(commands.Bot):
         #split = full_command_name.split(" ")
         #executed_command = str(split[0])
         if context.guild is not None:
-            await self.logger.info(
-                LoggingFormatter.format_invoked_slash_cmd(f"{_cmd}", context.author, context.kwargs), webhook=True
-                #f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id})"
-            )
+            await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
+            #await self.logger.info( LoggingFormatter.format_invoked_slash_cmd(f"{_cmd}", context), target=LogTarget.LOGGER_ONLY)
         else:
-            await self.logger.info(
-                f"Executed {_cmd} command by {context.author} (ID: {context.author.id}) in DMs"
-            )
+            await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
 
     async def on_command_error(self, context: Context, error) -> None:
         """
@@ -272,11 +273,11 @@ class DiscordBot(commands.Bot):
             await context.send(embed=embed)
             if context.guild:
                 await self.logger.warning(
-                    f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot."
+                    f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot.", target=LogTarget.BOTH
                 )
             else:
                 await self.logger.warning(
-                    f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot."
+                    f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot.", target=LogTarget.BOTH
                 )
         elif isinstance(error, commands.MissingPermissions):
             embed = discord.Embed(

@@ -154,6 +154,7 @@ class ConfigCog(commands.Cog, name="config"):
         await context.interaction.response.defer(ephemeral=True)
 
         if not await validate_invoking_channel(self.bot, context):
+            cmds_channel = int(Discord.get_cmds_channel_id())
             await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 

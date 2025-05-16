@@ -11,6 +11,11 @@ class Color:
     Error = int(0xE02B2B)
     Neutral = int(0xffffff)
 
+class LogTarget:
+    LOGGER_ONLY = 1
+    WEBHOOK_ONLY = 2
+    BOTH = 3
+
 class Discord:
 
     @staticmethod

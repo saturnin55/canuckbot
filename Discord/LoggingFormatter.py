@@ -1,5 +1,6 @@
 import logging
 from discord import Member, User
+from discord.ext.commands import Context
 
 class LoggingFormatter(logging.Formatter):
     # Colors
@@ -32,6 +33,15 @@ class LoggingFormatter(logging.Formatter):
         return formatter.format(record)
 
     @staticmethod
-    def format_invoked_slash_cmd(cmd: str, author: Member | User, kwargs: dict) -> str:
-        args_string = " ".join(f"{k}='{v}'" for k, v in kwargs.items() if v is not None)
-        return f"{LoggingFormatter.blue}{LoggingFormatter.bold}{cmd} {args_string}{LoggingFormatter.reset} by {LoggingFormatter.green}{author}{LoggingFormatter.reset} (ID: {author.id})"
+    def format_invoked_slash_cmd(cmd: str, context: Context) -> str:
+        if context.interaction:
+            channel = context.interaction.channel.name
+            channel_id = context.interaction.channel.id
+        elif context.channel:   
+            channel = context.channel.name
+            channel_id = context.channel.id
+        else:
+            channel = "DM"
+            channel_id = "-"
+
+        return f"{LoggingFormatter.blue}{LoggingFormatter.bold}{cmd}{LoggingFormatter.reset} by {LoggingFormatter.green}{context.author}{LoggingFormatter.reset} (ID: {context.author.id}) in #{channel} (ID: {channel_id})"
