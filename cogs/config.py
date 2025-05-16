@@ -23,12 +23,9 @@ class ConfigCog(commands.Cog, name="config"):
     )
     @commands.has_permissions(manage_messages=True)
     async def config(self, context: Context) -> None:
-        if context.invoked_subcommand is None:
-            embed = discord.Embed(
-                description="Use /config commands",
-                color=0xE02B2B,
-            )
-            await context.send(embed=embed)
+        if not context.interaction:
+            await Discord.send_error(context, "Usage: `/config`")
+
 
     @config.command(
         name="set",
@@ -45,14 +42,15 @@ class ConfigCog(commands.Cog, name="config"):
         self, context: Context, field: CONFIG_FIELDS_EDITABLE, value: Optional[str] = None
     ) -> None:
 
-        if not await validate_invoking_channel(self.bot, context):
-            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+        if context.interaction is None:
+            await Discord.send_error(context, "Usage: `/config set`")
             return
 
-        if context.interaction:
-            await context.interaction.response.defer(ephemeral=False)
-        else:
-            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+        await context.interaction.response.defer(ephemeral=False)
+
+        if not await validate_invoking_channel(self.bot, context):
+            cmds_channel = int(Discord.get_cmds_channel_id())
+            await Discord.send_error(context, f"You cannot use this command in <#{context.channel.id}>. Go to <#{cmds_channel}>" )
             return
 
 
@@ -67,13 +65,11 @@ class ConfigCog(commands.Cog, name="config"):
                     self.bot.status_task.change_interval(minutes=float(value))
                 elif field.name == 'interval_match_task':
                     self.bot.match_task.change_interval(minutes=float(value))
-                await context.send("Configuration updated.")
+                await Discord.send_success(context, f"Configuration updated.")
             else:
-                await context.interaction.followup.send(
-                    "ERR: There was an error trying to update the config."
-                )
+                await Discord.send_error(context, "There was an error trying to update the config.")
         else:
-            await context.interaction.followup.send("ERR: no field or value was provided.")
+            await Discord.send_error(context, "No field or value was provided.")
 
 
     @config.command(
@@ -85,20 +81,16 @@ class ConfigCog(commands.Cog, name="config"):
     )
     async def config_info(self, context: Context) -> None:
 
-        if not await validate_invoking_channel(self.bot, context):
-            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+        if context.interaction is None:
+            await Discord.send_error(context, "Usage: `/config info`")
             return
 
-        if context.interaction:
-            await context.interaction.response.defer(ephemeral=True)
-        else:
-            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
-            return
+        await context.interaction.response.defer(ephemeral=True)
 
         try:
             config = await Config.create(bot=self.bot)
 
-            embed = discord.Embed()
+            embed = discord.Embed(color=int(0x28a745))
 
             attributes = vars(config)
             for attr in attributes:
@@ -112,7 +104,7 @@ class ConfigCog(commands.Cog, name="config"):
 
             await context.interaction.followup.send(content="**CanuckBot config info**", embed=embed)
         except Exception as e:
-                await context.interaction.followup.send("ERR: There was an error trying to get info from the database: {e}")
+            await Discord.send_error(context, f"There was an error trying to get info from the database: {e}")
 
 
     @config.command(
@@ -125,25 +117,25 @@ class ConfigCog(commands.Cog, name="config"):
     )
     async def config_setinfo( self, context: Context, field: CONFIG_FIELDS_INFO, info_text: Optional[str] = None) -> None:
 
-        if not await validate_invoking_channel(self.bot, context):
-            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+        if context.interaction is None:
+            await Discord.send_error(context, "Usage: `/config setinfo`")
             return
 
-        if context.interaction:
-            await context.interaction.response.defer(ephemeral=False)
-        else:
-            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+        await context.interaction.response.defer(ephemeral=False)
+
+        if not await validate_invoking_channel(self.bot, context):
+            cmds_channel = int(Discord.get_cmds_channel_id())
+            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         try:
             objinfo = await Info.create(self.bot, "config", field.name)
             if await objinfo.set(info_text):
-                await context.interaction.followup.send(f"config.{field.name} updated : `{info_text}`")
+                await Discord.send_success(f"config.{field.name} updated : `{info_text}`")
             else:
-                await context.interaction.followup.send(f"config.{field.name} updated : `{info_text}`")
-                await context.interaction.followup.send(f"ERR: couldn't update config.{field.name}")
+                await Discord.send_error(f"Couldn't update config.{field.name}")
         except Exception as e:
-            await context.interaction.followup.send(f"ERR: couldn't update config.{field.name}: {e}")
+            await Discord.send_error(f"couldn't update config.{field.name}: {e}")
 
 
     @config.command(
@@ -155,20 +147,20 @@ class ConfigCog(commands.Cog, name="config"):
     # )
     async def config_list(self, context: Context):
 
-        if not await validate_invoking_channel(self.bot, context):
-            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+        if context.interaction is None:
+            await Discord.send_error(context, "Usage: `/config list`")
             return
 
-        if context.interaction:
-            await context.interaction.response.defer(ephemeral=True)
-        else:
-            await context.send(f"ERR: Use `/config` slash command", ephemeral=True)
+        await context.interaction.response.defer(ephemeral=True)
+
+        if not await validate_invoking_channel(self.bot, context):
+            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         config = await Config.create(self.bot)
 
         embed = discord.Embed(
-            title="CanuckBot Configuration", color=int(config.default_comp_color,16)
+            title="CanuckBot Configuration", color=int(0x28a745)
         )
 
         #embed.set_author(name=mngrname, icon_url=avatar_url)

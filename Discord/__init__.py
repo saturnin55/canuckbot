@@ -1,3 +1,5 @@
+import os
+import sqlite3
 from typing import Optional, Union
 import discord
 from discord.ext import commands
@@ -361,3 +363,70 @@ class Discord:
             pass
 
         return None
+
+    @staticmethod
+    async def send_error(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
+
+        await Discord.send_message(context, message, 0xE02B2B, ephemeral)
+
+
+    async def send_success(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
+
+        await Discord.send_message(context, message, 0x28a745, ephemeral)
+
+
+    async def send_warning(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
+
+        await Discord.send_message(context, message, 0xffa500, ephemeral)
+
+
+    @staticmethod
+    async def send_message(context: commands.Context, message:str = None, color:int = 0xE02B2B, ephemeral: Optional[bool] = False):
+
+        if message:
+            embed = discord.Embed(description=message, color=color)
+
+            if not context.interaction:
+                content=context.author.mention
+                try:
+                    await context.reply(embed=embed)
+                except discord.Forbidden:
+                    channel = context.guild.get_channel(int(Discord.get_cmds_channel_id()))
+                    if channel:
+                        await channel.send(content=content, embed=embed)
+            else:
+                kwargs = {"embed": embed}
+                if ephemeral:
+                    kwargs["ephemeral"] = ephemeral
+
+                try:
+                    await context.interaction.followup.send(**kwargs)
+                except:
+                    channel = context.guild.get_channel(int(Discord.get_cmds_channel_id()))
+                    if channel:
+                        await channel.send(content=content, embed=embed)
+
+        return
+
+
+    @staticmethod
+    def get_config_item(field:str = None):
+        if not field:
+            return None
+
+        db_path = os.getenv("DB_PATH")
+        if not db_path:
+            raise ValueError("Environment variable DB_PATH is not set")
+
+        conn = sqlite3.connect(db_path)
+        try:
+            cursor = conn.cursor()
+            cursor.execute("SELECT value FROM config WHERE field = ?", ("cmds_channel_id",))
+            row = cursor.fetchone()
+            return row[0] if row else None
+        finally:
+            conn.close()
+
+    @staticmethod
+    def get_cmds_channel_id():
+        return Discord.get_config_item('cmds_channel_id')
