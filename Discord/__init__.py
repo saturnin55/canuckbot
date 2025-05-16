@@ -5,6 +5,12 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
+class Color:
+    Success = int(0x28a745)
+    Warning = int(0xffa500)
+    Error = int(0xE02B2B)
+    Neutral = int(0xffffff)
+
 class Discord:
 
     @staticmethod
@@ -367,21 +373,21 @@ class Discord:
     @staticmethod
     async def send_error(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
 
-        await Discord.send_message(context, message, 0xE02B2B, ephemeral)
+        await Discord.send_message(context, message, Color.Error, ephemeral)
 
 
     async def send_success(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
 
-        await Discord.send_message(context, message, 0x28a745, ephemeral)
+        await Discord.send_message(context, message, Color.Success, ephemeral)
 
 
     async def send_warning(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
 
-        await Discord.send_message(context, message, 0xffa500, ephemeral)
+        await Discord.send_message(context, message, Color.Warning, ephemeral)
 
 
     @staticmethod
-    async def send_message(context: commands.Context, message:str = None, color:int = 0xE02B2B, ephemeral: Optional[bool] = False):
+    async def send_message(context: commands.Context, message:str = None, color:int = Color.Neutral, ephemeral: Optional[bool] = False):
 
         if message:
             embed = discord.Embed(description=message, color=color)

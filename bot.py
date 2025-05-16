@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 
 from Discord.DiscordBot import DiscordBot
 from Discord.LoggingFormatter import LoggingFormatter
+from Discord.WebhookLoggerAdapter import WebhookLoggerAdapter
 
 load_dotenv()
 
@@ -75,8 +76,9 @@ If you want to use prefix commands, make sure to also enable the intent below in
 
 # Setup both of the loggers
 
-logger = logging.getLogger("discord_bot")
-logger.setLevel(logging.INFO)
+_logger = logging.getLogger("discord_bot")
+_logger.setLevel(logging.INFO)
+logger = WebhookLoggerAdapter(_logger, os.getenv("WEBHOOK"))
 
 # Console handler
 console_handler = logging.StreamHandler()

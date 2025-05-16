@@ -19,6 +19,7 @@ from discord.ext.commands import Context
 
 from database import DatabaseManager
 from Discord.LoggingFormatter import LoggingFormatter
+from Discord.WebhookLoggerAdapter import WebhookLoggerAdapter
 
 """	
 Setup bot intents (events restrictions)
@@ -56,7 +57,7 @@ intents.presences = False
 
 class DiscordBot(commands.Bot):
     def __init__(
-        self, intents: discord.Intents, logger: logging.Logger, config: dict
+        self, intents: discord.Intents, logger: WebhookLoggerAdapter, config: dict
     ) -> None:
         super().__init__(
             command_prefix=commands.when_mentioned_or(config["prefix"]),
@@ -119,10 +120,10 @@ class DiscordBot(commands.Bot):
                 extension = file[:-3]
                 try:
                     await self.load_extension(f"cogs.{extension}")
-                    self.logger.info(f"Loaded extension '{extension}'")
+                    await self.logger.info(f"Loaded extension '{extension}'")
                 except Exception as e:
                     exception = f"{type(e).__name__}: {e}"
-                    self.logger.error(
+                    await self.logger.error(
                         f"Failed to load extension {extension}\n{exception}"
                     )
 
@@ -158,13 +159,13 @@ class DiscordBot(commands.Bot):
         This will just be executed when the bot starts the first time.
         """
         assert self.user, "ERR in bot.py setup_hook(): self.user not available."
-        self.logger.info(f"Logged in as {self.user.name}")
-        self.logger.info(f"discord.py API version: {discord.__version__}")
-        self.logger.info(f"Python version: {platform.python_version()}")
-        self.logger.info(
+        await self.logger.info(f"Logged in as {self.user.name}", webhook=True)
+        await self.logger.info(f"discord.py API version: {discord.__version__}")
+        await self.logger.info(f"Python version: {platform.python_version()}")
+        await self.logger.info(
             f"Running on: {platform.system()} {platform.release()} ({os.name})"
         )
-        self.logger.info("-------------------")
+        await self.logger.info("-------------------")
         await self.init_db(f"{self.config['db_dir']}/database.db")
         await self.load_cogs()
         self.database = DatabaseManager(
@@ -230,12 +231,12 @@ class DiscordBot(commands.Bot):
         #split = full_command_name.split(" ")
         #executed_command = str(split[0])
         if context.guild is not None:
-            self.logger.info(
-                LoggingFormatter.format_invoked_slash_cmd(f"{_cmd}", context.author, context.kwargs)
+            await self.logger.info(
+                LoggingFormatter.format_invoked_slash_cmd(f"{_cmd}", context.author, context.kwargs), webhook=True
                 #f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id})"
             )
         else:
-            self.logger.info(
+            await self.logger.info(
                 f"Executed {_cmd} command by {context.author} (ID: {context.author.id}) in DMs"
             )
 
@@ -270,11 +271,11 @@ class DiscordBot(commands.Bot):
             )
             await context.send(embed=embed)
             if context.guild:
-                self.logger.warning(
+                await self.logger.warning(
                     f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot."
                 )
             else:
-                self.logger.warning(
+                await self.logger.warning(
                     f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot."
                 )
         elif isinstance(error, commands.MissingPermissions):

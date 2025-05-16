@@ -10,7 +10,7 @@ from CanuckBot.utils import validate_invoking_channel
 from decorators.checks import is_superadmin, is_full_manager, is_comp_manager, is_trusted_user
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
-from Discord import Discord
+from Discord import Discord, Color
 
 
 class ConfigCog(commands.Cog, name="config"):
@@ -90,7 +90,7 @@ class ConfigCog(commands.Cog, name="config"):
         try:
             config = await Config.create(bot=self.bot)
 
-            embed = discord.Embed(color=int(0x28a745))
+            embed = discord.Embed(color=Color.Success)
 
             attributes = vars(config)
             for attr in attributes:
@@ -160,7 +160,7 @@ class ConfigCog(commands.Cog, name="config"):
         config = await Config.create(self.bot)
 
         embed = discord.Embed(
-            title="CanuckBot Configuration", color=int(0x28a745)
+            title="CanuckBot Configuration", color=Color.Success
         )
 
         #embed.set_author(name=mngrname, icon_url=avatar_url)
