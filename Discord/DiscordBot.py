@@ -121,11 +121,11 @@ class DiscordBot(commands.Bot):
                 extension = file[:-3]
                 try:
                     await self.load_extension(f"cogs.{extension}")
-                    await self.logger.info(f"Loaded extension '{extension}'")
+                    await self.logger.debug(f"Loaded extension '{extension}'")
                 except Exception as e:
                     exception = f"{type(e).__name__}: {e}"
                     await self.logger.error(
-                        f"Failed to load extension {extension}\n{exception}"
+                        f"Failed to load extension {extension}\n{exception}", target=LogTarget.BOTH
                     )
         await self.logger.info(f"{self.user.name} started!", target=LogTarget.BOTH)
 
@@ -134,7 +134,7 @@ class DiscordBot(commands.Bot):
         Clean the canuckbot cache
         """
         await self.database.delete("DELETE FROM canuckbot_cache WHERE expiration < CURRENT_TIMESTAMP")
-        #await self.logger.info("Cleanup tasks executed.", target=LogTarget.BOTH)
+        await self.logger.debug("Cleanup tasks executed.", target=LogTarget.BOTH)
 
 
     async def _status_task(self) -> None:
@@ -150,13 +150,13 @@ class DiscordBot(commands.Bot):
                 name=status, type=discord.ActivityType.watching
             )
         )
-        await self.logger.info(f"CanuckBot status changed to : `{status}`", target=LogTarget.BOTH)
+        await self.logger.debug(f"{self.user.name} status changed to : `{status}`", target=LogTarget.BOTH)
 
     async def _match_task(self) -> None:
         """
         Setup matches and channels
         """
-        #await self.logger.info(f"Match tasks executed", target=LogTarget.BOTH)
+        await self.logger.debug(f"Match tasks executed", target=LogTarget.BOTH)
         pass
 
     async def setup_hook(self) -> None:
@@ -232,12 +232,8 @@ class DiscordBot(commands.Bot):
         else:
             _cmd = context.message.content
             
-        #full_command_name = context.command.qualified_name
-        #split = full_command_name.split(" ")
-        #executed_command = str(split[0])
         if context.guild is not None:
             await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
-            #await self.logger.info( LoggingFormatter.format_invoked_slash_cmd(f"{_cmd}", context), target=LogTarget.LOGGER_ONLY)
         else:
             await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
 

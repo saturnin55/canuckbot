@@ -1,3 +1,4 @@
+import logging
 import pytz
 from enum import IntEnum
 from typing import Annotated, Any
@@ -12,6 +13,16 @@ Handle = Annotated[str, Field(pattern=HANDLE_PATTERN, max_length=24)]
 HexColor = Annotated[str, Field(pattern=HEX_COLOR_PATTERN)]
 # we'll need to store snowflakeid as TEXT into sqlite
 UnixTimestamp = Annotated[int, Field(strict=True, ge=0)]
+
+class Log_Level(IntEnum):
+    DEBUG = logging.DEBUG
+    INFO = logging.INFO
+    WARNING = logging.WARNING
+    ERROR = logging.ERROR
+    CRITICAL = logging.CRITICAL
+
+    def __str__(self):
+        return self.name
 
 class User_Level(IntEnum):
     Superadmin = 0

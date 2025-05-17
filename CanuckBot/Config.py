@@ -3,8 +3,9 @@ from enum import Enum
 from pydantic import HttpUrl
 from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
-from CanuckBot.types import HexColor, TimeZone
+from CanuckBot.types import HexColor, TimeZone, Log_Level
 from Discord.types import Snowflake
+import logging
 
 class CONFIG_FIELDS_INFO(str, Enum):
     logs_channel_id = "logs_channel_id"
@@ -19,7 +20,7 @@ class CONFIG_FIELDS_INFO(str, Enum):
     default_logo_url = "default_logo_url"
     default_tz = "default_tz"
     mngr_role_id = "mngr_role_id"
-    default_comp_color = "default_comp_color"
+    log_level = "log_level"
     optout_all_role_id = "optout_all_role_id"
 
 class CONFIG_FIELDS_EDITABLE(str, Enum):
@@ -35,7 +36,6 @@ class CONFIG_FIELDS_EDITABLE(str, Enum):
     default_logo_url = "default_logo_url"
     default_tz = "default_tz"
     mngr_role_id = "mngr_role_id"
-    default_comp_color = "default_comp_color"
 
 class Config(CanuckBotBase):
     logs_channel_id: Snowflake = 0
@@ -51,7 +51,7 @@ class Config(CanuckBotBase):
     )
     default_tz: TimeZone = TimeZone("America/Toronto")
     mngr_role_id: Snowflake = 0
-    default_comp_color: HexColor = "#ffffff"
+    log_level: Log_Level = logging.INFO
     optout_all_role_id: Snowflake = 0
 
     class Config:

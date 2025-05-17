@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 from Discord.DiscordBot import DiscordBot
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.WebhookLoggerAdapter import WebhookLoggerAdapter
+from Discord import Discord
 
 load_dotenv()
 
@@ -93,6 +94,11 @@ file_handler.setFormatter(file_handler_formatter)
 # Add the handlers
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+log_level = Discord.ge_log_level()
+if not log_level:
+    log_level = logging.INFO
+logger.setLevel(log_level)
 
 os.environ["PREFIX"] = config["prefix"]
 config["cogs_dir"] = f"{os.path.realpath(os.path.dirname(__file__))}/cogs/"

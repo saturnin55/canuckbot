@@ -4,6 +4,7 @@ from typing import Optional
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
+from CanuckBot.types import Log_Level
 from CanuckBot.Config import Config, CONFIG_FIELDS_EDITABLE, CONFIG_FIELDS_INFO
 from CanuckBot.Info import Info
 from CanuckBot.utils import validate_invoking_channel
@@ -56,6 +57,7 @@ class ConfigCog(commands.Cog, name="config"):
 
         if field.name and value:
             config = await Config.create(bot=self.bot)
+            oldvalue = str(getattr(config, field.name))
             setattr(config, field.name, value)
 
             if await config.update(field.name):
@@ -65,7 +67,7 @@ class ConfigCog(commands.Cog, name="config"):
                     self.bot.status_task.change_interval(minutes=float(value))
                 elif field.name == 'interval_match_task':
                     self.bot.match_task.change_interval(minutes=float(value))
-                await Discord.send_success(context, f"Configuration updated.")
+                await Discord.send_success(context, f"Configuration updated `config.{field.name}` : `{oldvalue}` -> `{value}`")
             else:
                 await Discord.send_error(context, "There was an error trying to update the config.")
         else:
@@ -130,8 +132,9 @@ class ConfigCog(commands.Cog, name="config"):
 
         try:
             objinfo = await Info.create(self.bot, "config", field.name)
+            oldinfo = obj.info
             if await objinfo.set(info_text):
-                await Discord.send_success(f"config.{field.name} updated : `{info_text}`")
+                await Discord.send_success(f"config.{field.name} updated : `{oldinfo}` -> `{info_text}`")
             else:
                 await Discord.send_error(f"Couldn't update config.{field.name}")
         except Exception as e:
@@ -183,10 +186,42 @@ class ConfigCog(commands.Cog, name="config"):
         embed.add_field(name="default_logo_url", value=config.default_logo_url, inline=False)
         embed.add_field(name="default_tz", value=config.default_tz, inline=False)
         embed.add_field(name="mngr_role_id", value=mngr_role.mention, inline=False)
-        embed.add_field(name="default_comp_color", value=config.default_comp_color, inline=False)
+        embed.add_field(name="log_level", value=config.log_level.name, inline=False)
         embed.add_field(name="optout_all_role_id", value=optout_role.mention, inline=False)
 
         await context.interaction.followup.send(embed=embed)
+
+
+    @config.command(
+        name="loglevel",
+        description="Modify the log level.",
+    )
+    @is_superadmin()
+    @app_commands.describe(
+        loglevel="The log level.",
+    )
+    async def config_level(self, context: Context, loglevel: Log_Level) -> None:
+
+        if context.interaction is None:
+            await Discord.send_error(context, "Usage: `/config loglevel`")
+            return
+
+        await context.interaction.response.defer(ephemeral=False)
+
+        if not await validate_invoking_channel(self.bot, context):
+            cmds_channel = int(Discord.get_cmds_channel_id())
+            await Discord.send_error(context, f"You cannot use this command in <#{context.channel.id}>. Go to <#{cmds_channel}>" )
+            return
+
+        if loglevel.value:
+            config = await Config.create(bot=self.bot)
+            oldvalue = str(getattr(config, 'log_level'))
+            setattr(config, 'log_level', loglevel.value)
+
+            if await config.update('log_level'):
+                await Discord.send_success(context, f"Configuration updated for `config.log_level` : `{Log_Level[oldvalue].name}` -> `{loglevel.name}`")
+            else:
+                await Discord.send_error(context, "There was an error trying to update the config.")
 
 
 async def setup(bot) -> None:

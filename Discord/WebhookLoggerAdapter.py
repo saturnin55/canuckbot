@@ -41,6 +41,9 @@ class WebhookLoggerAdapter:
 
     async def cmds(self, cmd: str, context: Context, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
         
+        if self.logger.getEffectiveLevel() > logging.INFO:
+            return
+
         if target in [LogTarget.LOGGER_ONLY, LogTarget.BOTH]:
             self.logger.info(LoggingFormatter.format_invoked_slash_cmd(f"{cmd}", context))
 
@@ -59,7 +62,7 @@ class WebhookLoggerAdapter:
                 args = " ".join(f"{k}='{v}'" for k, v in context.kwargs.items() if v is not None)
                 cmd = f"{cmd} {args}"
             
-            embed = discord.Embed(color=int(0x3664a8))
+            embed = discord.Embed(color=int(0x4CAF50))
             embed.set_author(name=f"{context.author.name} [{context.author.id}]", icon_url=context.author.avatar.url)
             embed.add_field(name="", value=cmd, inline=False)
             embed.add_field(name="", value=f"{channel} [{channel_id}]", inline=False)
@@ -72,27 +75,61 @@ class WebhookLoggerAdapter:
             self.logger.info(message, *args, **kwargs)
 
         if target in [LogTarget.WEBHOOK_ONLY, LogTarget.BOTH]:
-            embed = discord.Embed(color=int(0xb0b6bf), description=message)
+            embed = discord.Embed(color=int(0x4CAF50), description=message)
             await self._send_webhook(embed)
 
 
     async def error(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+
+        if self.logger.getEffectiveLevel() > logging.ERROR:
+            return
+
         if target in [LogTarget.LOGGER_ONLY, LogTarget.BOTH]:
             self.logger.error(message, *args, **kwargs)
 
         if target in [LogTarget.WEBHOOK_ONLY, LogTarget.BOTH]:
-            embed = discord.Embed(color=int(0xE02B2B), description=message)
+            embed = discord.Embed(color=int(0xF44336), description=message)
             await self._send_webhook(embed)
 
 
     async def warning(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
 
+        if self.logger.getEffectiveLevel() > logging.WARNING:
+            return
+
         if target in [LogTarget.LOGGER_ONLY, LogTarget.BOTH]:
             self.logger.warning(message, *args, **kwargs)
 
         if target in [LogTarget.WEBHOOK_ONLY, LogTarget.BOTH]:
-            embed = discord.Embed(color=int(0xffa500), description=message)
+            embed = discord.Embed(color=int(0xFFC107), description=message)
             await self._send_webhook(embed)
+
+
+    async def debug(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+
+        if self.logger.getEffectiveLevel() > logging.DEBUG:
+            return
+
+        if target in [LogTarget.LOGGER_ONLY, LogTarget.BOTH]:
+            self.logger.debug(message, *args, **kwargs)
+
+        if target in [LogTarget.WEBHOOK_ONLY, LogTarget.BOTH]:
+            embed = discord.Embed(color=int(0x9E9E9E), description=message)
+            await self._send_webhook(embed)
+
+
+    async def critical(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+
+        if self.logger.getEffectiveLevel() > logging.CRITICAL:
+            return
+
+        if target in [LogTarget.LOGGER_ONLY, LogTarget.BOTH]:
+            self.logger.critical(message, *args, **kwargs)
+
+        if target in [LogTarget.WEBHOOK_ONLY, LogTarget.BOTH]:
+            embed = discord.Embed(color=int(0xD50000), description=message)
+            await self._send_webhook(embed)
+
 
     # Delegate useful logger methods
     def setLevel(self, level):

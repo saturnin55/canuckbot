@@ -432,12 +432,17 @@ class Discord:
         conn = sqlite3.connect(db_path)
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT value FROM config WHERE field = ?", ("cmds_channel_id",))
+            cursor.execute("SELECT value FROM config WHERE field = ?", (str(field),))
             row = cursor.fetchone()
             return row[0] if row else None
         finally:
             conn.close()
 
     @staticmethod
-    def get_cmds_channel_id():
-        return Discord.get_config_item('cmds_channel_id')
+    def get_cmds_channel_id() -> int:
+        return int(Discord.get_config_item('cmds_channel_id'))
+
+
+    @staticmethod
+    def get_log_level() -> int:
+        return int(Discord.get_config_item('log_level'))
