@@ -60,9 +60,9 @@ class ManagerCog(commands.Cog, name="managers"):
         mngrname = getattr(user, 'display_name', user.name)
 
         if ret:
-            await Discord.send_success(f"{mngrname} created as a new CanuckBot manager!")
+            await Discord.send_success(context, f"{mngrname} created as a new CanuckBot manager!")
         else:
-            await Discord.send_error(f"There was an error trying to add {mngrname} as a new CanuckBot manager.")
+            await Discord.send_error(context, f"There was an error trying to add {mngrname} as a new CanuckBot manager.")
 
 
     @mngr.command(
@@ -97,7 +97,7 @@ class ManagerCog(commands.Cog, name="managers"):
         await m.get(user.id)
 
         if not m.is_loaded():
-            await Discord.send_error(f"User {mngrname} is not a manager!")
+            await Discord.send_error(context, f"User {mngrname} is not a manager!")
             return
 
         oldlevel = m.level
@@ -114,10 +114,10 @@ class ManagerCog(commands.Cog, name="managers"):
                 await m.clear_competitions()
             
         except Exception as e:
-            await Discord.send_error("There was an error trying to get info from the database.")
+            await Discord.send_error(context, "There was an error trying to get info from the database.")
             return
 
-        await Discord.send_success(content=f"`{mngrname}` level set to `{level.name}`")
+        await Discord.send_success(context, f"`{mngrname}` level set to `{level.name}`")
 
 
     @mngr.command(
@@ -145,9 +145,9 @@ class ManagerCog(commands.Cog, name="managers"):
         mngrname = getattr(user, 'display_name', user.name)
         if await m.get(user.id):
             await m.remove(user.id)
-            await Discord.send_success(f"{mngrname} removed as a CanuckBot manager!")
+            await Discord.send_success(context, f"{mngrname} removed as a CanuckBot manager!")
         else:
-            await Discord.send_error( f"{mngrname} is currently not a CanuckBot manager!")
+            await Discord.send_error(context,  f"{mngrname} is currently not a CanuckBot manager!")
 
     @mngr.command(
         name="list",
@@ -253,7 +253,7 @@ class ManagerCog(commands.Cog, name="managers"):
 
             await context.interaction.followup.send(content="**CanuckBot manager info**", embed=embed)
         except Exception as e:
-           await Discsord.send_error(f"There was an error trying to get info from the database: {e}")
+           await Discsord.send_error(context, f"There was an error trying to get info from the database: {e}")
 
     @mngr.command(
         name="setinfo",
@@ -284,13 +284,13 @@ class ManagerCog(commands.Cog, name="managers"):
         try:
             getattr(manager, field.value)
         except AttributeError as e:
-            await Discord.send_error(f"manager.{field.value} is not defined: {e}")
+            await Discord.send_error(context, f"manager.{field.value} is not defined: {e}")
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(f"manager.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"manager.{field.value} updated : `{info_text}`")
         else:
-            await Discord.send_errorsend(f"Couldn't update manager.{field.value}")
+            await Discord.send_errorsend(context, f"Couldn't update manager.{field.value}")
 
 
     @mngr.command(
@@ -323,16 +323,16 @@ class ManagerCog(commands.Cog, name="managers"):
         # check if the user isn't already a manager
         await m.get(user.id)
         if(m.user_id != 0):
-            await Discord.send_error(f"User {mngrname} is already a manager!")
+            await Discord.send_error(context, f"User {mngrname} is already a manager!")
             return
 
         ret = await m.add(user.id, invoking_user.id, User_Level.Trusted)
 
         mngrname = getattr(user, 'display_name', user.name)
         if ret:
-            await Discord.send_success(f"{mngrname} set as a new CanuckBot Trusted manager!")
+            await Discord.send_success(context, f"{mngrname} set as a new CanuckBot Trusted manager!")
         else:
-            await Discord.send_error(f"There was an error trying to add {mngrname} as a new CanuckBot Trusted manager.")
+            await Discord.send_error(context, f"There was an error trying to add {mngrname} as a new CanuckBot Trusted manager.")
 
 
     @mngr.command(
@@ -362,9 +362,9 @@ class ManagerCog(commands.Cog, name="managers"):
         await m.get(user.id)
         if m != 0 and m.level == User_Level.Trusted:
             await m.remove(user.id)
-            await Discord.send_success(f"{mngrname}: CanuckBot {m.level.name} manager privileges revoked!")
+            await Discord.send_success(context, f"{mngrname}: CanuckBot {m.level.name} manager privileges revoked!")
         else:
-            await Discord.send_error(f"{mngrname} is currently not a CanuckBot Trusted manager!")
+            await Discord.send_error(context, f"{mngrname} is currently not a CanuckBot Trusted manager!")
 
     @mngr.command(
         name="comp",
@@ -396,27 +396,27 @@ class ManagerCog(commands.Cog, name="managers"):
         # check if the user isn't already a manager
         await m.get(user.id)
         if not m.is_loaded() or m.level != User_Level.Comp:
-            await Discord.send_error(f"`{mngrname}` isn't a Comp manager!")
+            await Discord.send_error(context, f"`{mngrname}` isn't a Comp manager!")
             return
 
         # check if the competition exists
         comp = Competition(self.bot)
         await comp.load_by_key(key)
         if not comp.is_loaded():
-            await Discord.send_error(f"The competition `{key}` doesn't exist!")
+            await Discord.send_error(context, f"The competition `{key}` doesn't exist!")
             return
 
         try:
             if comp.competition_id in m.competitions:
                 # remove the comp from the managed competitions of that trusted manager
                 await m.delcomp(comp.competition_id)
-                await Discord.send_success(f"`{comp.shortname}` removed to `{mngrname}`'s competitions.")
+                await Discord.send_success(context, f"`{comp.shortname}` removed to `{mngrname}`'s competitions.")
             else:
                 # add the comp from the managed competitions of that trusted manager
                 await m.addcomp(comp.competition_id)
-                await Discord.send_success(f"`{comp.shortname}` added to `{mngrname}`'s competitions.")
+                await Discord.send_success(context, f"`{comp.shortname}` added to `{mngrname}`'s competitions.")
         except Exception as e:
-            await Discord.send_error(f"There was an error: {e}")
+            await Discord.send_error(context, f"There was an error: {e}")
         
 
 async def setup(bot: DiscordBot) -> None:

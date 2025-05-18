@@ -70,7 +70,7 @@ class MatchCog(commands.Cog, name="match"):
 
             await context.interaction.followup.send(content="**CanuckBot match info**", embed=embed)
         except Exception as e:
-                await Discord.send_error(f"There was an error trying to get info from the database: {e}")
+                await Discord.send_error(context, f"There was an error trying to get info from the database: {e}")
 
 
     @match.command(
@@ -93,7 +93,7 @@ class MatchCog(commands.Cog, name="match"):
 
         if not await validate_invoking_channel(self.bot, context):
             cmds_channel = int(Discord.get_cmds_channel_id())
-            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
+            await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         objinfo = await Info.create(self.bot, "match", field.value)
@@ -103,13 +103,13 @@ class MatchCog(commands.Cog, name="match"):
         try:
             getattr(match, field.value)
         except AttributeError as e:
-            await Discord.send_error(f"match.{field.value} is not defined.")
+            await Discord.send_error(context, f"match.{field.value} is not defined.")
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(f"match.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"match.{field.value} updated : `{info_text}`")
         else:
-            await Discord.send_error(f"Couldn't update match.{field.value}")
+            await Discord.send_error(context, f"Couldn't update match.{field.value}")
 
 
     @match.command(
@@ -131,24 +131,24 @@ class MatchCog(commands.Cog, name="match"):
 
         if not await validate_invoking_channel(self.bot, context):
             cmds_channel = int(Discord.get_cmds_channel_id())
-            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
+            await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         if name is None or shortname is None:
-            await Discord.send_error(f"Missing parameters!")
+            await Discord.send_error(context, f"Missing parameters!")
             return
 
         invoking_user = context.interaction.user
 
         if not is_valid_handle(shortname):
-            await Discord.send_error(f"`{shortname}` is not a valid shortname!")
+            await Discord.send_error(context, f"`{shortname}` is not a valid shortname!")
             return
 
         c = Competition(self.bot)
 
         await c.load_by_shortname(shortname)
         if c.is_loaded():
-            await Discord.send_error(f"`{c.shortname}` ({c.name}) already exists!")
+            await Discord.send_error(context, f"`{c.shortname}` ({c.name}) already exists!")
             return
 
         config = Config(self.bot)
@@ -174,13 +174,13 @@ class MatchCog(commands.Cog, name="match"):
             ret = await c.add()
 
             if ret:
-                await Discord.send_success(f"Competition `{c.shortname}` (`{c.competition_id}`) created!")
+                await Discord.send_success(context, f"Competition `{c.shortname}` (`{c.competition_id}`) created!")
             else:
-                await Discord.send_error(f"A problem occured while creating the competition!")
+                await Discord.send_error(context, f"A problem occured while creating the competition!")
 
             return
         except Exception as e:
-            await Discord.send_error(f"A problem occured while creating the competition: `{e}`")
+            await Discord.send_error(context, f"A problem occured while creating the competition: `{e}`")
             return
 
 
@@ -204,7 +204,7 @@ class MatchCog(commands.Cog, name="match"):
 
         if not await validate_invoking_channel(self.bot, context):
             cmds_channel = int(Discord.get_cmds_channel_id())
-            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
+            await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         invoking_user = context.interaction.user
@@ -214,20 +214,20 @@ class MatchCog(commands.Cog, name="match"):
 
             await match.get(int(key))
             if not match.is_loaded():
-                await Discord.send_warning(f"Match `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Match `{key}` doesn't exist!")
                 return
 
             if not field.name or not value:
-                await Discord.send_error(f"Missing parameters to edit match `{key}`!")
+                await Discord.send_error(context, f"Missing parameters to edit match `{key}`!")
                 return
 
             if not await match.update(field.name, value):
-                await Discord.send_error(f"There was an error trying to update match `{key}`!")
+                await Discord.send_error(context, f"There was an error trying to update match `{key}`!")
                 return
                 
-            await Discord.send_success(f"Match `{match.match_id}` updated: `{field.name}` = `{value}`")
+            await Discord.send_success(context, f"Match `{match.match_id}` updated: `{field.name}` = `{value}`")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while updating match: `{key}`: `{e}`")
+            await Discord.send_error(context, f"A problem occured while updating match: `{key}`: `{e}`")
             return
 
 
@@ -249,13 +249,13 @@ class MatchCog(commands.Cog, name="match"):
 
         if not await validate_invoking_channel(self.bot, context):
             cmds_channel = int(Discord.get_cmds_channel_id())
-            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
+            await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         invoking_user = context.interaction.user
 
         if key is None:
-            await Discord.send_error(f"Missing parameters!")
+            await Discord.send_error(context, f"Missing parameters!")
             return
 
         invoking_user = context.interaction.user
@@ -265,16 +265,16 @@ class MatchCog(commands.Cog, name="match"):
 
             await match.get(int(key))
             if not comp.is_loaded():
-                await Discord.send_warning(f"Match `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Match `{key}` doesn't exist!")
                 return
 
             match_id = match.match_id
             if await match.remove():
-                await Discord.send_success(f"Match `{competition_id}` deleted!")
+                await Discord.send_success(context, f"Match `{competition_id}` deleted!")
             else:
-                await Discord.send_error(f"A problem occured while deleting the match!")
+                await Discord.send_error(context, f"A problem occured while deleting the match!")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while deleting the match: {e}")
+            await Discord.send_error(context, f"A problem occured while deleting the match: {e}")
             return
 
 
@@ -286,13 +286,13 @@ class MatchCog(commands.Cog, name="match"):
 
         """
         if not await validate_invoking_channel(self.bot, context):
-            await context.send(f"You cannot use this command in this channel.", ephemeral=True)
+            await context.send(context, f"You cannot use this command in this channel.", ephemeral=True)
             return
 
         if context.interaction:
             await context.interaction.response.defer(ephemeral=True)
         else:
-            await context.send(f"ERR: Use `/match` slash command", ephemeral=True)
+            await context.send(context, f"ERR: Use `/match` slash command", ephemeral=True)
             return
         if context.interaction:
             await context.interaction.response.defer(ephemeral=True)
@@ -313,7 +313,7 @@ class MatchCog(commands.Cog, name="match"):
 
         table += "```\n-# Use `/comp show id|shortname` for more details on a competition."
 
-        await context.interaction.followup.send(f"{table}", ephemeral=True)
+        await context.interaction.followup.send(context, f"{table}", ephemeral=True)
         """
 
 
@@ -334,7 +334,7 @@ class MatchCog(commands.Cog, name="match"):
             await comp.get(int(key))
 
             if not match.is_loaded():
-                await Discord.send_warning(f"Match `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Match `{key}` doesn't exist!")
                 return
         
             assert self.bot.database, "ERR Match.add(): database not available."
@@ -394,7 +394,7 @@ class MatchCog(commands.Cog, name="match"):
             await context.interaction.followup.send(content="**Competition**", embed=embed)
             """
         except Exception as e:
-            await Discord.send_error(f"A problem occured retrieving the match: {e}")
+            await Discord.send_error(context, f"A problem occured retrieving the match: {e}")
             return
 
 async def setup(bot) -> None:

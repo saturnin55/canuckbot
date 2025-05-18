@@ -55,20 +55,20 @@ class TeamCog(commands.Cog, name="teams"):
             return
 
         if name is None or shortname is None:
-            await Discord.send_error(f"Missing parameters!")
+            await Discord.send_error(context, f"Missing parameters!")
             return
 
         invoking_user = context.interaction.user
 
         if not is_valid_handle(shortname):
-            await Discord.send_error(f"`{shortname}` is not a valid shortname!")
+            await Discord.send_error(context, f"`{shortname}` is not a valid shortname!")
             return
 
         t = Team(self.bot)
 
         await t.load_by_shortname(shortname)
         if t.is_loaded():
-            await Discord.send_warning(f"`{t.shortname}` ({t.name}) already exists!")
+            await Discord.send_warning(context, f"`{t.shortname}` ({t.name}) already exists!")
             return
 
         config = Config(self.bot)
@@ -86,13 +86,13 @@ class TeamCog(commands.Cog, name="teams"):
             ret = await t.add()
 
             if ret:
-                await Discord.send_success(f"Team `{t.shortname}` (`{t.team_id}`) created!")
+                await Discord.send_success(context, f"Team `{t.shortname}` (`{t.team_id}`) created!")
             else:
-                await Discord.send_error(f"A problem occured while creating the team!")
+                await Discord.send_error(context, f"A problem occured while creating the team!")
 
             return 
         except Exception as e:
-            await Discord.send_error(f"A problem occured while creating the team: {e}")
+            await Discord.send_error(context, f"A problem occured while creating the team: {e}")
             return
 
 
@@ -118,7 +118,7 @@ class TeamCog(commands.Cog, name="teams"):
             return
 
         if key is None:
-            await Discord.send_error(f"Missing parameters!")
+            await Discord.send_error(context, f"Missing parameters!")
             return
 
         invoking_user = context.interaction.user
@@ -128,17 +128,17 @@ class TeamCog(commands.Cog, name="teams"):
 
             await t.load_by_key(key)
             if not t.is_loaded():
-                await Discord.send_warning(f"Team `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Team `{key}` doesn't exist!")
                 return
 
             team_id = t.team_id
             shortname = t.shortname
             if await t.remove():
-                await Discord.send_success(f"Team `{shortname}` (`{team_id}`) deleted!")
+                await Discord.send_success(context, f"Team `{shortname}` (`{team_id}`) deleted!")
             else:
-                await Discord.send_error(f"A problem occured while deleting the team!")
+                await Discord.send_error(context, f"A problem occured while deleting the team!")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while deleting the team: {e}")
+            await Discord.send_error(context, f"A problem occured while deleting the team: {e}")
             return
 
         
@@ -180,7 +180,7 @@ class TeamCog(commands.Cog, name="teams"):
 
                 await context.interaction.followup.send(content="**CanuckBot team info**", embed=embed)
         except:
-                await Discord.send_error("There was an error trying to get info from the database.")
+                await Discord.send_error(context, "There was an error trying to get info from the database.")
 
     @team.command(
         name="setinfo",
@@ -209,13 +209,13 @@ class TeamCog(commands.Cog, name="teams"):
         try:
             getattr(team, field.value)
         except AttributeError as e:
-            await Discord.send_error(f"team.{field.value} is not defined.")
+            await Discord.send_error(context, f"team.{field.value} is not defined.")
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(f"team.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"team.{field.value} updated : `{info_text}`")
         else:
-            await Discord.send_error(f"Couldn't update team.{field.value}")
+            await Discord.send_error(context, f"Couldn't update team.{field.value}")
 
     @team.command(
         name="show",
@@ -243,7 +243,7 @@ class TeamCog(commands.Cog, name="teams"):
             await team.load_by_key(key)
 
             if not team.is_loaded():
-                await Discord.send_error(f"Team id/shortname `{key}` doesn't exist!")
+                await Discord.send_error(context, f"Team id/shortname `{key}` doesn't exist!")
                 return
 
             if team.lastmodified_by:
@@ -277,7 +277,7 @@ class TeamCog(commands.Cog, name="teams"):
             await context.interaction.followup.send(content="**Team**", embed=embed)
 
         except Exception as e:
-            await Discord.send_error(f"A problem occured while retreiving team `{key}`: {e}")
+            await Discord.send_error(context, f"A problem occured while retreiving team `{key}`: {e}")
 
 
     @team.command(
@@ -302,11 +302,11 @@ class TeamCog(commands.Cog, name="teams"):
             await team.load_by_key(key)
 
             if not team.is_loaded():
-                await Discord.send_warning(f"Team `{key}` doesn't exist.")
+                await Discord.send_warning(context, f"Team `{key}` doesn't exist.")
                 return 
 
             if alias.lower() == team.shortname.lower():
-                await Discord.send_warning(f"Alias `{alias}` is already used as the shortname of team id `{team.team_id}`: `{team.name}`.")
+                await Discord.send_warning(context, f"Alias `{alias}` is already used as the shortname of team id `{team.team_id}`: `{team.name}`.")
                 return 
 
             if await team.is_alias(alias):
@@ -319,16 +319,16 @@ class TeamCog(commands.Cog, name="teams"):
                     aliases = ", ".join(team.aliases)
 
 
-                await Discord.send_success(f"Alias `{alias}` removed from team `{team.name}` : `{aliases}`")
+                await Discord.send_success(context, f"Alias `{alias}` removed from team `{team.name}` : `{aliases}`")
             else:
                 # we add the alias
                 await team.add_alias(alias)
 
                 aliases = ", ".join(team.aliases)
 
-                await Discord.send_success(f"Alias `{alias}` added to team `{team.name}` : `{aliases}`")
+                await Discord.send_success(context, f"Alias `{alias}` added to team `{team.name}` : `{aliases}`")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while manipulating alias `{alias}` for team `{team.name}`: {e}")
+            await Discord.send_error(context, f"A problem occured while manipulating alias `{alias}` for team `{team.name}`: {e}")
             return
 
     @team.command(
@@ -412,7 +412,7 @@ class TeamCog(commands.Cog, name="teams"):
                 await context.interaction.followup.send(f"{body}", ephemeral=True)
 
         except Exception as e:
-            await Discord.send_error(f"A problem occured while searching: {e}")
+            await Discord.send_error(context, f"A problem occured while searching: {e}")
 
 
     @team.command(
@@ -445,20 +445,20 @@ class TeamCog(commands.Cog, name="teams"):
 
             await team.load_by_key(key)
             if not team.is_loaded():
-                await Discord.send_warning(f"Team `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Team `{key}` doesn't exist!")
                 return
 
             if not field.name or not value:
-                await Discord.send_error(f"Missing parameters to edit team `{key}`!")
+                await Discord.send_error(context, f"Missing parameters to edit team `{key}`!")
                 return
 
             if not await team.update(field.name, value):
-                await Discord.send_error(f"There was an error trying to update team `{key}`!")
+                await Discord.send_error(context, f"There was an error trying to update team `{key}`!")
                 return
 
-            await Discord.send_success(f"Team `{team.shortname}` updated: `{field.name}` = `{value}`")
+            await Discord.send_success(context, f"Team `{team.shortname}` updated: `{field.name}` = `{value}`")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while updating team: `{key}`: `{e}`")
+            await Discord.send_error(context, f"A problem occured while updating team: `{key}`: `{e}`")
 
 
 async def setup(bot: DiscordBot) -> None:

@@ -95,7 +95,7 @@ file_handler.setFormatter(file_handler_formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-log_level = Discord.ge_log_level()
+log_level = Discord.get_log_level()
 if not log_level:
     log_level = logging.INFO
 logger.setLevel(log_level)

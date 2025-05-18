@@ -394,6 +394,7 @@ class Discord:
     @staticmethod
     async def send_message(context: commands.Context, message:str = None, color:int = Color.Neutral, ephemeral: Optional[bool] = False):
 
+        print(message)
         if message:
             embed = discord.Embed(description=message, color=color)
 

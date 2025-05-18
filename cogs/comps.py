@@ -70,7 +70,7 @@ class CompCog(commands.Cog, name="comp"):
             await context.interaction.followup.send(content="**CanuckBot competition info**", embed=embed)
 
         except Exception as e:
-                await Discord.send_error(f"There was an error trying to get info from the database: {e}")
+                await Discord.send_error(context, f"There was an error trying to get info from the database: {e}")
 
     @comp.command(
         name="setinfo",
@@ -101,13 +101,13 @@ class CompCog(commands.Cog, name="comp"):
         try:
             getattr(comp, field.value)
         except AttributeError as e:
-            await Discord.send_error(f"comp.{field.value} is not defined.")
+            await Discord.send_error(context, f"comp.{field.value} is not defined.")
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(f"comp.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"comp.{field.value} updated : `{info_text}`")
         else:
-            await Discord.send_error(f"Couldn't update comp.{field.value}")
+            await Discord.send_error(context, f"Couldn't update comp.{field.value}")
 
 
     @comp.command(
@@ -133,20 +133,20 @@ class CompCog(commands.Cog, name="comp"):
             return
 
         if name is None or shortname is None:
-            await Discord.send_error(f"Missing parameters!")
+            await Discord.send_error(context, f"Missing parameters!")
             return
 
         invoking_user = context.interaction.user
 
         if not is_valid_handle(shortname):
-            await Discord.send_error(f"`{shortname}` is not a valid shortname!")
+            await Discord.send_error(context, f"`{shortname}` is not a valid shortname!")
             return
 
         c = Competition(self.bot)
 
         await c.load_by_shortname(shortname)
         if c.is_loaded():
-            await Discord.send_error(f"`{c.shortname}` ({c.name}) already exists!")
+            await Discord.send_error(context, f"`{c.shortname}` ({c.name}) already exists!")
             return
 
         config = Config(self.bot)
@@ -181,13 +181,13 @@ class CompCog(commands.Cog, name="comp"):
             ret = await c.add()
 
             if ret:
-                await Discord.send_success(f"Competition `{c.shortname}` (`{c.competition_id}`) created!")
+                await Discord.send_success(context, f"Competition `{c.shortname}` (`{c.competition_id}`) created!")
             else:
-                await Discord.send_error(f"A problem occured while creating the competition!")
+                await Discord.send_error(context, f"A problem occured while creating the competition!")
 
             return
         except Exception as e:
-            await Discord.send_error(f"A problem occured while creating the competition: `{e}`")
+            await Discord.send_error(context, f"A problem occured while creating the competition: `{e}`")
             return
 
 
@@ -221,20 +221,20 @@ class CompCog(commands.Cog, name="comp"):
 
             await comp.load_by_key(key)
             if not comp.is_loaded():
-                await Discord.send_warning(f"Competition `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Competition `{key}` doesn't exist!")
                 return
 
             if not field.name or not value:
-                await Discord.send_error(f"Missing parameters to edit competition `{key}`!")
+                await Discord.send_error(context, f"Missing parameters to edit competition `{key}`!")
                 return
 
             if not await comp.update(field.name, value):
-                await Discord.send_error(f"There was an error trying to update competition `{key}`!")
+                await Discord.send_error(context, f"There was an error trying to update competition `{key}`!")
                 return
                 
-            await Discord.send_success(f"Competition `{comp.shortname}` updated: `{field.name}` = `{value}`")
+            await Discord.send_success(context, f"Competition `{comp.shortname}` updated: `{field.name}` = `{value}`")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while updating competition: `{key}`: `{e}`")
+            await Discord.send_error(context, f"A problem occured while updating competition: `{key}`: `{e}`")
             return
 
 
@@ -260,7 +260,7 @@ class CompCog(commands.Cog, name="comp"):
             return
 
         if key is None:
-            await Discord.send_error(f"Missing parameters!")
+            await Discord.send_error(context, f"Missing parameters!")
             return
 
         invoking_user = context.interaction.user
@@ -270,7 +270,7 @@ class CompCog(commands.Cog, name="comp"):
 
             await comp.load_by_key(key)
             if not comp.is_loaded():
-                await Discord.send_warning(f"Competition `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Competition `{key}` doesn't exist!")
                 return
 
             competition_id = comp.competition_id
@@ -283,15 +283,15 @@ class CompCog(commands.Cog, name="comp"):
                 if role:
                     audit = f"Removing competition {comp.name}"
                     if not await Discord.delete_role(context, role.id, reason=audit):
-                        await Discord.send_error(f"A problem occured while deleting the role: {e}")
+                        await Discord.send_error(context, f"A problem occured while deleting the role: {e}")
                         return
 
             if await comp.remove():
-                await Discord.send_success(f"Competition `{shortname}` (`{competition_id}`) deleted!")
+                await Discord.send_success(context, f"Competition `{shortname}` (`{competition_id}`) deleted!")
             else:
-                await Discord.send_error(f"A problem occured while deleting the competition!")
+                await Discord.send_error(context, f"A problem occured while deleting the competition!")
         except Exception as e:
-            await Discord.send_error(f"A problem occured while deleting the competition: {e}")
+            await Discord.send_error(context, f"A problem occured while deleting the competition: {e}")
             return
 
 
@@ -343,7 +343,7 @@ class CompCog(commands.Cog, name="comp"):
             await comp.load_by_key(key)
 
             if not comp.is_loaded():
-                await Discord.send_warning(f"Competition `{key}` doesn't exist!")
+                await Discord.send_warning(context, f"Competition `{key}` doesn't exist!")
                 return
         
             assert self.bot.database, "ERR Team.add(): database not available."
@@ -401,7 +401,7 @@ class CompCog(commands.Cog, name="comp"):
 
             await context.interaction.followup.send(content="**Competition**", embed=embed)
         except Exception as e:
-            await Discord.send_error(f"A problem occured retrieving the competition: {e}")
+            await Discord.send_error(context, f"A problem occured retrieving the competition: {e}")
             return
 
 async def setup(bot) -> None:

@@ -127,18 +127,18 @@ class ConfigCog(commands.Cog, name="config"):
 
         if not await validate_invoking_channel(self.bot, context):
             cmds_channel = int(Discord.get_cmds_channel_id())
-            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
+            await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         try:
             objinfo = await Info.create(self.bot, "config", field.name)
-            oldinfo = obj.info
+            oldinfo = objinfo.info
             if await objinfo.set(info_text):
-                await Discord.send_success(f"config.{field.name} updated : `{oldinfo}` -> `{info_text}`")
+                await Discord.send_success(context, f"config.{field.name} updated : `{oldinfo}` -> `{info_text}`")
             else:
-                await Discord.send_error(f"Couldn't update config.{field.name}")
+                await Discord.send_error(context, f"Couldn't update config.{field.name}")
         except Exception as e:
-            await Discord.send_error(f"couldn't update config.{field.name}: {e}")
+            await Discord.send_error(context, f"couldn't update config.{field.name}: {e}")
 
 
     @config.command(
@@ -158,7 +158,7 @@ class ConfigCog(commands.Cog, name="config"):
 
         if not await validate_invoking_channel(self.bot, context):
             cmds_channel = int(Discord.get_cmds_channel_id())
-            await Discord.send_error(f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
+            await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
 
         config = await Config.create(self.bot)
