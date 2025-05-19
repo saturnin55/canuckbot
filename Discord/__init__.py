@@ -18,6 +18,38 @@ class LogTarget:
 
 class Discord:
 
+
+    @staticmethod
+    async def rename_role( guild: discord.Guild, role_identifier: Union[int, str], new_name: str) -> bool:
+        """
+        Renames a role by role ID or name.
+
+        Args:
+            guild (discord.Guild): The guild where the role exists.
+            role_identifier (Union[int, str]): The role's ID or name.
+            new_name (str): The new name to assign to the role.
+
+        Returns:
+            bool: True if renamed successfully, False otherwise.
+        """
+        # Get the role by ID or name
+        if isinstance(role_identifier, int):
+            role = guild.get_role(role_identifier)
+        else:
+            role = discord.utils.get(guild.roles, name=role_identifier)
+
+        if role is None:
+            return False
+
+        try:
+            await role.edit(name=new_name, reason="Renamed by rename_role()")
+            return True
+        except discord.Forbidden:
+            return False  # Bot lacks permission
+        except discord.HTTPException:
+            return False  # API error
+
+
     @staticmethod
     async def join_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str], reason: Optional[str] = None) -> bool:
         """

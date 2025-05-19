@@ -228,6 +228,9 @@ class CompCog(commands.Cog, name="comp"):
                 await Discord.send_error(context, f"Missing parameters to edit competition `{key}`!")
                 return
 
+            if field.name == 'shortname':
+                Discord.rename_role(context.guild, comp.shortname, str(key))
+
             if not await comp.update(field.name, value):
                 await Discord.send_error(context, f"There was an error trying to update competition `{key}`!")
                 return
