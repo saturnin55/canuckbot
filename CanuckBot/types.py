@@ -42,10 +42,11 @@ class Competition_Type(IntEnum):
         return self.name
 
 class Match_Status(IntEnum):
-    Pending = 0     # Match in scheduled but not yet reached match's hours_before_kickoff
-    Ready = 1       # We reached match's hours_before_kickoff, channel should be created
-    Active = 2      # Match in progress
-    Completed = 3   # Match reached match's hours_after_kickoff, time to cleanup
+    TBD = 0         # Some info about the match is yet TBD (kickoff, venue, home, away)
+    Pending = 1     # Match in scheduled but not yet reached match's hours_before_kickoff
+    Ready = 2       # We reached match's hours_before_kickoff, channel should be created
+    Active = 3      # Match in progress or channel not yet deleted
+    Completed = 4   # Match reached match's hours_after_kickoff, time to cleanup
 
     def __str__(self):
         return self.name

@@ -75,3 +75,17 @@ async def validate_invoking_channel(bot:DiscordBot = None, context:Context = Non
         return True
     else:
         return False
+
+
+# from an internval in the form of 3,55-8,10 ; return a list of integer
+def parse_number_string(s: str) -> list[int]:
+    result = set()
+    parts = s.replace(" ", "").split(',')
+    for part in parts:
+        if '-' in part:
+            start, end = map(int, part.split('-'))
+            result.update(range(min(start, end), max(start, end) + 1))
+        else:
+            result.add(int(part))
+    return sorted(result)
+

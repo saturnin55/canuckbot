@@ -13,6 +13,7 @@ class TEAM_FIELDS_INFO(str, Enum):
     team_id = "team_id" 
     name = "name"
     shortname = "shortname"
+    default_venue = "default_venue"
     tz = "tz"
     aliases = "aliases"
     created_by = "created_by"
@@ -24,11 +25,13 @@ class TEAM_FIELDS_EDITABLE(str, Enum):
     name = "name"
     shortname = "shortname"
     tz = "tz"
+    default_venue = "default_venue"
 
 class Team(CanuckBotBase):
     team_id: int = 0
     name: str = None
     shortname: Handle = None
+    default_venue: str = None
     tz: TimeZone | None = None
     aliases: List[str] = []
     created_by: Snowflake | None = None
@@ -62,6 +65,7 @@ class Team(CanuckBotBase):
                 self.team_id = int(row["team_id"])
                 self.name = str(row["name"])
                 self.shortname = str(row["shortname"])
+                self.default_venue = str(row["default_venue"])
                 self.tz = TimeZone(str(row["tz"]))
                 self.created_at = datetime.fromtimestamp(int(row["created_at"]))
                 self.created_by = int(row["created_by"])
@@ -115,6 +119,7 @@ class Team(CanuckBotBase):
                 self.team_id = int(row["team_id"])
                 self.name = str(row["name"])
                 self.shortname = Handle(row["shortname"])
+                self.default_venue = str(row["default_venue"])
                 self.tz = TimeZone(row["tz"])
 
                 if row["created_by"] is not None:
@@ -249,6 +254,7 @@ class Team(CanuckBotBase):
             self.team_id = 0
             self.name = None
             self.shortname = None
+            self.default_venue = None
             self.tz = None
             self.aliases = []
             self.created_at = 0
@@ -265,8 +271,8 @@ class Team(CanuckBotBase):
 
         try:
             await self._bot.database.insert(
-                "INSERT INTO teams (name, shortname, tz, created_at, created_by) VALUES (?, ?, ?, ?, ?)",
-                [str(self.name), str(self.shortname), str(self.tz), str(self.created_at), int(self.created_by)]
+                "INSERT INTO teams (name, shortname, default_venue, tz, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?)",
+                [str(self.name), str(self.shortname), str(self.default_venue), str(self.tz), str(self.created_at), int(self.created_by)]
                 )
 
             self.team_id = int(self._bot.database.lastrowid())
@@ -396,6 +402,12 @@ class Team(CanuckBotBase):
                     row["team_id"] = int(row["team_id"])
                     row["name"] = str(row["name"])
                     row["shortname"] = Handle(row["shortname"])
+
+                    if not row["default_venue"]:
+                        row["default_venue"] = str(row["default_venue"])
+                    else:
+                        row["default_venue"] = None
+
                     if not row["tz"]:
                         row["tz"] = None 
                     else:

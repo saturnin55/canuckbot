@@ -60,7 +60,7 @@ class ManagerCog(commands.Cog, name="managers"):
         mngrname = getattr(user, 'display_name', user.name)
 
         if ret:
-            await Discord.send_success(context, f"{mngrname} created as a new CanuckBot manager!")
+            await Discord.send_success(context, f"{mngrname} created as a new CanuckBot manager!", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_error(context, f"There was an error trying to add {mngrname} as a new CanuckBot manager.")
 
@@ -117,7 +117,7 @@ class ManagerCog(commands.Cog, name="managers"):
             await Discord.send_error(context, "There was an error trying to get info from the database.")
             return
 
-        await Discord.send_success(context, f"`{mngrname}` level set to `{level.name}`")
+        await Discord.send_success(context, f"`{mngrname}` level set to `{level.name}`", target=LogTarget.WEBHOOK_ONLY)
 
 
     @mngr.command(
@@ -145,7 +145,7 @@ class ManagerCog(commands.Cog, name="managers"):
         mngrname = getattr(user, 'display_name', user.name)
         if await m.get(user.id):
             await m.remove(user.id)
-            await Discord.send_success(context, f"{mngrname} removed as a CanuckBot manager!")
+            await Discord.send_success(context, f"{mngrname} removed as a CanuckBot manager!", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_error(context,  f"{mngrname} is currently not a CanuckBot manager!")
 
@@ -288,7 +288,7 @@ class ManagerCog(commands.Cog, name="managers"):
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(context, f"manager.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"manager.{field.value} updated : `{info_text}`", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_errorsend(context, f"Couldn't update manager.{field.value}")
 
@@ -330,7 +330,7 @@ class ManagerCog(commands.Cog, name="managers"):
 
         mngrname = getattr(user, 'display_name', user.name)
         if ret:
-            await Discord.send_success(context, f"{mngrname} set as a new CanuckBot Trusted manager!")
+            await Discord.send_success(context, f"{mngrname} set as a new CanuckBot Trusted manager!", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_error(context, f"There was an error trying to add {mngrname} as a new CanuckBot Trusted manager.")
 
@@ -362,7 +362,7 @@ class ManagerCog(commands.Cog, name="managers"):
         await m.get(user.id)
         if m != 0 and m.level == User_Level.Trusted:
             await m.remove(user.id)
-            await Discord.send_success(context, f"{mngrname}: CanuckBot {m.level.name} manager privileges revoked!")
+            await Discord.send_success(context, f"{mngrname}: CanuckBot {m.level.name} manager privileges revoked!", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_error(context, f"{mngrname} is currently not a CanuckBot Trusted manager!")
 
@@ -410,11 +410,11 @@ class ManagerCog(commands.Cog, name="managers"):
             if comp.competition_id in m.competitions:
                 # remove the comp from the managed competitions of that trusted manager
                 await m.delcomp(comp.competition_id)
-                await Discord.send_success(context, f"`{comp.shortname}` removed to `{mngrname}`'s competitions.")
+                await Discord.send_success(context, f"`{comp.shortname}` removed to `{mngrname}`'s competitions.", target=LogTarget.WEBHOOK_ONLY)
             else:
                 # add the comp from the managed competitions of that trusted manager
                 await m.addcomp(comp.competition_id)
-                await Discord.send_success(context, f"`{comp.shortname}` added to `{mngrname}`'s competitions.")
+                await Discord.send_success(context, f"`{comp.shortname}` added to `{mngrname}`'s competitions.", target=LogTarget.WEBHOOK_ONLY)
         except Exception as e:
             await Discord.send_error(context, f"There was an error: {e}")
         

@@ -67,7 +67,7 @@ class ConfigCog(commands.Cog, name="config"):
                     self.bot.status_task.change_interval(minutes=float(value))
                 elif field.name == 'interval_match_task':
                     self.bot.match_task.change_interval(minutes=float(value))
-                await Discord.send_success(context, f"Configuration updated `config.{field.name}` : `{oldvalue}` -> `{value}`")
+                await Discord.send_success(context, f"Configuration updated `config.{field.name}` : `{oldvalue}` -> `{value}`", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, "There was an error trying to update the config.")
         else:
@@ -134,7 +134,7 @@ class ConfigCog(commands.Cog, name="config"):
             objinfo = await Info.create(self.bot, "config", field.name)
             oldinfo = objinfo.info
             if await objinfo.set(info_text):
-                await Discord.send_success(context, f"config.{field.name} updated : `{oldinfo}` -> `{info_text}`")
+                await Discord.send_success(context, f"config.{field.name} updated : `{oldinfo}` -> `{info_text}`", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, f"Couldn't update config.{field.name}")
         except Exception as e:
@@ -219,7 +219,7 @@ class ConfigCog(commands.Cog, name="config"):
             setattr(config, 'log_level', loglevel.value)
 
             if await config.update('log_level'):
-                await Discord.send_success(context, f"Configuration updated for `config.log_level` : `{Log_Level[oldvalue].name}` -> `{loglevel.name}`")
+                await Discord.send_success(context, f"Configuration updated for `config.log_level` : `{Log_Level[oldvalue].name}` -> `{loglevel.name}`", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, "There was an error trying to update the config.")
 

@@ -229,7 +229,7 @@ class CompCog(commands.Cog, name="comp"):
                 return
 
             if field.name == 'shortname':
-                Discord.rename_role(context.guild, comp.shortname, str(key))
+                await Discord.rename_role(context.guild, comp.optout_role_id, f"Optout: {value}")
 
             if not await comp.update(field.name, value):
                 await Discord.send_error(context, f"There was an error trying to update competition `{key}`!")

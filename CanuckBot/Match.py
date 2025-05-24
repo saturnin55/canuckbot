@@ -254,9 +254,67 @@ class Match(CanuckBotBase):
 
 
     async def search(self, criteria: str = None) -> list[dict[str, Any]] | bool:
-        pass
+        data = []
 
+        if not criteria:
+            return data
 
+        rows = await self._bot.database.select(
+            "SELECT *"
+            "FROM matches"
+            "WHERE ",
+            [str(criteria)]
+        )
+
+        if not rows:
+            return data
+        else:
+            for row in rows:
+                row["match_id"] = int(row["match_id"])
+                row["home_id"] = int(row["home_id"])
+                row["away_id"] = int(row["away_id"])
+                row["competition_id"] = int(row["competition_id"])
+                row["status"] = int(row["status"])
+                row["kickoff_at"] = datetime.fromtimestamp(int(row["kickoff_at"]))
+
+                if row["tz"]:
+                    row["tz"] = None
+                else:
+                    row["tz"] = TimeZone(str(row["tz"]))
+
+                row["venue"] = str(row["venue"])
+                row["description"] = str(row["description"])
+
+                if row["channel_id"] is not None:
+                    row["channel_id"] = int(row["channel_id"])
+                else:
+                    row["channel_id"] = None
+
+                if row["info_msg_id"] is not None:
+                    row["info_msg_id"] = int(row["info_msg_id"])
+                else:
+                    row["info_msg_id"] = None
+
+                row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
+                row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
+                row["watch"] = str(row["watch"])
+                row["stream"] = str(row["watch"])
+
+                if row["created_at"] is not None:
+                    row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
+                if row["created_by"] is not None:
+                    row["created_by"] = int(row["created_by"])
+                if row["lastmodified_at"] is not None:
+                    row["lastmodified_at"] = datetime.fromtimestamp(int(row["lastmodified_at"]))
+                if row["lastmodified_by"] is not None:
+                    row["lastmodified_by"] = int(row["lastmodified_by"])
+
+            return rows
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
+        
     async def generate_channel_topic(self) -> str:
         pass
 

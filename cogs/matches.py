@@ -107,7 +107,7 @@ class MatchCog(commands.Cog, name="match"):
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(context, f"match.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"match.{field.value} updated : `{info_text}`", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_error(context, f"Couldn't update match.{field.value}")
 
@@ -174,7 +174,7 @@ class MatchCog(commands.Cog, name="match"):
             ret = await c.add()
 
             if ret:
-                await Discord.send_success(context, f"Competition `{c.shortname}` (`{c.competition_id}`) created!")
+                await Discord.send_success(context, f"Competition `{c.shortname}` (`{c.competition_id}`) created!", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, f"A problem occured while creating the competition!")
 
@@ -225,7 +225,7 @@ class MatchCog(commands.Cog, name="match"):
                 await Discord.send_error(context, f"There was an error trying to update match `{key}`!")
                 return
                 
-            await Discord.send_success(context, f"Match `{match.match_id}` updated: `{field.name}` = `{value}`")
+            await Discord.send_success(context, f"Match `{match.match_id}` updated: `{field.name}` = `{value}`", target=LogTarget.WEBHOOK_ONLY)
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while updating match: `{key}`: `{e}`")
             return
@@ -270,7 +270,7 @@ class MatchCog(commands.Cog, name="match"):
 
             match_id = match.match_id
             if await match.remove():
-                await Discord.send_success(context, f"Match `{competition_id}` deleted!")
+                await Discord.send_success(context, f"Match `{competition_id}` deleted!", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, f"A problem occured while deleting the match!")
         except Exception as e:

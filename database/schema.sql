@@ -11,7 +11,8 @@ tz TEXT default "America/Toronto",
 created_by TEXT default NULL,
 created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 lastmodified_by TEXT default NULL,
-lastmodified_at timestamp default NULL
+lastmodified_at timestamp default NULL,
+default_venue TEXT default NULL
 );
 
 CREATE TABLE IF NOT EXISTS competitions (

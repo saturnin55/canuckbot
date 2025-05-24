@@ -39,9 +39,10 @@ class TeamCog(commands.Cog, name="teams"):
     @is_superadmin()
     @app_commands.describe(
         name="The name of the team.",
-        shortname="The shortname of the team",
+        shortname="The shortname of the team.",
+        default_venue="The default venue of the team when at home.",
     )
-    async def team_add(self, context: Context, name: str = None, shortname: str = None) -> None:
+    async def team_add(self, context: Context, name: str = None, shortname: str = None, default_venue: str = None) -> None:
 
         if context.interaction is None:
             await Discord.send_error(context, "Usage: `/team add`")
@@ -79,6 +80,7 @@ class TeamCog(commands.Cog, name="teams"):
             t.team_id = None
             t.name = name
             t.shortname = shortname
+            t.default_venue = default_venue
             t.tz = config.default_tz
             t.created_at = int(time.time()) # now
             t.created_by = int(invoking_user.id)
@@ -86,7 +88,7 @@ class TeamCog(commands.Cog, name="teams"):
             ret = await t.add()
 
             if ret:
-                await Discord.send_success(context, f"Team `{t.shortname}` (`{t.team_id}`) created!")
+                await Discord.send_success(context, f"Team `{t.shortname}` (`{t.team_id}`) created!", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, f"A problem occured while creating the team!")
 
@@ -134,7 +136,7 @@ class TeamCog(commands.Cog, name="teams"):
             team_id = t.team_id
             shortname = t.shortname
             if await t.remove():
-                await Discord.send_success(context, f"Team `{shortname}` (`{team_id}`) deleted!")
+                await Discord.send_success(context, f"Team `{shortname}` (`{team_id}`) deleted!", target=LogTarget.WEBHOOK_ONLY)
             else:
                 await Discord.send_error(context, f"A problem occured while deleting the team!")
         except Exception as e:
@@ -213,7 +215,7 @@ class TeamCog(commands.Cog, name="teams"):
             return
 
         if await objinfo.set(info_text):
-            await Discord.send_success(context, f"team.{field.value} updated : `{info_text}`")
+            await Discord.send_success(context, f"team.{field.value} updated : `{info_text}`", target=LogTarget.WEBHOOK_ONLY)
         else:
             await Discord.send_error(context, f"Couldn't update team.{field.value}")
 
@@ -268,6 +270,12 @@ class TeamCog(commands.Cog, name="teams"):
             embed.add_field(name="Team ID", value=team.team_id, inline=False)
             embed.add_field(name="Name", value=team.name, inline=False)
             embed.add_field(name="Shortname", value=team.shortname, inline=False)
+
+            if not team.default_venue:
+                embed.add_field(name="Default venue", value="none", inline=False)
+            else:
+                embed.add_field(name="Default venue", value=team.default_venue, inline=False)
+
             if not team.tz:
                 embed.add_field(name="Timezone", value="none", inline=False)
             else:
@@ -319,14 +327,14 @@ class TeamCog(commands.Cog, name="teams"):
                     aliases = ", ".join(team.aliases)
 
 
-                await Discord.send_success(context, f"Alias `{alias}` removed from team `{team.name}` : `{aliases}`")
+                await Discord.send_success(context, f"Alias `{alias}` removed from team `{team.name}` : `{aliases}`", target=LogTarget.WEBHOOK_ONLY)
             else:
                 # we add the alias
                 await team.add_alias(alias)
 
                 aliases = ", ".join(team.aliases)
 
-                await Discord.send_success(context, f"Alias `{alias}` added to team `{team.name}` : `{aliases}`")
+                await Discord.send_success(context, f"Alias `{alias}` added to team `{team.name}` : `{aliases}`", target=LogTarget.WEBHOOK_ONLY)
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while manipulating alias `{alias}` for team `{team.name}`: {e}")
             return
@@ -456,7 +464,7 @@ class TeamCog(commands.Cog, name="teams"):
                 await Discord.send_error(context, f"There was an error trying to update team `{key}`!")
                 return
 
-            await Discord.send_success(context, f"Team `{team.shortname}` updated: `{field.name}` = `{value}`")
+            await Discord.send_success(context, f"Team `{team.shortname}` updated: `{field.name}` = `{value}`", target=LogTarget.WEBHOOK_ONLY)
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while updating team: `{key}`: `{e}`")
 
