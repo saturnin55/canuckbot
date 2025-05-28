@@ -1,4 +1,4 @@
-# Canucks Soccer Chat Discord Bot based on Python Discord Bot Template
+# Canucks Soccer Chat Discord Bot based on <a href="https://github.com/kkrypt0nn/Python-Discord-Bot-Template">Python Discord Bot Template</a>
 
 <p align="center">
   <a href="https://discord.gg/mTBrXyWxAF"><img src="https://img.shields.io/discord/739934735387721768?logo=discord"></a>
