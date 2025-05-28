@@ -1,3 +1,12 @@
+"""
+Copyright © Krypton 2019-Present - https://github.com/kkrypt0nn (https://krypton.ninja)
+Description:
+🐍 A simple template to start to code your own and personalized Discord bot in Python
+
+Version: 6.2.0
+
+Modified by saturnin55 for https://github.com/saturnin55/canuckbot
+"""
 import logging
 from discord import Member, User
 from discord.ext.commands import Context

@@ -4,6 +4,8 @@ Description:
 🐍 A simple template to start to code your own and personalized Discord bot in Python
 
 Version: 6.2.0
+
+Modified by saturnin55 for https://github.com/saturnin55/canuckbot
 """
 
 import time
