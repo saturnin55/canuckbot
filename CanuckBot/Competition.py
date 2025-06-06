@@ -18,6 +18,7 @@ class COMPETITION_FIELDS_INFO(str, Enum):
     is_international = "is_international"
     optout_role_id = "optout_role_id"
     category_id = "category_id"
+    force_tz = "force_tz"
     hours_before_kickoff = "hours_before_kickoff"
     hours_after_kickoff = "hours_after_kickoff"
     created_by = "created_by"
@@ -33,6 +34,7 @@ class COMPETITION_FIELDS_EDITABLE(str, Enum):
     is_monitored = "is_monitored"
     is_international = "is_international"
     category_id = "category_id"
+    force_tz = "force_tz"
     hours_before_kickoff = "hours_before_kickoff"
     hours_after_kickoff = "hours_after_kickoff"
 
@@ -46,6 +48,7 @@ class Competition(CanuckBotBase):
     is_international: bool = False
     optout_role_id: Snowflake = 0
     category_id: Snowflake | None = 0
+    forced_tz: List[str] = []
     hours_before_kickoff: int = 0
     hours_after_kickoff: int = 0
     created_by: Snowflake = None
@@ -98,8 +101,22 @@ class Competition(CanuckBotBase):
                 if row["lastmodified_at"] is not None:
                     self.lastmodified_at = datetime.fromtimestamp(int(row["lastmodified_at"]))
 
+                self.forced_tz = await self.load_forced_tz()
         return True
 
+    async def load_forced_tz(self) -> bool:
+        try:
+            rows = await self._bot.database.select(
+                "SELECT tz FROM comp_tz WHERE comp_id = ? ORDER BY tz ASC",
+                [str(self.comp_id)],
+            )
+            if not rows:
+                self.forced_tz = []
+            else:
+                for row in rows:
+                    self.forced_tz.append(str(row["tz"]))
+        except Exception as e:
+            raise ValueError(e)
 
     async def load_by_key(self, key: str = None) -> bool:
         try:
@@ -125,13 +142,15 @@ class Competition(CanuckBotBase):
 
         try:
             await self._bot.database.insert(
-                "INSERT INTO competitions (name, shortname, logo_url, competition_type, is_monitored, is_international, optout_role_id, category_id, hours_before_kickoff, hours_after_kickoff, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [str(self.name), str(self.shortname), str(self.logo_url), str(self.competition_type), int(self.is_monitored), int(self.is_international), int(self.optout_role_id), int(self.category_id), int(self.hours_before_kickoff), int(self.hours_after_kickoff), int(self.created_at), int(self.created_by)]
+                "INSERT INTO competitions (name, shortname, logo_url, competition_type, is_monitored, is_international, optout_role_id, category_id, force_tz, hours_before_kickoff, hours_after_kickoff, created_at, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [str(self.name), str(self.shortname), str(self.logo_url), str(self.competition_type), int(self.is_monitored), int(self.is_international), int(self.optout_role_id), int(self.category_id), int(self.force_tz), int(self.hours_before_kickoff), int(self.hours_after_kickoff), int(self.created_at), int(self.created_by)]
                 )
 
             self.competition_id = int(self._bot.database.lastrowid())
 
             await self._bot.database.connection.commit()
+
+            await self.clear_tz()
 
             return True
         except Exception as e:
@@ -183,6 +202,8 @@ class Competition(CanuckBotBase):
         try:
             await self._bot.database.delete("DELETE FROM competitions WHERE competition_id = ?", [int(self.competition_id)])
 
+            await self.clear_tz()
+
             # fixme : check for active, pending matches ?
 
             self.competition_id = 0
@@ -192,6 +213,7 @@ class Competition(CanuckBotBase):
             self.is_international = False
             self.optout_role_id = 0
             self.category_id = 0
+            self.forced_tz = []
             self.hours_before_kickoff = 0
             self.hours_after_kickoff = 0
             self.created_at = 0
@@ -227,6 +249,7 @@ class Competition(CanuckBotBase):
                     row["is_international"] = bool(row["is_international"])
                     row["optout_role_id"] = int(row["optout_role_id"]) if row["optout_role_id"] is not None else 0
                     row["category_id"] = int(row["category_id"])
+                    row["force_tz"] = bool(row["force_tz"])
                     row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
                     row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
                     if row["created_by"] is not None:
@@ -270,4 +293,76 @@ class Competition(CanuckBotBase):
         else:
             return False
 
+
+    async def add_tz(self, tz: str = None) -> bool:
+
+        try:
+            # check if tz isn't already in the comp's tz
+            if await self.is_tz(tz):
+                return True
+
+            # add the tz to the database
+            await self._bot.database.insert(
+                "INSERT INTO comp_tz (comp_id, tz) VALUES (?, ?)",
+                [int(self.comp_id), str(tz)]
+                )
+
+            # add the tz to the database
+            await self._bot.database.connection.commit()
+
+            self.forced_tz.append(tz)
+
+            return True
+
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
+
+    async def remove_tz(self, tz: str = None) -> bool:
+
+        try:
+            if not tz:
+                return False
+
+            # tz must be a valid TimeZone
+            #if not is_valid_handle(alias):
+            #    return False
+
+            if tz.lower() not in (val.lower() for val in self.forced_tz):
+                return True
+
+            # delete the tz from the database
+            await self._bot.database.delete(
+                "DELETE FROM comp_tz WHERE comp_id = ? and tz = ?",
+                [int(self.comp_id), str(tz)]
+                )
+
+            await self._bot.database.connection.commit()
+
+            self.forced_tz.remove(tz)
+
+            return True
+
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
+    async def clear_tz(self) -> bool:
+
+        if self.comp_id is None:
+            return False
+
+        try:
+            await self._bot.database.delete(
+                "DELETE FROM comp_tziases WHERE comp_id = ?", [int(self.comp_id)]
+                )
+
+            await self._bot.database.connection.commit()
+
+        except Exception as e:
+            raise ValueError(e)
+            return False
+
+        return True
 

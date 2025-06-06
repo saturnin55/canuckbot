@@ -34,6 +34,11 @@ lastmodified_by TEXT default NULL,
 lastmodified_at timestamp default NULL
 );
 
+CREATE TABLE IF NOT EXISTS comp_tz (
+tz TEXT PRIMARY KEY,
+comp_id INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS matches (
 match_id INTEGER PRIMARY KEY AUTOINCREMENT,
 home_id INTEGER NOT NULL,

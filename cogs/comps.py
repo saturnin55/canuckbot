@@ -377,7 +377,7 @@ class CompCog(commands.Cog, name="comp"):
             embed.add_field(name="Competition ID", value=comp.competition_id, inline=False)
             embed.add_field(name="Name", value=comp.name, inline=False)
             embed.add_field(name="Shortname", value=comp.shortname, inline=False)
-            embed.add_field(name="Competition Type", value=comp.competition_type.value, inline=False)
+            embed.add_field(name="Competition Type", value=comp.competition_type.name, inline=False)
             embed.add_field(name="Monitored", value=str(comp.is_monitored), inline=False)
             embed.add_field(name="International", value=str(comp.is_international), inline=False)
 
@@ -406,6 +406,25 @@ class CompCog(commands.Cog, name="comp"):
         except Exception as e:
             await Discord.send_error(context, f"A problem occured retrieving the competition: {e}")
             return
+
+    @comp.command(
+        name="tz",
+        description="Add or remove an forced timezone for a competition.",
+    )
+    @is_full_manager()
+    @app_commands.describe(
+        tz="The timezone.",
+        key="The comp id or shortname."
+    )
+    async def comp_tz(self, context: Context, tz: str = None, key: str = None) -> None:
+
+        if context.interaction is None:
+            await Discord.send_error(context, "Usage: `/comp tz`")
+            return
+
+        await context.interaction.response.defer(ephemeral=False)
+
+        # validate the timezone string
 
 async def setup(bot) -> None:
     await bot.add_cog(CompCog(bot))
