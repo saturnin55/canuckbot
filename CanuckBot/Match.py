@@ -17,7 +17,6 @@ class MATCH_FIELDS_INFO(str, Enum):
     competition_id = "competition_id"
     status = "status"
     kickoff_at = "kickoff_at"
-    tz = "tz"
     venue = "venue"
     description = "description"
     channel_id = "channel_id"
@@ -36,7 +35,6 @@ class MATCH_FIELDS_EDITABLE(str, Enum):
     competition_id = "competition_id"
     status = "status"
     kickoff_at = "kickoff_at"
-    tz = "tz"
     venue = "venue"
     description = "description"
     channel_id = "channel_id"
@@ -52,7 +50,6 @@ class Match(CanuckBotBase):
     competition_id: int
     status: Match_Status = Match_Status.Pending
     kickoff_at: datetime = 0
-    tz: TimeZone | None = None
     venue: str | None = None
     description: str = None
     channel_id: Snowflake = 0
@@ -103,7 +100,6 @@ class Match(CanuckBotBase):
                     self.competition_id = int(row["competition_id"])
                     self.status = int(row["status"])
                     self.kickoff_at = datetime.fromtimestamp(int(row["kickoff_at"]))
-                    self.tz = TimeZone(str(row["tz"]))
                     self.venue = str(row["venue"])
                     self.description = str(row["description"])
                     self.channel_id = int(row["channel_id"])
@@ -198,7 +194,6 @@ class Match(CanuckBotBase):
             self.competition_id = None
             self.status = Match_Status.Pending
             self.kickoff_at = 0
-            self.tz = None
             self.venue = None
             self.description = None
             self.channel_id = 0
@@ -222,10 +217,10 @@ class Match(CanuckBotBase):
 
         try:
             await self._bot.database.insert(
-                "INSERT INTO matches (home_id, away_id, competition_id, status, kickoff_at, tz, "
+                "INSERT INTO matches (home_id, away_id, competition_id, status, kickoff_at, "
                     "hours_before_kickoff, hours_after_kickoff, created_at, created_by) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [int(self.home_id), int(self.away_id), int(self.competition_id), int(self.status), int(self.kickoff_at), str(self.tz), int(self.hours_before_kickoff), int(self.hours_after_kickoff), int(self.created_at), int(self.created_by)]
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [int(self.home_id), int(self.away_id), int(self.competition_id), int(self.status), int(self.kickoff_at), int(self.hours_before_kickoff), int(self.hours_after_kickoff), int(self.created_at), int(self.created_by)]
                 )
 
             self.match_id = int(self._bot.database.lastrowid())
@@ -276,11 +271,6 @@ class Match(CanuckBotBase):
                 row["competition_id"] = int(row["competition_id"])
                 row["status"] = int(row["status"])
                 row["kickoff_at"] = datetime.fromtimestamp(int(row["kickoff_at"]))
-
-                if row["tz"]:
-                    row["tz"] = None
-                else:
-                    row["tz"] = TimeZone(str(row["tz"]))
 
                 row["venue"] = str(row["venue"])
                 row["description"] = str(row["description"])
