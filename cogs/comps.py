@@ -7,7 +7,7 @@ from typing import Any
 import CanuckBot
 from CanuckBot.Info import Info
 from CanuckBot.Config import Config
-from CanuckBot.types import Competition_Type
+from CanuckBot.types import Competition_Type, TimeZone
 from CanuckBot.Team import Team, TEAM_FIELDS_INFO, TEAM_FIELDS_EDITABLE
 from CanuckBot.Competition import Competition, COMPETITION_FIELDS_INFO, COMPETITION_FIELDS_EDITABLE
 from decorators.checks import is_superadmin, is_full_manager, is_comp_manager, is_trusted_user
@@ -402,6 +402,11 @@ class CompCog(commands.Cog, name="comp"):
             embed.add_field(name="Hours before kickoff", value=str(comp.hours_before_kickoff), inline=False)
             embed.add_field(name="Hours after kickoff", value=str(comp.hours_after_kickoff), inline=False)
 
+            if not comp.forced_tz:
+                embed.add_field(name="Forced Timezone(s)", value="—", inline=False)
+            else:
+                embed.add_field(name="Forced Timezone(s)", value=f"`{', '.join(comp.forced_tz)}`", inline=False)
+
             await context.interaction.followup.send(content="**Competition**", embed=embed)
         except Exception as e:
             await Discord.send_error(context, f"A problem occured retrieving the competition: {e}")
@@ -409,7 +414,7 @@ class CompCog(commands.Cog, name="comp"):
 
     @comp.command(
         name="tz",
-        description="Add or remove an forced timezone for a competition.",
+        description="Add or remove a forced timezone for a competition.",
     )
     @is_full_manager()
     @app_commands.describe(
@@ -425,6 +430,35 @@ class CompCog(commands.Cog, name="comp"):
         await context.interaction.response.defer(ephemeral=False)
 
         # validate the timezone string
+        try:
+            comp = Competition(self.bot)
+            await comp.load_by_key(key)
+
+            if not comp.is_loaded():
+                await Discord.send_warning(context, f"Competition `{key}` doesn't exist!")
+                return
+        
+            if tz:
+                _tz = TimeZone(tz)
+
+                if not comp.forced_tz or _tz.tz not in comp.forced_tz:
+                    # add tz
+                    await comp.add_tz(_tz.tz)
+                else:
+                    # remove tz
+                    await comp.remove_tz(_tz.tz )
+
+                if comp.forced_tz:
+                    await context.interaction.followup.send(content=f"`{key}.forced_tz` : `{', '.join(comp.forced_tz)}`")
+                else:
+                    await context.interaction.followup.send(content=f"`{key}.forced_tz` : —`")
+
+        except Exception as e:
+            await Discord.send_error(context, f"A problem occured timezone {tz}: {e}!\nTimezone formatting should be like : `America/Toronto`")
+            return
+
+
+
 
 async def setup(bot) -> None:
     await bot.add_cog(CompCog(bot))

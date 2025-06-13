@@ -34,9 +34,9 @@ lastmodified_by TEXT default NULL,
 lastmodified_at timestamp default NULL
 );
 
-CREATE TABLE IF NOT EXISTS comp_tz (
+CREATE TABLE IF NOT EXISTS competition_tz (
 tz TEXT PRIMARY KEY,
-comp_id INTEGER NOT NULL
+competition_id INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS matches (
