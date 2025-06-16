@@ -1,7 +1,6 @@
 # Canucks Soccer Chat Discord Bot based on <a href="https://github.com/kkrypt0nn/Python-Discord-Bot-Template">Python Discord Bot Template</a>
 
 <p align="center">
-  <a href="https://github.com/saturnin55/canuckbot/releases"><img src="https://img.shields.io/github/v/release/saturnin55/canuckbot"></a>
   <a href="https://github.com/saturnin55/canuckbot/commits/main"><img src="https://img.shields.io/github/last-commit/saturnin55/canuckbot"></a>
   <a href="https://github.com/saturnin55/canuckbot/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/saturnin55/canuckbot"></a>
   <a href="https://github.com/saturnin55/canuckbot"><img src="https://img.shields.io/github/languages/code-size/saturnin55/canuckbot"></a>
