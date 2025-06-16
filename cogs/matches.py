@@ -121,7 +121,7 @@ class MatchCog(commands.Cog, name="match"):
         name="The name of the competition.",
         shortname="The shortname of the ocmpetition",
     )
-    async def match_add(self, context: Context, name: str = None, shortname: str = None, comp_type: Competition_Type = Competition_Type.Men, is_international: bool = False) -> None:
+    async def match_add(self, context: Context, home_key: str, away_key: str, comp_key: str, date: str, kickoff: str = None, venue: str = None, desc: str = None) -> None:
 
         if context.interaction is None:
             await Discord.send_error(context, "Usage: `/match add`")
@@ -133,6 +133,8 @@ class MatchCog(commands.Cog, name="match"):
             cmds_channel = int(Discord.get_cmds_channel_id())
             await Discord.send_error(context, f"You cannot use this command in this channel. Go to <#{cmds_channel}>" )
             return
+
+        # please set your timezone as dates and times you will set, will be assumed to be in your tz
 
         if name is None or shortname is None:
             await Discord.send_error(context, f"Missing parameters!")
@@ -278,44 +280,12 @@ class MatchCog(commands.Cog, name="match"):
             return
 
 
-    @match.command(
-        name="search",
-        description="Search CanuckBot matches.",
-    )
-    async def comp_search(self, context: Context):
-
-        """
-        if not await validate_invoking_channel(self.bot, context):
-            await context.send(context, f"You cannot use this command in this channel.", ephemeral=True)
-            return
-
-        if context.interaction:
-            await context.interaction.response.defer(ephemeral=True)
-        else:
-            await context.send(context, f"ERR: Use `/match` slash command", ephemeral=True)
-            return
-        if context.interaction:
-            await context.interaction.response.defer(ephemeral=True)
-
-        m = Match(self.bot)
-        matches = await m.search()
-
-        table ="```\n"
-        table += f"   {'id':>3} {'shortname':<10} {'name'}\n"
-        table += f"{'-'*43}\n"
-
-        for item in competitions:
-            if item['is_monitored']:
-                is_monitored = "\U0001F7E9"
-            else:
-                is_monitored = "\U0001F7E7"
-            table += f"{is_monitored} {item['competition_id']:>3} {item['shortname']:<10} {item['name']}\n"
-
-        table += "```\n-# Use `/comp show id|shortname` for more details on a competition."
-
-        await context.interaction.followup.send(context, f"{table}", ephemeral=True)
-        """
-
+    #@match.command(
+    #    name="search",
+    #    description="Search CanuckBot matches.",
+    #)
+    #async def match_search(self, context: Context):
+    #    pass
 
     @match.command(
         name="match",

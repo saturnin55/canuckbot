@@ -35,8 +35,9 @@ lastmodified_at timestamp default NULL
 );
 
 CREATE TABLE IF NOT EXISTS competition_tz (
-tz TEXT PRIMARY KEY,
-competition_id INTEGER NOT NULL
+tz TEXT NOT NULL,
+competition_id INTEGER NOT NULL,
+PRIMARY KEY (tz, competition_id)
 );
 
 CREATE TABLE IF NOT EXISTS matches (
@@ -92,4 +93,10 @@ CREATE TABLE IF NOT EXISTS canuckbot_cache (
  data TEXT,
  timestamp INTEGER,
  expiration INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS user_settings (
+user_id TEXT NOT NULL,
+tz TEXT,
+PRIMARY KEY(user_id)
 );

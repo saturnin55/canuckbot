@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.12
 """
 Copyright © Krypton 2019-Present - https://github.com/kkrypt0nn (https://krypton.ninja)
 Description:
