@@ -5,8 +5,9 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
 	"features": {
-		"ghcr.io/warrenbuckley/codespace-features/sqlite:1": {}
-	}
+		"ghcr.io/warrenbuckley/codespace-features/sqlite:1": {},
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -15,7 +16,8 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+	//"postCreateCommand": "pip3 install --user -r requirements.txt"
+	"postCreateCommand": "curl -fsSL https://opencode.ai/install | bash" 
 
 	// Configure tool-specific properties.
 	// "customizations": {},
