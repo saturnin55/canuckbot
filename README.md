@@ -117,6 +117,12 @@ After that you can start it with
 python bot.py
 ```
 
+Alternatively, the bot can be automatically restarted on file changes with
+
+```
+watchmedo auto-restart -d . -p "*.py" --recursive -- python bot.py
+```
+
 > **Note** You may need to replace `python` with `py`, `python3`, `python3.11`, etc. depending on what Python versions you have installed on the machine.
 
 ## Linting and Formatting
