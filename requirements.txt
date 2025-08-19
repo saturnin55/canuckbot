@@ -9,3 +9,4 @@ pydantic == 2.11.*
 setuptools-scm
 requests
 colorthief
+watchdog == 4.0.*

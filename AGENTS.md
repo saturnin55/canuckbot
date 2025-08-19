@@ -12,6 +12,9 @@ ruff format .
 # Run bot locally
 python bot.py
 
+# Auto-restart on file changes (development)
+watchmedo auto-restart -d . -p "*.py" --recursive -- python bot.py
+
 # Test specific cog
 python -m pytest tests/test_cogs.py::test_competitions -v
 ```
