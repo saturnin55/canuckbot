@@ -104,7 +104,6 @@ class DiscordBot(commands.Bot):
             """
             await self.wait_until_ready()
 
-
     async def init_db(self, db_file: str = None) -> None:
         os.environ["DB_PATH"] = f"{self.config['db_dir']}/database.db"
         return
@@ -138,15 +137,14 @@ class DiscordBot(commands.Bot):
         await self.database.delete("DELETE FROM canuckbot_cache WHERE expiration < CURRENT_TIMESTAMP")
         await self.logger.debug("Cleanup tasks executed.", target=LogTarget.BOTH)
 
-
     async def _status_task(self) -> None:
         """
         Setup the game status task of the bot.
         """
         # select a random bot status from the database
-        row = await self.database.get_one("SELECT status FROM bot_statuses ORDER BY RANDOM() LIMIT 1", []);
+        row = await self.database.get_one("SELECT status FROM bot_statuses ORDER BY RANDOM() LIMIT 1", [])
         status = row["status"]
- 
+
         await self.change_presence(
             activity=discord.Activity(
                 name=status, type=discord.ActivityType.watching
@@ -181,23 +179,34 @@ class DiscordBot(commands.Bot):
 
         rows = await self.database.select("SELECT field, value FROM config WHERE field like 'interval_%'")
         if not rows or len(rows) < 3:
-            #fixme
-            pass
+            required_intervals = ["interval_cleanup_task",
+                                  "interval_status_task", "interval_match_task"]
+            missing = [i for i in required_intervals if not any(
+                r["field"] == i for r in rows or [])]
+
+            raise RuntimeError(
+                f"Missing required configuration: {', '.join(missing)}. "
+                f"Please insert into config table: INSERT INTO config (field, value) VALUES "
+                f"('interval_*_task', desired interval in minutes as a float);"
+            )
         else:
             for row in rows:
                 self.config[row['field']] = float(row['value'])
- 
+
         if not self.cleanup_task.is_running():
             self.cleanup_task.start()
-        self.cleanup_task.change_interval(minutes=float(self.config['interval_cleanup_task']))
+        self.cleanup_task.change_interval(
+            minutes=float(self.config['interval_cleanup_task']))
 
         if not self.status_task.is_running():
             self.status_task.start()
-        self.status_task.change_interval(minutes=float(self.config['interval_status_task']))
+        self.status_task.change_interval(
+            minutes=float(self.config['interval_status_task']))
 
         if not self.match_task.is_running():
             self.match_task.start()
-        self.match_task.change_interval(minutes=float(self.config['interval_match_task']))
+        self.match_task.change_interval(
+            minutes=float(self.config['interval_match_task']))
 
     async def on_message(self, message: discord.Message) -> None:
         """
@@ -233,7 +242,7 @@ class DiscordBot(commands.Bot):
             _cmd = f"/{name} {args_str}"
         else:
             _cmd = context.message.content
-            
+
         if context.guild is not None:
             await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
         else:
