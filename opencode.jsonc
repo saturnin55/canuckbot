@@ -1,13 +1,13 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  // Theme configuration
-  "theme": "opencode",
   //"model": "anthropic/claude-sonnet-4-20250514",
   "autoupdate": true,
+  "lsp": true,
   "provider": {
     "openrouter": {
       "models": {
-        "@preset/kimi-k2-fp8": {} // add defined openrouter model use preset.
+        "@preset/kimi-k2-fp8": {}, // add defined openrouter model use preset.
+        "@preset/kimi-k2-6": {} // add defined openrouter model use preset.
       }
     }
   },
