@@ -176,6 +176,13 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# AI tools stuff
+.ctx
+.opencode
+opencode.json
+opencode.jsonc
+tui.json
+
 # CanuckBot stuff
 setup/
 database/database.db
