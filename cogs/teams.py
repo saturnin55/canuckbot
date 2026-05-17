@@ -14,7 +14,7 @@ from database.db_utils import is_user_manager
 from Discord.types import Snowflake
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
-from Discord import Discord
+from Discord import Discord, LogTarget
 from CanuckBot.utils import get_dominant_color_from_url, is_valid_handle, validate_invoking_channel
 
 
@@ -30,7 +30,6 @@ class TeamCog(commands.Cog, name="teams"):
     async def team(self, context: Context) -> None:
         if not context.interaction:
             await Discord.send_error(context, "Usage: `/team`")
-
 
     @team.command(
         name="add",
@@ -75,14 +74,13 @@ class TeamCog(commands.Cog, name="teams"):
         config = Config(self.bot)
         self.bot.config = await config.list()
 
-
         try:
             t.team_id = None
             t.name = name
             t.shortname = shortname
             t.default_venue = default_venue
             t.tz = config.default_tz
-            t.created_at = int(time.time()) # now
+            t.created_at = int(time.time())  # now
             t.created_by = int(invoking_user.id)
 
             ret = await t.add()
@@ -92,11 +90,10 @@ class TeamCog(commands.Cog, name="teams"):
             else:
                 await Discord.send_error(context, f"A problem occured while creating the team!")
 
-            return 
+            return
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while creating the team: {e}")
             return
-
 
     @team.command(
         name="del",
@@ -143,16 +140,12 @@ class TeamCog(commands.Cog, name="teams"):
             await Discord.send_error(context, f"A problem occured while deleting the team: {e}")
             return
 
-        
-
-
     @team.command(
         name="info",
         description="Display information about team options.",
     )
     @is_full_manager()
-    @app_commands.describe(
-    )
+    @app_commands.describe()
     async def team_info(self, context: Context) -> None:
 
         if context.interaction is None:
@@ -193,7 +186,8 @@ class TeamCog(commands.Cog, name="teams"):
         field="The field to set info on.",
     )
     async def team_setinfo(
-        self, context: Context, field: TEAM_FIELDS_INFO, info_text: str = None) -> bool:
+        self, context: Context, field: TEAM_FIELDS_INFO, info_text: str = None
+    ) -> bool:
         objinfo = await Info.create(self.bot, "team", field.value)
 
         if context.interaction is None:
@@ -311,7 +305,7 @@ class TeamCog(commands.Cog, name="teams"):
 
             if not team.is_loaded():
                 await Discord.send_warning(context, f"Team `{key}` doesn't exist.")
-                return 
+                return
 
             if alias.lower() == team.shortname.lower():
                 await Discord.send_warning(context, f"Alias `{alias}` is already used as the shortname of team id `{team.team_id}`: `{team.name}`.")
@@ -387,10 +381,10 @@ class TeamCog(commands.Cog, name="teams"):
 
             if not teams:
                 table = "no teams found"
-                body = header + table 
+                body = header + table
             elif n > 50:
                 table = f"too many matches ({n}): narrow your search."
-                body = header + table 
+                body = header + table
             else:
                 count = len(pheader) + len(header) + len(footer)
                 for item in teams:
@@ -405,8 +399,6 @@ class TeamCog(commands.Cog, name="teams"):
                         table = ""
                         page += 1
                         pheader = f"*[Page {page}]*\n"
-                        
-
 
             if table:
                 if page == 1:
@@ -421,7 +413,6 @@ class TeamCog(commands.Cog, name="teams"):
 
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while searching: {e}")
-
 
     @team.command(
         name="edit",

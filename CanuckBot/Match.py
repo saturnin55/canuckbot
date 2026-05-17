@@ -66,15 +66,8 @@ class Match(CanuckBotBase):
     class Match:
         arbitrary_types_allowed = True
 
-    def __init__(self, bot: DiscordBot, **kwargs):
+    def __init__(self, bot: DiscordBot, **kwargs) -> None:
         super().__init__(bot, **kwargs)
-
-
-    @classmethod
-    async def create(cls: Type["Match"], bot: DiscordBot) -> "Match":
-        instance = cls(bot)
-        return instance
-
 
     @classmethod
     async def create(cls: Type["Match"], bot: DiscordBot) -> "Match":
@@ -119,33 +112,29 @@ class Match(CanuckBotBase):
 
         return True
 
-
     def is_loaded(self) -> bool:
         if self.match_id == 0:
             return False
         else:
             return True
 
-
-    async def load(self, key: str = 'team_id', keyval: str | int = None) -> bool:
-            if keyval is None or key not in ['match_id']:
+    async def load(self, key: str = 'match_id', keyval: str | int = None) -> bool:
+        if keyval is None or key not in ['match_id']:
+            raise ValueError(f"Can't load match `{keyval}` using `{key}` field!")
+        else:
+            try:
+                return await self.load(int(keyval))
+            except Exception as e:
                 raise ValueError(f"Can't load match `{keyval}` using `{key}` field!")
                 return False
-            else:
-                try:
-                    return await self.load(int(keyval))
-                except Exception as e:
-                    raise ValueError(f"Can't load match `{keyval}` using `{key}` field!")
-                    return False
 
-    async def load_by_id(self, team_id: int = 0) -> bool:
+    async def load_by_id(self, match_id: int = 0) -> bool:
         try:
-            return await self.load(int(keyval))
+            return await self.load(int(match_id))
         except Exception as e:
-            raise ValueError(f"Can't load match `{keyval}` using `{key}` field!")
-            return False
+            raise ValueError(f"Can't load match `{match_id}` using match_id field!")
 
-    async def update(self, field: str = None, value: Any = None)-> bool:
+    async def update(self, field: str = None, value: Any = None) -> bool:  # noqa: ANN401
         if not field:
             return False
 
@@ -182,7 +171,6 @@ class Match(CanuckBotBase):
             raise ValueError(e)
             return False
 
-
     async def remove(self) -> bool:
 
         try:
@@ -212,7 +200,6 @@ class Match(CanuckBotBase):
             raise ValueError(e)
             return False
 
-
     async def add(self) -> bool:
 
         try:
@@ -220,8 +207,18 @@ class Match(CanuckBotBase):
                 "INSERT INTO matches (home_id, away_id, competition_id, status, kickoff_at, "
                     "hours_before_kickoff, hours_after_kickoff, created_at, created_by) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [int(self.home_id), int(self.away_id), int(self.competition_id), int(self.status), int(self.kickoff_at), int(self.hours_before_kickoff), int(self.hours_after_kickoff), int(self.created_at), int(self.created_by)]
-                )
+                [
+                    int(self.home_id),
+                    int(self.away_id),
+                    int(self.competition_id),
+                    int(self.status),
+                    int(self.kickoff_at),
+                    int(self.hours_before_kickoff),
+                    int(self.hours_after_kickoff),
+                    int(self.created_at),
+                    int(self.created_by),
+                ],
+            )
 
             self.match_id = int(self._bot.database.lastrowid())
 
@@ -232,11 +229,9 @@ class Match(CanuckBotBase):
             raise ValueError(e)
             return False
 
-
     # check if there is a match already existing between the 2 teams on that day
     async def is_match_exists(self, home_id:int = None, away_id:int = None, competition_id:int = None, kickoff_at:int = None) -> bool:
         pass
-
 
     async def setmodified(self) -> bool:
         try:
@@ -247,59 +242,56 @@ class Match(CanuckBotBase):
             raise ValueError(e)
             return False
 
-
     async def search(self, criteria: str = None) -> list[dict[str, Any]] | bool:
         data = []
 
         if not criteria:
             return data
 
-        rows = await self._bot.database.select(
-            "SELECT *"
-            "FROM matches"
-            "WHERE ",
-            [str(criteria)]
-        )
+        try:
+            rows = await self._bot.database.select(
+                "SELECT * FROM matches WHERE ", [str(criteria)]
+            )
 
-        if not rows:
-            return data
-        else:
-            for row in rows:
-                row["match_id"] = int(row["match_id"])
-                row["home_id"] = int(row["home_id"])
-                row["away_id"] = int(row["away_id"])
-                row["competition_id"] = int(row["competition_id"])
-                row["status"] = int(row["status"])
-                row["kickoff_at"] = datetime.fromtimestamp(int(row["kickoff_at"]))
+            if not rows:
+                return data
+            else:
+                for row in rows:
+                    row["match_id"] = int(row["match_id"])
+                    row["home_id"] = int(row["home_id"])
+                    row["away_id"] = int(row["away_id"])
+                    row["competition_id"] = int(row["competition_id"])
+                    row["status"] = int(row["status"])
+                    row["kickoff_at"] = datetime.fromtimestamp(int(row["kickoff_at"]))
 
-                row["venue"] = str(row["venue"])
-                row["description"] = str(row["description"])
+                    row["venue"] = str(row["venue"])
+                    row["description"] = str(row["description"])
 
-                if row["channel_id"] is not None:
-                    row["channel_id"] = int(row["channel_id"])
-                else:
-                    row["channel_id"] = None
+                    if row["channel_id"] is not None:
+                        row["channel_id"] = int(row["channel_id"])
+                    else:
+                        row["channel_id"] = None
 
-                if row["info_msg_id"] is not None:
-                    row["info_msg_id"] = int(row["info_msg_id"])
-                else:
-                    row["info_msg_id"] = None
+                    if row["info_msg_id"] is not None:
+                        row["info_msg_id"] = int(row["info_msg_id"])
+                    else:
+                        row["info_msg_id"] = None
 
-                row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
-                row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
-                row["watch"] = str(row["watch"])
-                row["stream"] = str(row["watch"])
+                    row["hours_before_kickoff"] = int(row["hours_before_kickoff"])
+                    row["hours_after_kickoff"] = int(row["hours_after_kickoff"])
+                    row["watch"] = str(row["watch"])
+                    row["stream"] = str(row["watch"])
 
-                if row["created_at"] is not None:
-                    row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
-                if row["created_by"] is not None:
-                    row["created_by"] = int(row["created_by"])
-                if row["lastmodified_at"] is not None:
-                    row["lastmodified_at"] = datetime.fromtimestamp(int(row["lastmodified_at"]))
-                if row["lastmodified_by"] is not None:
-                    row["lastmodified_by"] = int(row["lastmodified_by"])
+                    if row["created_at"] is not None:
+                        row["created_at"] = datetime.fromtimestamp(int(row["created_at"]))
+                    if row["created_by"] is not None:
+                        row["created_by"] = int(row["created_by"])
+                    if row["lastmodified_at"] is not None:
+                        row["lastmodified_at"] = datetime.fromtimestamp(int(row["lastmodified_at"]))
+                    if row["lastmodified_by"] is not None:
+                        row["lastmodified_by"] = int(row["lastmodified_by"])
 
-            return rows
+                return rows
         except Exception as e:
             raise ValueError(e)
             return False
@@ -307,7 +299,6 @@ class Match(CanuckBotBase):
         
     async def generate_channel_topic(self) -> str:
         pass
-
 
     async def generate_channel_name(self) -> str:
         pass

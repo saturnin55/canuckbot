@@ -7,9 +7,11 @@ Version: 6.2.0
 
 Modified by saturnin55 for https://github.com/saturnin55/canuckbot
 """
+
 import logging
 from discord import Member, User
 from discord.ext.commands import Context
+
 
 class LoggingFormatter(logging.Formatter):
     # Colors
@@ -31,7 +33,7 @@ class LoggingFormatter(logging.Formatter):
         logging.CRITICAL: red + bold,
     }
 
-    def format(self, record):
+    def format(self, record: logging.LogRecord) -> str:
         log_color = self.COLORS[record.levelno]
         format = "(black){asctime}(reset) (levelcolor){levelname:<8}(reset) (green){name}(reset) {message}"
         format = format.replace("(black)", self.black + self.bold)
@@ -46,7 +48,7 @@ class LoggingFormatter(logging.Formatter):
         if context.interaction:
             channel = context.interaction.channel.name
             channel_id = context.interaction.channel.id
-        elif context.channel:   
+        elif context.channel:
             channel = context.channel.name
             channel_id = context.channel.id
         else:

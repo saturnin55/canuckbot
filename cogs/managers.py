@@ -12,7 +12,7 @@ from database.db_utils import is_user_manager
 from Discord.types import Snowflake
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
-from Discord import Discord
+from Discord import Discord, LogTarget
 from CanuckBot.utils import get_dominant_color_from_url, validate_invoking_channel
 
 
@@ -28,7 +28,6 @@ class ManagerCog(commands.Cog, name="managers"):
     async def mngr(self, context: Context) -> None:
         if not context.interaction:
             await Discord.send_error(context, "Usage: `/mngr`")
-
 
     @mngr.command(
         name="add",
@@ -112,7 +111,7 @@ class ManagerCog(commands.Cog, name="managers"):
             # if old level is not disabled or Comp : clear manager_competitions
             if oldlevel.value != User_Level.Disabled and oldlevel != User_Level.Comp and level.value == User_Level.Comp:
                 await m.clear_competitions()
-            
+
         except Exception as e:
             await Discord.send_error(context, "There was an error trying to get info from the database.")
             return
@@ -156,7 +155,7 @@ class ManagerCog(commands.Cog, name="managers"):
     @is_full_manager()
     # @app_commands.describe(
     # )
-    async def mngr_list(self, context: Context):
+    async def mngr_list(self, context: Context) -> None:
 
         if context.interaction is None:
             await Discord.send_error(context, "Usage: `/mngr list`")
@@ -169,12 +168,12 @@ class ManagerCog(commands.Cog, name="managers"):
 
         embeds = []
 
-        k=0
+        k = 0
         for item in managers:
             competitions = []
             await m.get(item["user_id"])
 
-            if m.level in [User_Level.Superadmin, User_Level.Full] :
+            if m.level in [User_Level.Superadmin, User_Level.Full]:
                 competitions.append("all")
             elif not m.competitions:
                 competitions.append("none")
@@ -222,8 +221,7 @@ class ManagerCog(commands.Cog, name="managers"):
         description="Display information about manager options.",
     )
     @is_full_manager()
-    @app_commands.describe(
-    )
+    @app_commands.describe()
     async def mngr_info(self, context: Context) -> None:
 
         if context.interaction is None:
@@ -253,7 +251,7 @@ class ManagerCog(commands.Cog, name="managers"):
 
             await context.interaction.followup.send(content="**CanuckBot manager info**", embed=embed)
         except Exception as e:
-           await Discsord.send_error(context, f"There was an error trying to get info from the database: {e}")
+           await Discord.send_error(context, f"There was an error trying to get info from the database: {e}")
 
     @mngr.command(
         name="setinfo",
@@ -298,9 +296,7 @@ class ManagerCog(commands.Cog, name="managers"):
         description="Add a new CanuckBot Trusted manager.",
     )
     @is_full_manager()
-    @app_commands.describe(
-        user="The user to add as a CanuckBot Trusted manager."
-    )
+    @app_commands.describe(user="The user to add as a CanuckBot Trusted manager.")
     async def mngr_trustedadd(self, context: Context, user: discord.User) -> None:
 
         if context.interaction is None:
@@ -322,7 +318,7 @@ class ManagerCog(commands.Cog, name="managers"):
 
         # check if the user isn't already a manager
         await m.get(user.id)
-        if(m.user_id != 0):
+        if m.user_id != 0:
             await Discord.send_error(context, f"User {mngrname} is already a manager!")
             return
 
@@ -417,7 +413,7 @@ class ManagerCog(commands.Cog, name="managers"):
                 await Discord.send_success(context, f"`{comp.shortname}` added to `{mngrname}`'s competitions.", target=LogTarget.WEBHOOK_ONLY)
         except Exception as e:
             await Discord.send_error(context, f"There was an error: {e}")
-        
+
 
 async def setup(bot: DiscordBot) -> None:
     await bot.add_cog(ManagerCog(bot))

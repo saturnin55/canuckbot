@@ -7,12 +7,13 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from Discord.LoggingFormatter import LoggingFormatter
 
+
 class WebhookLoggerAdapter:
-    def __init__(self, logger: logging.Logger, webhook_url: str = None):
+    def __init__(self, logger: logging.Logger, webhook_url: str = None) -> None:
         self.logger = logger
         self.webhook_url = webhook_url
 
-    async def _send_webhook(self, embed: discord.Embed = None):
+    async def _send_webhook(self, embed: discord.Embed = None) -> None:
         if not self.webhook_url or not embed:
             return
 
@@ -39,7 +40,7 @@ class WebhookLoggerAdapter:
             self.logger.warning(f"Exception during webhook send: {e}")
 
 
-    async def cmds(self, cmd: str, context: Context, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+    async def cmds(self, cmd: str, context: Context, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs) -> None:
         
         if self.logger.getEffectiveLevel() > logging.INFO:
             return
@@ -61,7 +62,7 @@ class WebhookLoggerAdapter:
             if context.kwargs:
                 args = " ".join(f"{k}='{v}'" for k, v in context.kwargs.items() if v is not None)
                 cmd = f"{cmd} {args}"
-            
+
             embed = discord.Embed(color=int(0x4CAF50))
             embed.set_author(name=f"{context.author.name} [{context.author.id}]", icon_url=context.author.avatar.url)
             embed.add_field(name="", value=cmd, inline=False)
@@ -70,7 +71,7 @@ class WebhookLoggerAdapter:
             await self._send_webhook(embed)
 
 
-    async def info(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+    async def info(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs) -> None:
         if target in [LogTarget.LOGGER_ONLY, LogTarget.BOTH]:
             self.logger.info(message, *args, **kwargs)
 
@@ -79,7 +80,7 @@ class WebhookLoggerAdapter:
             await self._send_webhook(embed)
 
 
-    async def error(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+    async def error(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs) -> None:
 
         if self.logger.getEffectiveLevel() > logging.ERROR:
             return
@@ -92,7 +93,7 @@ class WebhookLoggerAdapter:
             await self._send_webhook(embed)
 
 
-    async def warning(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+    async def warning(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs) -> None:
 
         if self.logger.getEffectiveLevel() > logging.WARNING:
             return
@@ -105,7 +106,7 @@ class WebhookLoggerAdapter:
             await self._send_webhook(embed)
 
 
-    async def debug(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+    async def debug(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs) -> None:
 
         if self.logger.getEffectiveLevel() > logging.DEBUG:
             return
@@ -118,7 +119,7 @@ class WebhookLoggerAdapter:
             await self._send_webhook(embed)
 
 
-    async def critical(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs):
+    async def critical(self, message: str, *args, target:LogTarget = LogTarget.LOGGER_ONLY, **kwargs) -> None:
 
         if self.logger.getEffectiveLevel() > logging.CRITICAL:
             return
@@ -130,20 +131,19 @@ class WebhookLoggerAdapter:
             embed = discord.Embed(color=int(0xD50000), description=message)
             await self._send_webhook(embed)
 
-
     # Delegate useful logger methods
-    def setLevel(self, level):
+
+    def setLevel(self, level: int) -> None:
         self.logger.setLevel(level)
 
-    def addHandler(self, handler):
+    def addHandler(self, handler: logging.Handler) -> None:
         self.logger.addHandler(handler)
 
-    def removeHandler(self, handler):
+    def removeHandler(self, handler: logging.Handler) -> None:
         self.logger.removeHandler(handler)
 
-    def getEffectiveLevel(self):
+    def getEffectiveLevel(self) -> int:
         return self.logger.getEffectiveLevel()
 
-    def isEnabledFor(self, level):
+    def isEnabledFor(self, level: int) -> bool:
         return self.logger.isEnabledFor(level)
-

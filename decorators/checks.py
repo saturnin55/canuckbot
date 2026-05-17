@@ -7,7 +7,7 @@ from database import DatabaseManager
 
 def is_superadmin():
     @commands.check
-    async def predicate(ctx: commands.Context):
+    async def predicate(ctx: commands.Context) -> bool:
         cog = ctx.command.cog
         if not cog or not hasattr(cog, 'bot'):
             raise commands.CheckFailure("This command must be part of a Cog with a 'bot' attribute.")
@@ -19,9 +19,10 @@ def is_superadmin():
 
     return predicate
 
+
 def is_full_manager():
     @commands.check
-    async def predicate(ctx: commands.Context):
+    async def predicate(ctx: commands.Context) -> bool:
         cog = ctx.command.cog
         if not cog or not hasattr(cog, 'bot'):
             raise commands.CheckFailure("This command must be part of a Cog with a 'bot' attribute.")
@@ -33,9 +34,10 @@ def is_full_manager():
 
     return predicate
 
+
 def is_comp_manager():
     @commands.check
-    async def predicate(ctx: commands.Context):
+    async def predicate(ctx: commands.Context) -> bool:
         cog = ctx.command.cog
         if not cog or not hasattr(cog, 'bot'):
             raise commands.CheckFailure("This command must be part of a Cog with a 'bot' attribute.")
@@ -47,9 +49,10 @@ def is_comp_manager():
 
     return predicate
 
+
 def is_trusted_user():
     @commands.check
-    async def predicate(ctx: commands.Context):
+    async def predicate(ctx: commands.Context) -> bool:
         cog = ctx.command.cog
         if not cog or not hasattr(cog, 'bot'):
             raise commands.CheckFailure("This command must be part of a Cog with a 'bot' attribute.")

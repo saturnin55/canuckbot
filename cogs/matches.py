@@ -16,12 +16,12 @@ from database.db_utils import is_user_manager
 from Discord.types import Snowflake
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
-from Discord import Discord
+from Discord import Discord, LogTarget
 from CanuckBot.utils import get_dominant_color_from_url, is_valid_handle, validate_invoking_channel
 
 
 class MatchCog(commands.Cog, name="match"):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: DiscordBot) -> None:
         self.bot = bot
 
     @commands.hybrid_group(
@@ -33,14 +33,12 @@ class MatchCog(commands.Cog, name="match"):
         if not context.interaction:
             await Discord.send_error(context, "Usage: `/match`")
 
-
     @match.command(
         name="info",
         description="Display information about match options.",
     )
     @is_full_manager()
-    @app_commands.describe(
-    )
+    @app_commands.describe()
     async def match_info(self, context: Context) -> None:
 
         if context.interaction is None:
@@ -70,7 +68,7 @@ class MatchCog(commands.Cog, name="match"):
 
             await context.interaction.followup.send(content="**CanuckBot match info**", embed=embed)
         except Exception as e:
-                await Discord.send_error(context, f"There was an error trying to get info from the database: {e}")
+            await Discord.send_error(context, f"There was an error trying to get info from the database: {e}")
 
 
     @match.command(
@@ -111,7 +109,6 @@ class MatchCog(commands.Cog, name="match"):
         else:
             await Discord.send_error(context, f"Couldn't update match.{field.value}")
 
-
     @match.command(
         name="add",
         description="Add a new CanuckBot match.",
@@ -136,7 +133,7 @@ class MatchCog(commands.Cog, name="match"):
 
         # please set your timezone as dates and times you will set, will be assumed to be in your tz
 
-        if name is None or shortname is None:
+        if name is None or shortname is None: #fixme
             await Discord.send_error(context, f"Missing parameters!")
             return
 
@@ -170,7 +167,7 @@ class MatchCog(commands.Cog, name="match"):
             c.category_id = config.default_category_id
             c.hours_before_kickoff = config.default_add_hours_before
             c.hours_after_kickoff = config.default_del_hours_after
-            c.created_at = int(time.time()) # now
+            c.created_at = int(time.time())  # now
             c.created_by = int(invoking_user.id)
 
             ret = await c.add()
@@ -184,7 +181,6 @@ class MatchCog(commands.Cog, name="match"):
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while creating the competition: `{e}`")
             return
-
 
     @match.command(
         name="edit",
@@ -232,7 +228,6 @@ class MatchCog(commands.Cog, name="match"):
             await Discord.send_error(context, f"A problem occured while updating match: `{key}`: `{e}`")
             return
 
-
     @match.command(
         name="del",
         description="Remove a match.",
@@ -266,13 +261,13 @@ class MatchCog(commands.Cog, name="match"):
             match = Match(self.bot)
 
             await match.get(int(key))
-            if not comp.is_loaded():
+            if not comp.is_loaded(): #fixme comp not defined
                 await Discord.send_warning(context, f"Match `{key}` doesn't exist!")
                 return
 
             match_id = match.match_id
             if await match.remove():
-                await Discord.send_success(context, f"Match `{competition_id}` deleted!", target=LogTarget.WEBHOOK_ONLY)
+                await Discord.send_success(context, f"Match `{competition_id}` deleted!", target=LogTarget.WEBHOOK_ONLY) #fixme competition_id not defined
             else:
                 await Discord.send_error(context, f"A problem occured while deleting the match!")
         except Exception as e:
@@ -306,7 +301,7 @@ class MatchCog(commands.Cog, name="match"):
             if not match.is_loaded():
                 await Discord.send_warning(context, f"Match `{key}` doesn't exist!")
                 return
-        
+
             assert self.bot.database, "ERR Match.add(): database not available."
 
             creator = await Discord.get_user_or_member(context, int(match.created_by))
@@ -324,7 +319,7 @@ class MatchCog(commands.Cog, name="match"):
             #fixme get competition logo
             #color = await get_dominant_color_from_url(self.bot.database, str(match.logo_url))
 
-            embed = discord.Embed(color=color)
+            embed = discord.Embed(color=color) #fixme color not defined
             #embed.set_thumbnail(url=comp.logo_url)
 
             if match.lastmodified_by:
@@ -367,5 +362,6 @@ class MatchCog(commands.Cog, name="match"):
             await Discord.send_error(context, f"A problem occured retrieving the match: {e}")
             return
 
-async def setup(bot) -> None:
+
+async def setup(bot: DiscordBot) -> None:
     await bot.add_cog(MatchCog(bot))
