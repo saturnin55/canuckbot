@@ -20,7 +20,7 @@ from CanuckBot.utils import get_dominant_color_from_url, is_valid_handle, valida
 
 
 class CompCog(commands.Cog, name="comp"):
-    def __init__(self, bot) -> None:
+    def __init__(self, bot: DiscordBot) -> None:
         self.bot = bot
 
     @commands.hybrid_group(
@@ -32,14 +32,12 @@ class CompCog(commands.Cog, name="comp"):
         if not context.interaction:
             await Discord.send_error(context, "Usage: `/comp`")
 
-
     @comp.command(
         name="info",
         description="Display information about competition options.",
     )
     @is_full_manager()
-    @app_commands.describe(
-    )
+    @app_commands.describe()
     async def comp_info(self, context: Context) -> None:
 
         if context.interaction is None:
@@ -109,7 +107,6 @@ class CompCog(commands.Cog, name="comp"):
         else:
             await Discord.send_error(context, f"Couldn't update comp.{field.value}")
 
-
     @comp.command(
         name="add",
         description="Add a new CanuckBot competition.",
@@ -169,7 +166,6 @@ class CompCog(commands.Cog, name="comp"):
             c.created_at = int(time.time()) # now
             c.created_by = int(invoking_user.id)
 
-
             role_name = f"Optout: {c.shortname}"[:100]
 
             role = Discord.role_exists(context, role_name)
@@ -189,7 +185,6 @@ class CompCog(commands.Cog, name="comp"):
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while creating the competition: `{e}`")
             return
-
 
     @comp.command(
         name="edit",
@@ -239,7 +234,6 @@ class CompCog(commands.Cog, name="comp"):
         except Exception as e:
             await Discord.send_error(context, f"A problem occured while updating competition: `{key}`: `{e}`")
             return
-
 
     @comp.command(
         name="del",
@@ -297,12 +291,11 @@ class CompCog(commands.Cog, name="comp"):
             await Discord.send_error(context, f"A problem occured while deleting the competition: {e}")
             return
 
-
     @comp.command(
         name="list",
         description="List all CanuckBot competitions.",
     )
-    async def comp_list(self, context: Context):
+    async def comp_list(self, context: Context) -> None:
 
         if context.interaction is None:
             await Discord.send_error(context, "Usage: `/comp list`")
@@ -313,7 +306,7 @@ class CompCog(commands.Cog, name="comp"):
         c = Competition(self.bot)
         competitions = await c.list()
 
-        table ="```\n"
+        table = "```\n"
         table += f"   {'id':>3} {'shortname':<10} {'name'}\n"
         table += f"{'-'*43}\n"
 
@@ -327,7 +320,6 @@ class CompCog(commands.Cog, name="comp"):
         table += "```\n-# Use `/comp show id|shortname` for more details on a competition."
 
         await context.interaction.followup.send(f"{table}")
-
 
     @comp.command(
         name="show",
@@ -348,7 +340,7 @@ class CompCog(commands.Cog, name="comp"):
             if not comp.is_loaded():
                 await Discord.send_warning(context, f"Competition `{key}` doesn't exist!")
                 return
-        
+
             assert self.bot.database, "ERR Team.add(): database not available."
 
             creator = await Discord.get_user_or_member(context, int(comp.created_by))
@@ -417,10 +409,7 @@ class CompCog(commands.Cog, name="comp"):
         description="Add or remove a forced timezone for a competition.",
     )
     @is_full_manager()
-    @app_commands.describe(
-        tz="The timezone.",
-        key="The comp id or shortname."
-    )
+    @app_commands.describe(tz="The timezone.", key="The comp id or shortname.")
     async def comp_tz(self, context: Context, tz: str = None, key: str = None) -> None:
 
         if context.interaction is None:
@@ -437,7 +426,7 @@ class CompCog(commands.Cog, name="comp"):
             if not comp.is_loaded():
                 await Discord.send_warning(context, f"Competition `{key}` doesn't exist!")
                 return
-        
+
             if tz:
                 _tz = TimeZone(tz)
 
@@ -446,7 +435,7 @@ class CompCog(commands.Cog, name="comp"):
                     await comp.add_tz(_tz.tz)
                 else:
                     # remove tz
-                    await comp.remove_tz(_tz.tz )
+                    await comp.remove_tz(_tz.tz)
 
                 if comp.forced_tz:
                     await context.interaction.followup.send(content=f"`{key}.forced_tz` : `{', '.join(comp.forced_tz)}`")
@@ -458,7 +447,5 @@ class CompCog(commands.Cog, name="comp"):
             return
 
 
-
-
-async def setup(bot) -> None:
+async def setup(bot: DiscordBot) -> None:
     await bot.add_cog(CompCog(bot))

@@ -73,7 +73,7 @@ class DatabaseManager:
             print(f"ERR Database.update(): {e}, query : |{formatted_sql}|")
             return False
 
-    def lastrowid(self) -> Any:
+    def lastrowid(self) -> int | None:
         return self._lastrowid
 
     async def insert(self, sql: str, values: list) -> bool:

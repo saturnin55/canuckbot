@@ -7,6 +7,7 @@ from CanuckBot.types import HexColor, TimeZone, Log_Level
 from Discord.types import Snowflake
 import logging
 
+
 class CONFIG_FIELDS_INFO(str, Enum):
     logs_channel_id = "logs_channel_id"
     cmds_channel_id = "cmds_channel_id"
@@ -23,6 +24,7 @@ class CONFIG_FIELDS_INFO(str, Enum):
     log_level = "log_level"
     optout_all_role_id = "optout_all_role_id"
 
+
 class CONFIG_FIELDS_EDITABLE(str, Enum):
     logs_channel_id = "logs_channel_id"
     cmds_channel_id = "cmds_channel_id"
@@ -36,6 +38,7 @@ class CONFIG_FIELDS_EDITABLE(str, Enum):
     default_logo_url = "default_logo_url"
     default_tz = "default_tz"
     mngr_role_id = "mngr_role_id"
+
 
 class Config(CanuckBotBase):
     logs_channel_id: Snowflake = 0
@@ -57,8 +60,8 @@ class Config(CanuckBotBase):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, bot: DiscordBot, **kwargs):
-        super().__init__( bot=bot, **kwargs)
+    def __init__(self, bot: DiscordBot, **kwargs) -> None:
+        super().__init__(bot=bot, **kwargs)
 
     @classmethod
     async def create(cls: Type["Config"], bot: DiscordBot) -> "Config":
@@ -67,12 +70,12 @@ class Config(CanuckBotBase):
 
         return instance
 
-    async def reload(self):
+    async def reload(self) -> None:
         self.list
 
     async def update(self, field: str) -> bool:
         ret: bool
-    
+
         try:
             assert self._bot.database, "ERR Config.py update(): database not available."
             ret = await self._bot.database.update(
@@ -81,8 +84,7 @@ class Config(CanuckBotBase):
             )
         except Exception as e:
             raise ValueError(e)
-            return False
- 
+
         return ret
 
     async def get(self, field: Optional[str] = None) -> str | Literal[False]:
@@ -90,7 +92,6 @@ class Config(CanuckBotBase):
             value = getattr(self, field, None) if field else False
         except Exception as e:
             raise ValueError(e)
-            return False
 
         return value or False
 
@@ -115,6 +116,5 @@ class Config(CanuckBotBase):
                     data[item["field"]] = cast_value
         except Exception as e:
             raise ValueError(e)
-            return False
 
-            return data
+        return data

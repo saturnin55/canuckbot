@@ -52,14 +52,12 @@ class OptoutCog(commands.Cog, name="optout"):
 
                 return
 
-
             c = Competition(self.bot)
             competitions = await c.list()
-            comps: dict[str,str] = {}
+            comps: dict[str, str] = {}
             for item in competitions:
                 comps[item["shortname"]] = item["name"]
             comps["all"] = "All competitions"
-            
 
             if competition:
                 await c.load_by_key(competition)
@@ -83,7 +81,7 @@ class OptoutCog(commands.Cog, name="optout"):
                 optout_roles = [
                     role.name.split(":", 1)[1].strip()
                     for role in member.roles
-                        if role.name.startswith("Optout:")
+                    if role.name.startswith("Optout:")
                 ]
 
                 roles = []
@@ -106,6 +104,7 @@ class OptoutCog(commands.Cog, name="optout"):
             await interaction.followup.send(
                 f"ERR: A problem occured while retrieving your data : {e}"
             )
+
 
 async def setup(bot: DiscordBot) -> None:
     await bot.add_cog(OptoutCog(bot))

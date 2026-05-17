@@ -104,7 +104,6 @@ class DiscordBot(commands.Bot):
             """
             await self.wait_until_ready()
 
-
     async def init_db(self, db_file: str = None) -> None:
         os.environ["DB_PATH"] = f"{self.config['db_dir']}/database.db"
         return
@@ -138,7 +137,6 @@ class DiscordBot(commands.Bot):
         await self.database.delete("DELETE FROM canuckbot_cache WHERE expiration < CURRENT_TIMESTAMP")
         await self.logger.debug("Cleanup tasks executed.", target=LogTarget.BOTH)
 
-
     async def _status_task(self) -> None:
         """
         Setup the game status task of the bot.
@@ -152,7 +150,6 @@ class DiscordBot(commands.Bot):
                 name=status, type=discord.ActivityType.watching
             )
         )
-        await self.logger.debug(f"{self.user.name} status changed to : `{status}`", target=LogTarget.BOTH)
 
     async def _match_task(self) -> None:
         """
@@ -223,7 +220,7 @@ class DiscordBot(commands.Bot):
             name = data.get("name")
             options = data.get("options", [])
 
-            def format_options(opts):
+            def format_options(opts: list[dict]) -> str:
                 return " ".join(
                     f"{opt['name']}:{opt['value']}" if "value" in opt else opt["name"]
                     for opt in opts
@@ -233,13 +230,13 @@ class DiscordBot(commands.Bot):
             _cmd = f"/{name} {args_str}"
         else:
             _cmd = context.message.content
-            
+
         if context.guild is not None:
             await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
         else:
             await self.logger.cmds(_cmd, context, target=LogTarget.BOTH)
 
-    async def on_command_error(self, context: Context, error) -> None:
+    async def on_command_error(self, context: Context, error: Exception) -> None:
         """
         The code in this event is executed every time a normal valid command catches an error.
 

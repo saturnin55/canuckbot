@@ -3,7 +3,7 @@ import hashlib
 import requests
 from io import BytesIO
 from CanuckBot.Cache import Cache
-from CanuckBot.types import HANDLE_PATTERN
+from CanuckBot.types import HANDLE_PATTERN, Handle
 from colorthief import ColorThief
 from database import DatabaseManager
 from discord.ext.commands import Context
@@ -11,7 +11,7 @@ from Discord.DiscordBot import DiscordBot
 from typing import List
 from CanuckBot.Config import Config
 
-def md5_hash(text: str):
+def md5_hash(text: str) -> str:
     return hashlib.md5(text.encode('utf-8')).hexdigest()
 
 def _is_near_white_or_black(rgb: tuple, white_threshold: int = 240, black_threshold: int = 15) -> bool:
@@ -58,7 +58,7 @@ async def get_dominant_color_from_url(db: DatabaseManager = None, image_url: str
         return 0xffffff
 
 
-def is_valid_handle(s):
+def is_valid_handle(s: Handle) -> bool:
     return re.match(HANDLE_PATTERN, s) is not None
 
 
@@ -88,4 +88,3 @@ def parse_number_string(s: str) -> list[int]:
         else:
             result.add(int(part))
     return sorted(result)
-

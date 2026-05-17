@@ -1,4 +1,5 @@
 from typing import Any, Literal, Optional, Type
+from Discord.DiscordBot import DiscordBot
 from CanuckBot import CanuckBotBase
 
 
@@ -8,12 +9,12 @@ class Info(CanuckBotBase):
     field: Optional[str] = None
     info: Optional[str] = None
 
-    def __init__(self, bot):
+    def __init__(self, bot: DiscordBot):
         super().__init__(bot)
 
     @classmethod
     async def create(
-        cls: Type["Info"], bot, obj: Optional[str] = None, field: Optional[str] = None
+        cls: Type["Info"], bot: DiscordBot, obj: Optional[str] = None, field: Optional[str] = None
     ) -> "Info":
         instance = Info(bot)
         instance.obj = obj or ""
@@ -44,7 +45,7 @@ class Info(CanuckBotBase):
         else:
             return row
 
-    async def set(self, info) -> bool:
+    async def set(self, info: str | None) -> bool:
         if info is None:
             info = ""
         assert self._bot.database, "ERR Info.py set(): database not available."

@@ -10,7 +10,7 @@ from Discord.DiscordBot import DiscordBot
 
 
 class TEAM_FIELDS_INFO(str, Enum):
-    team_id = "team_id" 
+    team_id = "team_id"
     name = "name"
     shortname = "shortname"
     default_venue = "default_venue"
@@ -42,7 +42,7 @@ class Team(CanuckBotBase):
     class Team:
         arbitrary_types_allowed = True
 
-    def __init__(self, bot: DiscordBot, **kwargs):
+    def __init__(self, bot: DiscordBot, **kwargs) -> None:
         super().__init__(bot, **kwargs)
 
     @classmethod
@@ -79,7 +79,6 @@ class Team(CanuckBotBase):
                 return False
 
         return True
-
 
     async def load_aliases(self) -> bool:
         try:
@@ -135,14 +134,13 @@ class Team(CanuckBotBase):
 
                 return True
 
-
-    async def load_by_key(self, key: str = None):
+    async def load_by_key(self, key: str = None) -> None:
         if key.isdigit():
             await self.load_by_id(int(key))
         else:
             await self.load_by_shortname(str(key))
 
-    async def load_by_id(self, team_id: int = 0):
+    async def load_by_id(self, team_id: int = 0) -> None:
 
         await self.load('team_id', int(team_id))
 
@@ -165,10 +163,9 @@ class Team(CanuckBotBase):
             raise ValueError(e)
             return False
 
-    
-    async def load_by_alias(self, alias: str = None):
+    async def load_by_alias(self, alias: str | None = None) -> bool:
 
-        #if not is_valid_handle(alias):
+        # if not is_valid_handle(alias):
         #    return False
 
         if not alias:
@@ -187,9 +184,8 @@ class Team(CanuckBotBase):
             raise ValueError(e)
             return False
 
-
-    async def load_by_shortname(self, shortname: Handle = None):
-        if await self.load('shortname', str(shortname)):
+    async def load_by_shortname(self, shortname: Handle | None = None) -> bool:
+        if await self.load("shortname", str(shortname)):
             return True
         else:
             # check by aliases
@@ -207,8 +203,8 @@ class Team(CanuckBotBase):
             return t.team_id
         else:
             return False
-        
-    async def update(self, field: str = None, value: Any = None)-> bool:
+
+    async def update(self, field: str | None = None, value: Any = None) -> bool:  # noqa: ANN401
         if not field:
             return False
 
@@ -242,7 +238,6 @@ class Team(CanuckBotBase):
         except Exception as e:
             raise ValueError(e)
             return False
-
 
     async def remove(self) -> bool:
 
@@ -286,7 +281,6 @@ class Team(CanuckBotBase):
         except Exception as e:
             raise ValueError(e)
             return False
-                
 
     async def setmodified(self) -> bool:
         try:
@@ -296,7 +290,7 @@ class Team(CanuckBotBase):
         except Exception as e:
             raise ValueError(e)
             return False
-        
+
     async def add_alias(self, alias: str = None) -> bool:
 
         try:
@@ -314,8 +308,8 @@ class Team(CanuckBotBase):
             # add the alias to the database
             await self._bot.database.insert(
                 "INSERT INTO team_aliases (team_id, alias) VALUES (?, ?)",
-                [int(self.team_id), str(alias)]
-                )
+                [int(self.team_id), str(alias)],
+            )
 
             # add the alias to the database
             await self._bot.database.connection.commit()
@@ -325,11 +319,11 @@ class Team(CanuckBotBase):
             return True
 
         except Exception as e:
-            raise ValueError(e) 
+            raise ValueError(e)
             return False
 
     async def remove_alias(self, alias: str = None) -> bool:
-    
+
         try:
             if not alias:
                 return False
@@ -338,14 +332,14 @@ class Team(CanuckBotBase):
             if not is_valid_handle(alias):
                 return False
 
-            if alias.lower() not in (val.lower() for val in self.aliases): 
+            if alias.lower() not in (val.lower() for val in self.aliases):
                 return True
 
             # delete the alias from the database
             await self._bot.database.delete(
                 "DELETE FROM team_aliases WHERE team_id = ? and alias = ?",
-                [int(self.team_id), str(alias)]
-                )
+                [int(self.team_id), str(alias)],
+            )
 
             await self._bot.database.connection.commit()
 
@@ -365,7 +359,7 @@ class Team(CanuckBotBase):
         try:
             await self._bot.database.delete(
                 "DELETE FROM team_aliases WHERE team_id = ?", [int(self.team_id)]
-                )
+            )
 
             await self._bot.database.connection.commit()
 
@@ -374,7 +368,6 @@ class Team(CanuckBotBase):
             return False
 
         return True
-
 
     async def search(self, criteria: str = None) -> list[dict[str, Any]] | bool:
         try:
@@ -409,10 +402,10 @@ class Team(CanuckBotBase):
                         row["default_venue"] = None
 
                     if not row["tz"]:
-                        row["tz"] = None 
+                        row["tz"] = None
                     else:
                         row["tz"] = TimeZone(row["tz"])
-                    
+
                     if row["created_by"] is not None:
                         row["created_by"] = int(row["created_by"])
                     if row["created_at"] is not None:

@@ -28,7 +28,7 @@ class Manager(CanuckBotBase):
     class Manager:
         arbitrary_types_allowed = True
 
-    def __init__(self, bot: DiscordBot, **kwargs):
+    def __init__(self, bot: DiscordBot, **kwargs) -> None:
         super().__init__(bot, **kwargs)
 
     @classmethod
@@ -85,7 +85,7 @@ class Manager(CanuckBotBase):
                 now = int(time.time())
                 await self._bot.database.insert(
                     "INSERT INTO managers(user_id, created_at, created_by, level) VALUES (?, ?, ?, ?)",
-                    [str(user_id), now, str(invoking_id), str(level.value)]
+                    [str(user_id), now, str(invoking_id), str(level.value)],
                 )
 
                 self.user_id = int(user_id)
@@ -100,8 +100,8 @@ class Manager(CanuckBotBase):
 
                 for competition_id in self.competitions:
                     await self._bot.database.insert(
-                        "INSERT INTO manager_competitions (user_id, competition_id) VALUES (?, ?)", 
-                        [str(user_id), str(competition_id)]
+                        "INSERT INTO manager_competitions (user_id, competition_id) VALUES (?, ?)",
+                        [str(user_id), str(competition_id)],
                     )
 
                 await self._bot.database.connection.commit()
@@ -176,7 +176,7 @@ class Manager(CanuckBotBase):
 
     async def addcomp(self, competition_id: int = None) -> bool:
         assert self._bot.database, "ERR Manager.addcomp(): database not available."
-            
+
         if self.user_id is None or competition_id is None:
             return False
 
@@ -192,7 +192,7 @@ class Manager(CanuckBotBase):
 
     async def delcomp(self, competition_id: int = None) -> bool:
         assert self._bot.database, "ERR Manager.delcomp(): database not available."
-        
+
         if self.user_id is None or competition_id is None:
             return False
 
@@ -206,7 +206,7 @@ class Manager(CanuckBotBase):
 
         return True
 
-    async def update(self, field: str = None, value: Any = None) -> bool:
+    async def update(self, field: str = None, value: Any = None) -> bool:  # noqa: ANN401
         if not field:
             return False
 
@@ -235,4 +235,3 @@ class Manager(CanuckBotBase):
             return True
         except:
             return False
-

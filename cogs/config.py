@@ -11,7 +11,7 @@ from CanuckBot.utils import validate_invoking_channel
 from decorators.checks import is_superadmin, is_full_manager, is_comp_manager, is_trusted_user
 from Discord.LoggingFormatter import LoggingFormatter
 from Discord.DiscordBot import DiscordBot
-from Discord import Discord, Color
+from Discord import Discord, Color, LogTarget
 
 
 class ConfigCog(commands.Cog, name="config"):
@@ -27,18 +27,16 @@ class ConfigCog(commands.Cog, name="config"):
         if not context.interaction:
             await Discord.send_error(context, "Usage: `/config`")
 
-
     @config.command(
         name="set",
         description="Set a CanuckBot config parameter.",
     )
-    #@commands.is_owner()
+    # @commands.is_owner()
     @is_superadmin()
     @app_commands.describe(
         field="The field to set.",
         value="The text info to set for the selected field.",
     )
-
     async def config_set(
         self, context: Context, field: CONFIG_FIELDS_EDITABLE, value: Optional[str] = None
     ) -> None:
@@ -53,7 +51,6 @@ class ConfigCog(commands.Cog, name="config"):
             cmds_channel = int(Discord.get_cmds_channel_id())
             await Discord.send_error(context, f"You cannot use this command in <#{context.channel.id}>. Go to <#{cmds_channel}>" )
             return
-
 
         if field.name and value:
             config = await Config.create(bot=self.bot)
@@ -73,14 +70,12 @@ class ConfigCog(commands.Cog, name="config"):
         else:
             await Discord.send_error(context, "No field or value was provided.")
 
-
     @config.command(
         name="info",
         description="Display information about config options.",
     )
     @is_comp_manager()
-    @app_commands.describe(
-    )
+    @app_commands.describe()
     async def config_info(self, context: Context) -> None:
 
         if context.interaction is None:
@@ -148,7 +143,7 @@ class ConfigCog(commands.Cog, name="config"):
     @is_comp_manager()
     # @app_commands.describe(
     # )
-    async def config_list(self, context: Context):
+    async def config_list(self, context: Context) -> None:
 
         if context.interaction is None:
             await Discord.send_error(context, "Usage: `/config list`")
@@ -191,7 +186,6 @@ class ConfigCog(commands.Cog, name="config"):
 
         await context.interaction.followup.send(embed=embed)
 
-
     @config.command(
         name="loglevel",
         description="Modify the log level.",
@@ -224,5 +218,5 @@ class ConfigCog(commands.Cog, name="config"):
                 await Discord.send_error(context, "There was an error trying to update the config.")
 
 
-async def setup(bot) -> None:
+async def setup(bot: DiscordBot) -> None:
     await bot.add_cog(ConfigCog(bot))

@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
+
 class Color:
     Success = int(0x28a745)
     Warning = int(0xffa500)
@@ -16,9 +17,8 @@ class LogTarget:
     WEBHOOK_ONLY = 2
     BOTH = 3
 
+
 class Discord:
-
-
     @staticmethod
     async def rename_role( guild: discord.Guild, role_identifier: Union[int, str], new_name: str) -> bool:
         """
@@ -48,7 +48,6 @@ class Discord:
             return False  # Bot lacks permission
         except discord.HTTPException:
             return False  # API error
-
 
     @staticmethod
     async def join_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str], reason: Optional[str] = None) -> bool:
@@ -88,7 +87,6 @@ class Discord:
         except discord.HTTPException:
             return False  # Discord API error
 
-
     @staticmethod
     async def is_member_of_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str]) -> bool:
         """
@@ -119,7 +117,6 @@ class Discord:
             return False
 
         return role in member.roles
-
 
     @staticmethod
     async def leave_role(guild: discord.Guild, user_id: int, role_identifier: Union[int, str], reason: Optional[str] = None) -> bool:
@@ -159,7 +156,6 @@ class Discord:
         except discord.HTTPException:
             return False  # Discord API error
 
-
     @staticmethod
     async def delete_role(context: commands.Context, role_id: int, *, reason: Optional[str] = None) -> bool:
         """
@@ -185,24 +181,22 @@ class Discord:
             await role.delete(reason=reason)
             return True
         except discord.Forbidden:
-            #print("Missing permissions to delete the role.")
+            # print("Missing permissions to delete the role.")
             return False
         except discord.HTTPException as e:
-            #print(f"Failed to delete role: {e}")
+            # print(f"Failed to delete role: {e}")
             return False
 
-
     @staticmethod
-    async def create_role(context: Context, name: str, reason:str = None) -> bool | Optional[discord.Role]:
+    async def create_role(
+        context: Context, name: str, reason: str = None
+    ) -> bool | Optional[discord.Role]:
 
         guild: discord.Guild = context.guild
 
         try:
-            new_role: discord.Role = await guild.create_role(
-                name=name,
-                reason=reason
-            )
-            #await context.send(f"✅ Role `{new_role.name}` created successfully!")
+            new_role: discord.Role = await guild.create_role(name=name, reason=reason)
+            # await context.send(f"✅ Role `{new_role.name}` created successfully!")
             return new_role
 
         except discord.Forbidden:
@@ -211,7 +205,6 @@ class Discord:
             raise ValueError("Bot failed to create roles.")
 
         return False
-
 
     @staticmethod
     def role_exists(context: commands.Context, identifier: Union[str, int]) -> Union[discord.Role, bool]:
@@ -238,7 +231,6 @@ class Discord:
                 return role
 
         return False
-
 
     @staticmethod
     async def get_role(ctx: commands.Context, role_id: int) -> Optional[discord.Role]:
@@ -301,7 +293,6 @@ class Discord:
 
         return None
 
-
     @staticmethod
     async def get_message(ctx: commands.Context, channel: discord.TextChannel, msg_id: int) -> Optional[discord.Message]:
         """
@@ -311,7 +302,7 @@ class Discord:
             Optional[discord.Message]: The message object or None.
         """
         try:
-            message =  await channel.fetch_message(msg_id)
+            message = await channel.fetch_message(msg_id)
             if isinstance(message, discord.Message):
                 return message
         except (discord.NotFound, discord.Forbidden, discord.HTTPException):
@@ -336,7 +327,6 @@ class Discord:
             return guild
 
         return None
-
 
     @staticmethod
     async def get_member(ctx: commands.Context, member_id: int) -> Optional[discord.Member]:
@@ -382,7 +372,6 @@ class Discord:
 
         return None
 
-
     @staticmethod
     async def get_user_or_member(ctx: commands.Context, user_id: int) -> Optional[discord.abc.User]:
         """
@@ -408,34 +397,35 @@ class Discord:
         return None
 
     @staticmethod
-    async def send_error(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
+    async def send_error(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False) -> None:
 
         await Discord.send_message(context, message, Color.Error, ephemeral)
 
 
-    async def send_success(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
+    async def send_success(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False) -> None:
 
         await Discord.send_message(context, message, Color.Success, ephemeral)
 
 
-    async def send_warning(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False):
+    async def send_warning(context: commands.Context, message:str = None, ephemeral: Optional[bool] = False) -> None:
 
         await Discord.send_message(context, message, Color.Warning, ephemeral)
 
-
     @staticmethod
-    async def send_message(context: commands.Context, message:str = None, color:int = Color.Neutral, ephemeral: Optional[bool] = False):
+    async def send_message(context: commands.Context, message:str = None, color:int = Color.Neutral, ephemeral: Optional[bool] = False) -> None:
 
         print(message)
         if message:
             embed = discord.Embed(description=message, color=color)
 
             if not context.interaction:
-                content=context.author.mention
+                content = context.author.mention
                 try:
                     await context.reply(embed=embed)
                 except discord.Forbidden:
-                    channel = context.guild.get_channel(int(Discord.get_cmds_channel_id()))
+                    channel = context.guild.get_channel(
+                        int(Discord.get_cmds_channel_id())
+                    )
                     if channel:
                         await channel.send(content=content, embed=embed)
             else:
@@ -452,9 +442,8 @@ class Discord:
 
         return
 
-
     @staticmethod
-    def get_config_item(field:str = None):
+    def get_config_item(field: str | None = None) -> str | None:
         if not field:
             return None
 

@@ -56,14 +56,12 @@ class OptinCog(commands.Cog, name="optin"):
 
                 return
 
-
             c = Competition(self.bot)
             competitions = await c.list()
-            comps: dict[str,str] = {}
+            comps: dict[str, str] = {}
             for item in competitions:
                 comps[item["shortname"]] = item["name"]
             comps["all"] = "All competitions"
-            
 
             if competition:
                 await c.load_by_key(competition)
@@ -85,6 +83,7 @@ class OptinCog(commands.Cog, name="optin"):
             await interaction.followup.send(
                 f"ERR: A problem occured while retrieving your data : {e}"
             )
+
 
 async def setup(bot: DiscordBot) -> None:
     await bot.add_cog(OptinCog(bot))
